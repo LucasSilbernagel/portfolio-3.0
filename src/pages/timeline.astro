@@ -1,0 +1,260 @@
+---
+import Layout from '../layouts/Layout.astro'
+import TerminalButton from '../components/TerminalButton.astro'
+
+const TIMELINE_ANIMATION_DELAY_MS = 150
+const timelineData = [
+  {
+    year: 2025,
+    title: 'Senior Software Engineer',
+    company: 'theScore',
+    period: 'March 2025 - Present',
+    type: 'work',
+    description:
+      'Drove accelerated market entry for theScore Casino web application, launching two months ahead of schedule. Spearheaded development for high-value casino features including the complex In-House Jackpots system.',
+    highlights: [
+      'Launched casino application 2 months ahead of schedule',
+      'Introduced Rive animation framework to the repository',
+      'Developed animated cash rolodex component for the lobby',
+      'Enhanced web platform scalability through architectural RFCs',
+      'Implemented centralized persistence management solution',
+    ],
+  },
+  {
+    year: 2024,
+    title: 'Software Developer',
+    company: 'theScore',
+    period: 'March 2024 - March 2025',
+    type: 'work',
+    description:
+      'Led web development for Hollywood Casino application launch on Next.js, resulting in deployment six weeks ahead of schedule and enabling immediate revenue generation.',
+    highlights: [
+      'Deployed Hollywood Casino 6 weeks ahead of schedule',
+      'Engineered critical casino promo credits features',
+      'Created Casino Client Page Load Performance dashboard',
+      'Handled 8 non-production and 2 production deployments',
+      'Championed web accessibility and development standards',
+    ],
+  },
+  {
+    year: 2024,
+    title: 'Word Game DB v2',
+    company: 'Personal Project',
+    period: '2024',
+    type: 'project',
+    description:
+      'Modernized the original MERN stack Word Game DB application using Next.js for both frontend and backend with new functionality and endpoints.',
+    highlights: [
+      'Built with Next.js, React, MongoDB, TypeScript',
+      'Added new REST API endpoints and functionality',
+      'Improved performance and developer experience',
+      'Deployed with modern CI/CD pipeline',
+    ],
+  },
+  {
+    year: 2024,
+    title: 'Housing Solver',
+    company: 'Personal Project',
+    period: '2024',
+    type: 'project',
+    description:
+      'Created an incremental clicker game about solving the affordable housing crisis, featuring complex economic simulation and engaging gameplay mechanics.',
+    highlights: [
+      'Built with React, Vite, TypeScript, Zustand',
+      'Implemented complex economic simulation logic',
+      'Used TanStack Router for navigation',
+      'Styled with Tailwind CSS and Radix UI',
+    ],
+  },
+  {
+    year: 2023,
+    title: 'Software Developer II',
+    company: 'Xanadu',
+    period: 'January 2023 - March 2024',
+    type: 'work',
+    description:
+      'Enhanced the Xanadu.ai website by implementing server-side rendering, image optimization, and several new pages. Migrated PennyLane.ai website to modern development framework.',
+    highlights: [
+      'Implemented server-side rendering and image optimization',
+      'Integrated Xanadu merchandise shop using Shopify APIs',
+      'Migrated PennyLane.ai from Python templating to Gatsby',
+      'Led front-end development of Generic Datasets project',
+      'Built with React, TypeScript, and Tailwind CSS',
+    ],
+  },
+  {
+    year: 2023,
+    title: 'Decision Tree',
+    company: 'Personal Project',
+    period: '2023',
+    type: 'project',
+    description:
+      'Built a simple generator of shareable and accessible decision trees with data serialization in URLs for easy sharing.',
+    highlights: [
+      'Built with React, Remix, TypeScript',
+      'Implemented URL-based data serialization',
+      'Created accessible decision tree interface',
+      'Used shadcn/ui for consistent design',
+    ],
+  },
+  {
+    year: 2023,
+    title: 'Blizzard Rush',
+    company: 'Personal Project',
+    period: '2023',
+    type: 'project',
+    description:
+      'Developed a Shopify development store for snowboard sales with Remix frontend and Shopify API integration.',
+    highlights: [
+      'Integrated Shopify APIs with Remix frontend',
+      'Built with React, TypeScript, Tailwind CSS',
+      'Used Zustand for state management',
+      'Implemented TanStack Query for data fetching',
+    ],
+  },
+  {
+    year: 2023,
+    title: 'Super Simon',
+    company: 'Personal Project',
+    period: '2023',
+    type: 'project',
+    description:
+      'Created a Progressive Web App version of the classic Simon memory game with offline capabilities and comprehensive testing.',
+    highlights: [
+      'Built Progressive Web App with offline support',
+      'Included unit tests with Jest and React Testing Library',
+      'Added e2e tests with Playwright',
+      'Integrated Firebase for data persistence',
+    ],
+  },
+  {
+    year: 2020,
+    title: 'Web Development Bootcamp',
+    company: 'Lighthouse Labs',
+    period: '2020',
+    type: 'education',
+    description:
+      'Completed intensive web development bootcamp covering full-stack JavaScript development, React, Node.js, and modern development practices.',
+    highlights: [
+      'Learned full-stack JavaScript development',
+      'Mastered React and Node.js fundamentals',
+      'Built multiple full-stack applications',
+      'Gained experience with modern development tools',
+    ],
+  },
+]
+---
+
+<Layout title="Lucas Silbernagel | Timeline">
+  <div
+    class="min-h-screen bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue"
+  >
+    <div class="container mx-auto px-4 py-12">
+      <div class="mb-12 text-center">
+        <h1 class="mb-4 text-4xl font-bold text-white md:text-5xl">Timeline</h1>
+        <p class="font-terminal text-xl text-gray-300">
+          Career Timeline & Professional Milestones
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-6xl">
+        <div class="terminal-card p-8">
+          <div class="space-y-6">
+            {
+              timelineData.map((item, index) => (
+                <div
+                  class="animate-timeline-entry border-l-4 border-terminal-blue pb-6 pl-6"
+                  style={`animation-delay: ${index * TIMELINE_ANIMATION_DELAY_MS}ms`}
+                >
+                  <div class="flex flex-col md:flex-row md:items-start md:justify-between">
+                    <div class="flex-1">
+                      <div class="mb-2 flex items-center space-x-3">
+                        <div
+                          class={`h-3 w-3 rounded-full ${
+                            item.type === 'work'
+                              ? 'bg-terminal-blue'
+                              : item.type === 'project'
+                                ? 'bg-terminal-success-green'
+                                : 'bg-terminal-yellow'
+                          }`}
+                        />
+                        <span class="font-terminal text-sm uppercase tracking-wide text-gray-500">
+                          {item.type === 'work'
+                            ? 'WORK'
+                            : item.type === 'project'
+                              ? 'PROJECT'
+                              : 'EDUCATION'}
+                        </span>
+                      </div>
+                      <h3 class="mb-1 text-xl font-bold text-terminal-dark-gray">
+                        {item.title}
+                      </h3>
+                      <p class="mb-2 font-semibold text-terminal-blue">
+                        {item.company}
+                      </p>
+                      <p class="mb-3 text-sm text-gray-500">{item.period}</p>
+                      <p class="mb-4 text-gray-600">{item.description}</p>
+                    </div>
+
+                    <div class="mb-4 md:mb-0 md:ml-6">
+                      <div class="rounded-lg bg-terminal-blue px-4 py-2 text-center text-white">
+                        <div class="text-2xl font-bold">{item.year}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-4">
+                    <h4 class="mb-2 text-sm font-semibold uppercase tracking-wide text-terminal-dark-gray">
+                      Key Achievements:
+                    </h4>
+                    <ul class="space-y-1">
+                      {item.highlights.map((highlight) => (
+                        <li class="flex items-start space-x-2 text-sm text-gray-600">
+                          <span class="mt-1 text-terminal-success-green">
+                            •
+                          </span>
+                          <span>{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <div class="flex flex-wrap justify-center gap-4">
+          <TerminalButton href="/" variant="secondary" size="md">
+            🏠 Back
+          </TerminalButton>
+          <TerminalButton href="/about" variant="primary" size="md">
+            🎒 About Me
+          </TerminalButton>
+          <TerminalButton href="/projects" variant="success" size="md">
+            ✈️ View Projects
+          </TerminalButton>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .animate-timeline-entry {
+    animation: slideInLeft 0.6s ease-out forwards;
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+</style>

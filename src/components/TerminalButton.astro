@@ -1,0 +1,113 @@
+---
+export type Props = (
+  | {
+      href: string
+      onClick?: never
+    }
+  | {
+      href?: never
+      onClick: string
+    }
+) & {
+  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  size?: 'sm' | 'md' | 'lg'
+  disabled?: boolean
+  class?: string
+}
+
+const {
+  href,
+  onClick,
+  variant = 'primary',
+  size = 'md',
+  disabled = false,
+  class: className = '',
+} = Astro.props
+
+const baseClasses =
+  'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2'
+const variantClasses = {
+  primary:
+    'bg-terminal-blue hover:bg-blue-600 text-white focus:ring-terminal-blue',
+  secondary:
+    'bg-terminal-light-gray hover:bg-gray-300 text-terminal-dark-gray focus:ring-gray-400',
+  success:
+    'bg-terminal-success-green hover:bg-green-600 text-white focus:ring-terminal-success-green',
+  warning:
+    'bg-terminal-yellow hover:bg-yellow-500 text-terminal-dark-gray focus:ring-terminal-yellow',
+  danger:
+    'bg-terminal-error-red hover:bg-red-600 text-white focus:ring-terminal-error-red',
+}
+const sizeClasses = {
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-6 py-3 text-base',
+  lg: 'px-8 py-4 text-lg',
+}
+
+const buttonClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`
+---
+
+{
+  href ? (
+    <a href={href} class={buttonClasses} data-terminal-button>
+      <slot />
+    </a>
+  ) : (
+    <button
+      type="button"
+      class={buttonClasses}
+      onclick={onClick}
+      disabled={disabled}
+      data-terminal-button
+    >
+      <slot />
+    </button>
+  )
+}
+
+<script>
+  // Add terminal button press animation
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('[data-terminal-button]')
+    const RIPPLE_DURATION = 600
+
+    for (const button of buttons) {
+      button.addEventListener('click', (e: Event) => {
+        // Create ripple effect
+        const ripple = document.createElement('span')
+        const rect = button.getBoundingClientRect()
+        const size = Math.max(rect.width, rect.height)
+        const HALF_DIVISOR = 2
+        const x = (e as MouseEvent).clientX - rect.left - size / HALF_DIVISOR
+        const y = (e as MouseEvent).clientY - rect.top - size / HALF_DIVISOR
+
+        ;(ripple as HTMLElement).style.width = (
+          ripple as HTMLElement
+        ).style.height = size + 'px'
+        ;(ripple as HTMLElement).style.left = x + 'px'
+        ;(ripple as HTMLElement).style.top = y + 'px'
+        ;(ripple as HTMLElement).style.position = 'absolute'
+        ;(ripple as HTMLElement).style.borderRadius = '50%'
+        ;(ripple as HTMLElement).style.background = 'rgba(255, 255, 255, 0.3)'
+        ;(ripple as HTMLElement).style.transform = 'scale(0)'
+        ;(ripple as HTMLElement).style.animation = 'ripple 0.6s linear'
+        ;(ripple as HTMLElement).style.pointerEvents = 'none'
+        ;(button as HTMLElement).style.position = 'relative'
+        button.append(ripple)
+
+        setTimeout(() => {
+          ripple.remove()
+        }, RIPPLE_DURATION)
+      })
+    }
+  })
+</script>
+
+<style>
+  @keyframes ripple {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+import Layout from '../layouts/Layout.astro'
+import TerminalButton from '../components/TerminalButton.astro'
+import BoardingPass from '../components/BoardingPass.astro'
+
+const ANIMATION_DELAY_MS = 100
+
+const projects = [
+  {
+    projectName: 'Word Game DB v2',
+    completedYear: '2024',
+    technologies: [
+      'Next.js',
+      'React',
+      'MongoDB',
+      'TypeScript',
+      'Tailwind',
+      'Radix UI',
+    ],
+    description:
+      'A read-only REST API for building word games and puzzles. Modernized from the original MERN stack application using Next.js for both frontend and backend with new functionality and endpoints.',
+    liveUrl: 'https://wordgamedb.com',
+    githubUrl: 'https://github.com/lucassilbernagel/word-game-db-v2',
+    imageUrl: 'https://placehold.co/300x200',
+  },
+  {
+    projectName: 'Housing Solver',
+    completedYear: '2024',
+    technologies: [
+      'React',
+      'Vite',
+      'TypeScript',
+      'Zustand',
+      'Tailwind',
+      'Radix UI',
+      'TanStack Router',
+    ],
+    description:
+      'Think you have what it takes to solve the affordable housing crisis? Prove it in this incremental clicker game! Features complex economic simulation and engaging gameplay mechanics.',
+    liveUrl: 'https://housing-solver.vercel.app',
+    githubUrl: 'https://github.com/lucassilbernagel/housing-solver',
+    imageUrl: 'https://placehold.co/300x200',
+  },
+  {
+    projectName: 'Decision Tree',
+    completedYear: '2023',
+    technologies: ['React', 'Remix', 'TypeScript', 'Tailwind', 'shadcn/ui'],
+    description:
+      'A simple generator of shareable and accessible decision trees. Decision tree data is serialized and saved in the URL, making it easy to share and save created decision trees.',
+    liveUrl: 'https://decision-tree-remix.vercel.app',
+    githubUrl: 'https://github.com/lucassilbernagel/decision-tree',
+    imageUrl: 'https://placehold.co/300x200',
+  },
+  {
+    projectName: 'Blizzard Rush',
+    completedYear: '2023',
+    technologies: [
+      'Remix',
+      'React',
+      'Shopify',
+      'TypeScript',
+      'Tailwind',
+      'shadcn/ui',
+      'Zustand',
+      'TanStack Query',
+    ],
+    description:
+      'A Shopify development store that sells snowboards. Test data is rendered on the Remix front end through Shopify APIs, and Shopify handles the checkout process.',
+    githubUrl: 'https://github.com/lucassilbernagel/blizzard-rush',
+    imageUrl: 'https://placehold.co/300x200',
+  },
+  {
+    projectName: 'Super Simon',
+    completedYear: '2023',
+    technologies: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind',
+      'Redux',
+      'Firebase',
+    ],
+    description:
+      'The classic memory game Simon, with a twist! How long of a sequence can you remember? Super Simon is a Progressive Web App that can be played on the web, installed on your device, and even played offline!',
+    liveUrl: 'https://super-simon.vercel.app',
+    githubUrl: 'https://github.com/lucassilbernagel/super-simon',
+    imageUrl: 'https://placehold.co/300x200',
+  },
+]
+---
+
+<Layout title="Lucas Silbernagel | Projects">
+  <div
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
+  >
+    <div class="container relative z-10 mx-auto min-h-screen px-8 py-12">
+      <div class="mb-12 text-center">
+        <h1 class="mb-4 text-4xl font-bold text-white md:text-5xl">Projects</h1>
+      </div>
+
+      <div class="mx-auto max-w-6xl space-y-8">
+        {
+          projects.map((project, index) => (
+            <div
+              class="animate-fade-in"
+              style={`animation-delay: ${index * ANIMATION_DELAY_MS}ms`}
+            >
+              <BoardingPass
+                projectName={project.projectName}
+                completedYear={project.completedYear}
+                technologies={project.technologies}
+                description={project.description}
+                liveUrl={project.liveUrl}
+                githubUrl={project.githubUrl}
+                imageUrl={project.imageUrl}
+              />
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-12 text-center">
+        <div class="flex flex-wrap justify-center gap-4">
+          <TerminalButton href="/" variant="secondary" size="md">
+            🏠 Back
+          </TerminalButton>
+          <TerminalButton href="/about" variant="primary" size="md">
+            🎒 About Me
+          </TerminalButton>
+          <TerminalButton href="/timeline" variant="success" size="md">
+            📅 Career Timeline
+          </TerminalButton>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .animate-fade-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

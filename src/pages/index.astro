@@ -1,11 +1,393 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import '../styles/global.css'
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content="Astro" />
+    <meta
+      name="description"
+      content="Personal website and software development portfolio for Lucas Silbernagel"
+    />
+    <title>Lucas Silbernagel | Software Developer</title>
+
+    <!-- Preload fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body class="bg-terminal-dark-gray font-sans text-terminal-white antialiased">
+    <div class="flex min-h-screen flex-col">
+      <main class="flex-1">
+        <!-- Landing Screen (First-time visitors) -->
+        <div
+          id="landing-screen"
+          class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100"
+        >
+          <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0 bg-terminal-blue/10"></div>
+          </div>
+
+          <div class="relative z-10 mx-auto max-w-4xl px-8 text-center">
+            <div class="mb-12 mt-6 flex justify-center">
+              <div
+                class="flex h-48 w-48 items-center justify-center rounded-full border-8 border-white bg-gradient-to-br from-terminal-blue to-blue-600 shadow-2xl"
+              >
+                <span class="text-8xl text-white">✈️</span>
+              </div>
+            </div>
+
+            <header class="mb-16">
+              <h1
+                class="mb-6 text-6xl font-bold text-terminal-dark-gray md:text-7xl"
+              >
+                Lucas Silbernagel
+              </h1>
+              <p
+                class="mb-4 text-3xl font-semibold text-terminal-blue md:text-4xl"
+              >
+                Software Developer
+              </p>
+              <p class="font-terminal text-xl text-gray-600">Toronto, Canada</p>
+            </header>
+
+            <div class="mb-12 flex items-center justify-center">
+              <button class="group block" id="check-in-button">
+                <div
+                  class="kiosk-button inline-block px-20 py-12 text-4xl font-bold text-white md:text-5xl"
+                >
+                  <div class="flex items-center justify-center space-x-6">
+                    <span class="text-5xl">✈️</span>
+                    <span>CHECK IN</span>
+                    <span class="text-5xl">✈️</span>
+                  </div>
+                  <div class="mt-4 text-2xl opacity-90">Tap to Continue</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Homepage (Returning visitors) -->
+        <div id="homepage" class="hidden">
+          <h1 class="sr-only">Lucas Silbernagel - Software Developer</h1>
+          <div
+            class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
+          >
+            <div
+              class="container relative z-10 mx-auto min-h-screen px-8 py-12"
+            >
+              <div
+                class="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+              >
+                <div class="group cursor-pointer">
+                  <a href="/about" class="block">
+                    <div class="touch-target kiosk-tile h-full p-8">
+                      <div class="text-center">
+                        <div class="mb-6 text-8xl">🎒</div>
+                        <h2
+                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                        >
+                          About
+                        </h2>
+                        <p class="mb-6 text-lg text-gray-600">
+                          Learn about my background, skills, and professional
+                          journey
+                        </p>
+                        <div class="flex justify-center">
+                          <div
+                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                          >
+                            View Details →
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="group cursor-pointer">
+                  <a href="/projects" class="block">
+                    <div class="touch-target kiosk-tile h-full p-8">
+                      <div class="text-center">
+                        <div class="mb-6 text-8xl">✈️</div>
+                        <h2
+                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                        >
+                          Flights
+                        </h2>
+                        <p class="mb-6 text-lg text-gray-600">
+                          Explore my portfolio of projects and case studies
+                        </p>
+                        <div class="flex justify-center">
+                          <div
+                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                          >
+                            View Flights →
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="group cursor-pointer">
+                  <a href="/timeline" class="block">
+                    <div class="touch-target kiosk-tile h-full p-8">
+                      <div class="text-center">
+                        <div class="mb-6 text-8xl">📅</div>
+                        <h2
+                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                        >
+                          Timeline
+                        </h2>
+                        <p class="mb-6 text-lg text-gray-600">
+                          View my career timeline and professional milestones
+                        </p>
+                        <div class="flex justify-center">
+                          <div
+                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                          >
+                            View Timeline →
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="group cursor-pointer">
+                  <a href="/contact" class="block">
+                    <div class="touch-target kiosk-tile h-full p-8">
+                      <div class="text-center">
+                        <div class="mb-6 text-8xl">🛟</div>
+                        <h2
+                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                        >
+                          Help
+                        </h2>
+                        <p class="mb-6 text-lg text-gray-600">
+                          Get in touch and start a conversation
+                        </p>
+                        <div class="flex justify-center">
+                          <div
+                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                          >
+                            Contact Me →
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="group cursor-pointer">
+                  <button
+                    id="boarding-pass-download"
+                    class="block h-full w-full"
+                    type="button"
+                  >
+                    <div class="touch-target kiosk-tile h-full p-8">
+                      <div class="text-center">
+                        <div class="mb-6 text-8xl">🎫</div>
+                        <h2
+                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                        >
+                          Boarding Pass
+                        </h2>
+                        <p class="mb-6 text-lg text-gray-600">
+                          Download my resume
+                        </p>
+                        <div class="flex justify-center">
+                          <div
+                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                          >
+                            Print Pass →
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                <div class="group cursor-pointer">
+                  <a href="/map" class="block">
+                    <div class="touch-target kiosk-tile h-full p-8">
+                      <div class="text-center">
+                        <div class="mb-6 text-8xl">🗺️</div>
+                        <h2
+                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                        >
+                          Map
+                        </h2>
+                        <p class="mb-6 text-lg text-gray-600">
+                          Countries I've visited
+                        </p>
+                        <div class="flex justify-center">
+                          <div
+                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                          >
+                            View Map →
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer
+        id="homepage-footer"
+        class="hidden border-t border-gray-600 bg-terminal-dark-gray p-4"
+      >
+        <div class="container mx-auto text-center text-sm text-gray-400">
+          <p>Built by Lucas Silbernagel</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<script>
+  // First-time visitor logic
+  document.addEventListener('DOMContentLoaded', () => {
+    const landingScreen = document.querySelector('#landing-screen')
+    const homepage = document.querySelector('#homepage')
+    const homepageHeader = document.querySelector('#homepage-header')
+    const homepageFooter = document.querySelector('#homepage-footer')
+    const hasVisited = sessionStorage.getItem('portfolio-visited')
+
+    // Check if user has visited before
+    if (hasVisited === 'true') {
+      // Show homepage for returning visitors
+      if (landingScreen) (landingScreen as HTMLElement).style.display = 'none'
+      if (homepage) homepage.classList.remove('hidden')
+      if (homepageHeader) homepageHeader.classList.remove('hidden')
+      if (homepageFooter) homepageFooter.classList.remove('hidden')
+    } else {
+      // Show landing screen for first-time visitors
+      if (landingScreen) (landingScreen as HTMLElement).style.display = 'block'
+      if (homepage) homepage.classList.add('hidden')
+      if (homepageHeader) homepageHeader.classList.add('hidden')
+      if (homepageFooter) homepageFooter.classList.add('hidden')
+    }
+
+    // Initialize landing screen interactions
+    initializeLandingScreen()
+
+    // Initialize homepage interactions
+    initializeHomepage()
+  })
+
+  function initializeLandingScreen() {
+    const checkInButton = document.querySelector('#check-in-button')
+
+    // Check-in button click handler
+    if (checkInButton) {
+      checkInButton.addEventListener('click', (e) => {
+        e.preventDefault()
+        // Mark as visited and show loading transition
+        sessionStorage.setItem('portfolio-visited', 'true')
+        showLoadingTransition()
+      })
+    }
+  }
+
+  function initializeHomepage() {
+    const tiles = document.querySelectorAll('.kiosk-tile')
+    const TILE_ANIMATION_DELAY_MS = 150
+
+    for (const [index, tile] of tiles.entries()) {
+      // Stagger animation on load
+      setTimeout(() => {
+        ;(tile as HTMLElement).style.opacity = '1'
+        ;(tile as HTMLElement).style.transform = 'translateY(0)'
+      }, index * TILE_ANIMATION_DELAY_MS)
+    }
+
+    // Boarding pass download handler
+    const boardingPassButton = document.querySelector('#boarding-pass-download')
+    if (boardingPassButton) {
+      boardingPassButton.addEventListener('click', () => {
+        const link = document.createElement('a')
+        link.href = '/resume.pdf'
+        link.download = 'lucas-silbernagel-resume.pdf'
+        document.body.append(link)
+        link.click()
+        link.remove()
+      })
+    }
+  }
+
+  // Loading transition function
+  function showLoadingTransition() {
+    const LOADING_TRANSITION_DURATION_MS = 3000
+    // Create loading overlay
+    const loadingOverlay = document.createElement('div')
+    loadingOverlay.className =
+      'fixed inset-0 bg-terminal-dark-gray z-50 flex flex-col justify-center items-center'
+    loadingOverlay.innerHTML = `
+			<div class="text-center">
+				<div class="mb-8 text-8xl animate-spin">✈️</div>
+				<div class="mb-8 font-terminal text-terminal-success-green text-2xl">
+					Checking in...
+				</div>
+				<div class="bg-terminal-dark-gray border-2 border-terminal-blue rounded-full w-80 h-4 overflow-hidden">
+					<div class="bg-terminal-blue h-full animate-progress-bar"></div>
+				</div>
+			</div>
+		`
+
+    document.body.append(loadingOverlay)
+
+    // Show homepage after animation
+    setTimeout(() => {
+      const landingScreen = document.querySelector('#landing-screen')
+      const homepage = document.querySelector('#homepage')
+      const homepageHeader = document.querySelector('#homepage-header')
+      const homepageFooter = document.querySelector('#homepage-footer')
+
+      if (landingScreen) (landingScreen as HTMLElement).style.display = 'none'
+      if (homepage) homepage.classList.remove('hidden')
+      if (homepageHeader) homepageHeader.classList.remove('hidden')
+      if (homepageFooter) homepageFooter.classList.remove('hidden')
+
+      // Remove loading overlay
+      loadingOverlay.remove()
+      // Initialize homepage animations
+      initializeHomepage()
+    }, LOADING_TRANSITION_DURATION_MS)
+  }
+</script>
+
+<style>
+  @keyframes progressBar {
+    0% {
+      width: 0%;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
+  .animate-progress-bar {
+    animation: progressBar 2.5s ease-in-out;
+  }
+
+  .kiosk-tile {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .group:hover .kiosk-tile {
+    transform: translateY(-5px);
+  }
+</style>

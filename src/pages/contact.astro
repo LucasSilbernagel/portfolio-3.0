@@ -1,0 +1,372 @@
+---
+import Layout from '../layouts/Layout.astro'
+import TerminalButton from '../components/TerminalButton.astro'
+---
+
+<Layout title="Lucas Silbernagel | Contact">
+  <div
+    class="min-h-screen bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue"
+  >
+    <div class="container mx-auto px-4 py-12">
+      <div class="mb-12 text-center">
+        <h1 class="mb-4 text-4xl font-bold text-white md:text-5xl">
+          Contact Me
+        </h1>
+      </div>
+
+      <div class="mx-auto max-w-6xl">
+        <div class="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
+          <div class="terminal-card p-8">
+            <h2
+              class="mb-6 flex items-center text-2xl font-bold text-terminal-dark-gray"
+            >
+              Contact Information
+            </h2>
+
+            <div class="space-y-6">
+              <div class="flex items-center space-x-4">
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-full bg-terminal-blue"
+                >
+                  <span class="text-xl text-white">📧</span>
+                </div>
+                <div>
+                  <div class="text-sm uppercase tracking-wide text-gray-500">
+                    Email
+                  </div>
+                  <a
+                    href="mailto:hello@lucassilbernagel.com"
+                    class="font-semibold text-terminal-blue hover:text-blue-600"
+                  >
+                    hello@lucassilbernagel.com
+                  </a>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-4">
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-full bg-terminal-success-green"
+                >
+                  <span class="text-xl text-white">🐙</span>
+                </div>
+                <div>
+                  <div class="text-sm uppercase tracking-wide text-gray-500">
+                    GitHub
+                  </div>
+                  <a
+                    href="https://github.com/LucasSilbernagel"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-semibold text-terminal-blue hover:text-blue-600"
+                  >
+                    github.com/LucasSilbernagel
+                  </a>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-4">
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-full bg-terminal-yellow"
+                >
+                  <span class="text-xl text-terminal-dark-gray">💼</span>
+                </div>
+                <div>
+                  <div class="text-sm uppercase tracking-wide text-gray-500">
+                    LinkedIn
+                  </div>
+                  <a
+                    href="https://www.linkedin.com/in/lucassilbernagel/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-semibold text-terminal-blue hover:text-blue-600"
+                  >
+                    linkedin.com/in/lucassilbernagel
+                  </a>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-4">
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-600"
+                >
+                  <span class="text-xl text-white">🐦</span>
+                </div>
+                <div>
+                  <div class="text-sm uppercase tracking-wide text-gray-500">
+                    Bluesky
+                  </div>
+                  <a
+                    href="https://bsky.app/profile/lucassilbernagel.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-semibold text-terminal-blue hover:text-blue-600"
+                  >
+                    https://bsky.app/profile/lucassilbernagel.com
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 rounded-lg bg-terminal-light-gray p-4">
+              <h3 class="mb-2 text-lg font-bold text-terminal-dark-gray">
+                📍 Location
+              </h3>
+              <p class="text-gray-600">Toronto, Ontario, Canada</p>
+            </div>
+          </div>
+
+          <div class="terminal-card p-8">
+            <h2
+              class="mb-6 flex items-center text-2xl font-bold text-terminal-dark-gray"
+            >
+              <span class="mr-3">📝</span>
+              Send Message
+            </h2>
+
+            <div id="success-message" class="hidden">
+              <div
+                class="flex flex-col items-center space-y-6 py-12 text-center"
+              >
+                <p
+                  class="text-lg font-semibold text-terminal-success-green"
+                  aria-live="polite"
+                >
+                  Thanks for your message! I'll get back to you as soon as I
+                  can.
+                </p>
+              </div>
+            </div>
+
+            <form class="space-y-6" id="contact-form">
+              <div class="flex flex-col gap-4">
+                <div>
+                  <label for="name" class="sr-only"> Name </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    class="terminal-input w-full"
+                    placeholder="Your name"
+                  />
+                </div>
+                <div>
+                  <label for="email" class="sr-only"> Email </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="terminal-input w-full"
+                    placeholder="Your email address"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="message" class="sr-only"> Message </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="6"
+                  required
+                  class="terminal-input min-h-[100px] w-full resize-none"
+                  placeholder="Your message"></textarea>
+              </div>
+
+              <div class="flex w-full flex-col items-center">
+                <div id="form-error" class="mb-4 hidden" aria-live="polite">
+                  <p class="text-sm text-terminal-error-red"></p>
+                </div>
+
+                <div id="form-loading" class="mb-4 hidden">
+                  <div
+                    class="flex items-center justify-center space-x-2 text-terminal-blue"
+                  >
+                    <div
+                      class="h-6 w-6 animate-spin rounded-full border-b-2 border-terminal-blue"
+                    >
+                    </div>
+                    <span class="font-terminal">Processing your message...</span
+                    >
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  id="submit-button"
+                  class="terminal-button w-full"
+                  name="submit"
+                >
+                  📤 Send message
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <div class="flex flex-wrap justify-center gap-4">
+            <TerminalButton href="/" variant="secondary" size="md">
+              🏠 Back
+            </TerminalButton>
+            <TerminalButton href="/about" variant="primary" size="md">
+              🎒 About Me
+            </TerminalButton>
+            <TerminalButton href="/projects" variant="success" size="md">
+              ✈️ View Projects
+            </TerminalButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Contact form handling
+  document.addEventListener('DOMContentLoaded', () => {
+    const DEFAULT_FORM_SUBMISSION = {
+      name: '',
+      emailAddress: '',
+      message: '',
+    }
+
+    const form = document.querySelector('#contact-form') as HTMLFormElement
+    const successMessage = document.querySelector('#success-message')
+    const formError = document.querySelector('#form-error')
+    const formErrorText = formError?.querySelector('p')
+    const formLoading = document.querySelector('#form-loading')
+    const submitButton = document.querySelector(
+      '#submit-button'
+    ) as HTMLButtonElement
+
+    const nameInput = document.querySelector('#name') as HTMLInputElement
+    const emailInput = document.querySelector('#email') as HTMLInputElement
+    const messageInput = document.querySelector(
+      '#message'
+    ) as HTMLTextAreaElement
+
+    let formSubmission = { ...DEFAULT_FORM_SUBMISSION }
+
+    const updateFormState = () => {
+      if (nameInput) nameInput.value = formSubmission.name
+      if (emailInput) emailInput.value = formSubmission.emailAddress
+      if (messageInput) messageInput.value = formSubmission.message
+    }
+
+    if (nameInput) {
+      nameInput.addEventListener('input', (e) => {
+        formSubmission.name = (e.target as HTMLInputElement).value
+      })
+    }
+
+    if (emailInput) {
+      emailInput.addEventListener('input', (e) => {
+        formSubmission.emailAddress = (e.target as HTMLInputElement).value
+      })
+    }
+
+    if (messageInput) {
+      messageInput.addEventListener('input', (e) => {
+        formSubmission.message = (e.target as HTMLTextAreaElement).value
+      })
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        // Hide previous error
+        if (formError) {
+          formError.classList.add('hidden')
+        }
+        if (successMessage) {
+          successMessage.classList.add('hidden')
+        }
+
+        // Show loading state
+        if (formLoading) {
+          formLoading.classList.remove('hidden')
+        }
+        if (submitButton) {
+          submitButton.disabled = true
+        }
+
+        // Validate form
+        if (
+          formSubmission.name.length > 0 &&
+          formSubmission.emailAddress.length > 0 &&
+          formSubmission.message.length > 0
+        ) {
+          try {
+            const formsparkId = import.meta.env.PUBLIC_FORMSPARK_ID
+
+            if (!formsparkId) {
+              throw new Error('Formspark ID is not configured')
+            }
+
+            const response = await fetch(
+              `https://submit-form.com/${formsparkId}`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                },
+                body: JSON.stringify(formSubmission),
+              }
+            )
+
+            if (response.ok) {
+              formSubmission = { ...DEFAULT_FORM_SUBMISSION }
+              updateFormState()
+
+              // Hide form and show success message
+              if (form) {
+                form.classList.add('hidden')
+              }
+              if (successMessage) {
+                successMessage.classList.remove('hidden')
+              }
+            } else {
+              const errorText = 'Something went wrong, please try again.'
+              if (formError && formErrorText) {
+                formErrorText.textContent = errorText
+                formError.classList.remove('hidden')
+              }
+            }
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error)
+            const errorText =
+              error instanceof Error ? error.message : String(error)
+            if (formError && formErrorText) {
+              formErrorText.textContent = errorText
+              formError.classList.remove('hidden')
+            }
+          } finally {
+            if (formLoading) {
+              formLoading.classList.add('hidden')
+            }
+            if (submitButton) {
+              submitButton.disabled = false
+            }
+          }
+        } else {
+          const errorText = 'Please fill out all required fields.'
+          if (formError && formErrorText) {
+            formErrorText.textContent = errorText
+            formError.classList.remove('hidden')
+          }
+          if (formLoading) {
+            formLoading.classList.add('hidden')
+          }
+          if (submitButton) {
+            submitButton.disabled = false
+          }
+        }
+      })
+    }
+  })
+</script>

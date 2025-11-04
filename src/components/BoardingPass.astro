@@ -1,0 +1,154 @@
+---
+export type Props = {
+  projectName: string
+  completedYear: string
+  technologies: string[]
+  description: string
+  liveUrl?: string
+  githubUrl?: string
+  imageUrl?: string
+  class?: string
+}
+
+const {
+  projectName,
+  completedYear,
+  technologies,
+  description,
+  liveUrl,
+  githubUrl,
+  imageUrl,
+  class: className = '',
+} = Astro.props
+
+const MAX_VISIBLE_TECHNOLOGIES = 5
+---
+
+<div class={`boarding-pass ${className} group`}>
+  <!-- Boarding Pass Perforations -->
+  <div class="mt-4 flex justify-between">
+    <div class="flex space-x-1">
+      <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+      <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+      <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+      <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+    </div>
+    <div class="flex space-x-1">
+      <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+      <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+      <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+      <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+    </div>
+  </div>
+
+  <div class="bg-white p-6">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div class="space-y-4">
+        <div>
+          <div class="text-xs uppercase tracking-wide text-gray-500">
+            Project
+          </div>
+          <div class="text-lg font-bold text-terminal-dark-gray">
+            {projectName}
+          </div>
+        </div>
+        <div>
+          <div class="text-xs uppercase tracking-wide text-gray-500">
+            Completed
+          </div>
+          <div class="text-sm text-gray-700">{completedYear}</div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center">
+        {
+          (
+            <img
+              src={imageUrl}
+              alt={projectName}
+              class="h-32 w-full rounded-lg object-cover shadow-md"
+            />
+          )
+        }
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <div class="text-xs uppercase tracking-wide text-gray-500">
+            Tech Stack
+          </div>
+          <div class="mt-1 flex flex-wrap gap-1">
+            {
+              technologies
+                .slice(0, MAX_VISIBLE_TECHNOLOGIES)
+                .map((tech) => (
+                  <span class="rounded bg-terminal-light-gray px-2 py-1 text-xs text-terminal-dark-gray">
+                    {tech}
+                  </span>
+                ))
+            }
+            {
+              technologies.length > MAX_VISIBLE_TECHNOLOGIES && (
+                <span class="text-xs text-gray-500">
+                  +{technologies.length - MAX_VISIBLE_TECHNOLOGIES} more
+                </span>
+              )
+            }
+          </div>
+        </div>
+        <div>
+          <div class="text-xs uppercase tracking-wide text-gray-500">Links</div>
+          <div class="mt-1 flex gap-2">
+            {
+              liveUrl && (
+                <a
+                  href={liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="rounded bg-terminal-success-green px-2 py-1 text-xs text-white transition-colors hover:bg-green-600"
+                >
+                  Live
+                </a>
+              )
+            }
+            {
+              githubUrl && (
+                <a
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="rounded bg-terminal-dark-gray px-2 py-1 text-xs text-white transition-colors hover:bg-gray-700"
+                >
+                  GitHub
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 border-t border-gray-200 pt-4">
+      <div class="mb-2 text-xs uppercase tracking-wide text-gray-500">
+        Description
+      </div>
+      <p class="text-sm leading-relaxed text-gray-700">{description}</p>
+    </div>
+
+    <!-- Boarding Pass Perforations -->
+    <div class="mt-4 flex justify-between">
+      <div class="flex space-x-1">
+        <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+        <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+        <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+        <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+      </div>
+      <div class="flex space-x-1">
+        <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+        <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+        <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+        <div class="h-2 w-2 rounded-full bg-gray-300"></div>
+      </div>
+    </div>
+  </div>
+</div>
