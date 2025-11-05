@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import airplaneBackground from '../assets/airplane-background.jpg'
 ---
 
 <!doctype html>
@@ -20,53 +21,60 @@ import '../styles/global.css'
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body class="bg-terminal-dark-gray font-sans text-terminal-white antialiased">
-    <div class="flex min-h-screen flex-col">
+    <div class="flex flex-col min-h-screen">
       <main class="flex-1">
         <!-- Landing Screen (First-time visitors) -->
         <div
           id="landing-screen"
-          class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100"
+          class="relative flex flex-col justify-center items-center bg-cover bg-no-repeat bg-center pt-12 min-h-screen overflow-hidden"
+          style={`background-image: url(${airplaneBackground.src})`}
         >
-          <div class="absolute inset-0 opacity-5">
-            <div class="absolute inset-0 bg-terminal-blue/10"></div>
-          </div>
+          <div class="absolute inset-0 bg-terminal-dark-gray/40"></div>
 
-          <div class="relative z-10 mx-auto max-w-4xl px-8 text-center">
-            <div class="mb-12 mt-6 flex justify-center">
-              <div
-                class="flex h-48 w-48 items-center justify-center rounded-full border-8 border-white bg-gradient-to-br from-terminal-blue to-blue-600 shadow-2xl"
-              >
-                <span class="text-8xl text-white">✈️</span>
-              </div>
+          <div
+            class="z-10 relative flex flex-col mx-auto px-8 max-w-4xl text-center"
+          >
+            <div
+              class="flex justify-center items-center order-1 md:order-3 md:mt-6 mb-12 md:mb-0"
+            >
+              <button class="group block" id="check-in-button">
+                <span
+                  class="inline-block px-20 py-12 font-bold text-white text-4xl md:text-5xl uppercase kiosk-button"
+                  >Check in</span
+                >
+              </button>
             </div>
 
-            <header class="mb-16">
+            <header class="order-2 mb-16">
               <h1
-                class="mb-6 text-6xl font-bold text-terminal-dark-gray md:text-7xl"
+                class="drop-shadow-lg mb-6 font-bold text-terminal-white text-5xl sm:text-6xl md:text-7xl"
               >
                 Lucas Silbernagel
               </h1>
               <p
-                class="mb-4 text-3xl font-semibold text-terminal-blue md:text-4xl"
+                class="drop-shadow-lg mb-4 font-semibold text-terminal-yellow text-3xl md:text-4xl"
               >
                 Software Developer
               </p>
-              <p class="font-terminal text-xl text-gray-600">Toronto, Canada</p>
+              <p
+                class="drop-shadow font-terminal text-terminal-white/90 text-xl"
+              >
+                Toronto, Canada
+              </p>
             </header>
 
-            <div class="mb-12 flex items-center justify-center">
-              <button class="group block" id="check-in-button">
-                <div
-                  class="kiosk-button inline-block px-20 py-12 text-4xl font-bold text-white md:text-5xl"
-                >
-                  <div class="flex items-center justify-center space-x-6">
-                    <span class="text-5xl">✈️</span>
-                    <span>CHECK IN</span>
-                    <span class="text-5xl">✈️</span>
-                  </div>
-                  <div class="mt-4 text-2xl opacity-90">Tap to Continue</div>
-                </div>
-              </button>
+            <div
+              class="flex justify-center order-3 md:order-1 mt-6 md:mt-0 md:mb-12"
+            >
+              <div
+                class="flex justify-center items-center bg-gradient-to-br from-terminal-blue to-blue-600 shadow-2xl border-8 border-white rounded-full w-48 h-48"
+              >
+                <img
+                  src="https://placehold.co/600x600"
+                  alt="Lucas Silbernagel"
+                  class="rounded-full object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -75,31 +83,31 @@ import '../styles/global.css'
         <div id="homepage" class="hidden">
           <h1 class="sr-only">Lucas Silbernagel - Software Developer</h1>
           <div
-            class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
+            class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 min-h-screen"
           >
             <div
-              class="container relative z-10 mx-auto min-h-screen px-8 py-12"
+              class="z-10 relative mx-auto px-8 py-12 min-h-screen container"
             >
               <div
-                class="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+                class="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto max-w-7xl"
               >
                 <div class="group cursor-pointer">
                   <a href="/about" class="block">
-                    <div class="touch-target kiosk-tile h-full p-8">
+                    <div class="p-8 h-full touch-target kiosk-tile">
                       <div class="text-center">
                         <div class="mb-6 text-8xl">🎒</div>
                         <h2
-                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                          class="mb-4 font-bold text-terminal-dark-gray text-3xl"
                         >
                           About
                         </h2>
-                        <p class="mb-6 text-lg text-gray-600">
+                        <p class="mb-6 text-gray-600 text-lg">
                           Learn about my background, skills, and professional
                           journey
                         </p>
                         <div class="flex justify-center">
                           <div
-                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                            class="px-6 py-3 font-bold text-white text-lg kiosk-button"
                           >
                             View Details →
                           </div>
@@ -111,20 +119,20 @@ import '../styles/global.css'
 
                 <div class="group cursor-pointer">
                   <a href="/projects" class="block">
-                    <div class="touch-target kiosk-tile h-full p-8">
+                    <div class="p-8 h-full touch-target kiosk-tile">
                       <div class="text-center">
                         <div class="mb-6 text-8xl">✈️</div>
                         <h2
-                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                          class="mb-4 font-bold text-terminal-dark-gray text-3xl"
                         >
                           Flights
                         </h2>
-                        <p class="mb-6 text-lg text-gray-600">
+                        <p class="mb-6 text-gray-600 text-lg">
                           Explore my portfolio of projects and case studies
                         </p>
                         <div class="flex justify-center">
                           <div
-                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                            class="px-6 py-3 font-bold text-white text-lg kiosk-button"
                           >
                             View Flights →
                           </div>
@@ -136,20 +144,20 @@ import '../styles/global.css'
 
                 <div class="group cursor-pointer">
                   <a href="/timeline" class="block">
-                    <div class="touch-target kiosk-tile h-full p-8">
+                    <div class="p-8 h-full touch-target kiosk-tile">
                       <div class="text-center">
                         <div class="mb-6 text-8xl">📅</div>
                         <h2
-                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                          class="mb-4 font-bold text-terminal-dark-gray text-3xl"
                         >
                           Timeline
                         </h2>
-                        <p class="mb-6 text-lg text-gray-600">
+                        <p class="mb-6 text-gray-600 text-lg">
                           View my career timeline and professional milestones
                         </p>
                         <div class="flex justify-center">
                           <div
-                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                            class="px-6 py-3 font-bold text-white text-lg kiosk-button"
                           >
                             View Timeline →
                           </div>
@@ -161,20 +169,20 @@ import '../styles/global.css'
 
                 <div class="group cursor-pointer">
                   <a href="/contact" class="block">
-                    <div class="touch-target kiosk-tile h-full p-8">
+                    <div class="p-8 h-full touch-target kiosk-tile">
                       <div class="text-center">
                         <div class="mb-6 text-8xl">🛟</div>
                         <h2
-                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                          class="mb-4 font-bold text-terminal-dark-gray text-3xl"
                         >
                           Help
                         </h2>
-                        <p class="mb-6 text-lg text-gray-600">
+                        <p class="mb-6 text-gray-600 text-lg">
                           Get in touch and start a conversation
                         </p>
                         <div class="flex justify-center">
                           <div
-                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                            class="px-6 py-3 font-bold text-white text-lg kiosk-button"
                           >
                             Contact Me →
                           </div>
@@ -187,23 +195,23 @@ import '../styles/global.css'
                 <div class="group cursor-pointer">
                   <button
                     id="boarding-pass-download"
-                    class="block h-full w-full"
+                    class="block w-full h-full"
                     type="button"
                   >
-                    <div class="touch-target kiosk-tile h-full p-8">
+                    <div class="p-8 h-full touch-target kiosk-tile">
                       <div class="text-center">
                         <div class="mb-6 text-8xl">🎫</div>
                         <h2
-                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                          class="mb-4 font-bold text-terminal-dark-gray text-3xl"
                         >
                           Boarding Pass
                         </h2>
-                        <p class="mb-6 text-lg text-gray-600">
+                        <p class="mb-6 text-gray-600 text-lg">
                           Download my resume
                         </p>
                         <div class="flex justify-center">
                           <div
-                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                            class="px-6 py-3 font-bold text-white text-lg kiosk-button"
                           >
                             Print Pass →
                           </div>
@@ -215,20 +223,20 @@ import '../styles/global.css'
 
                 <div class="group cursor-pointer">
                   <a href="/map" class="block">
-                    <div class="touch-target kiosk-tile h-full p-8">
+                    <div class="p-8 h-full touch-target kiosk-tile">
                       <div class="text-center">
                         <div class="mb-6 text-8xl">🗺️</div>
                         <h2
-                          class="mb-4 text-3xl font-bold text-terminal-dark-gray"
+                          class="mb-4 font-bold text-terminal-dark-gray text-3xl"
                         >
                           Map
                         </h2>
-                        <p class="mb-6 text-lg text-gray-600">
+                        <p class="mb-6 text-gray-600 text-lg">
                           Countries I've visited
                         </p>
                         <div class="flex justify-center">
                           <div
-                            class="kiosk-button px-6 py-3 text-lg font-bold text-white"
+                            class="px-6 py-3 font-bold text-white text-lg kiosk-button"
                           >
                             View Map →
                           </div>
@@ -245,9 +253,9 @@ import '../styles/global.css'
 
       <footer
         id="homepage-footer"
-        class="hidden border-t border-gray-600 bg-terminal-dark-gray p-4"
+        class="hidden bg-terminal-dark-gray p-4 border-gray-600 border-t"
       >
-        <div class="container mx-auto text-center text-sm text-gray-400">
+        <div class="mx-auto text-gray-400 text-sm text-center container">
           <p>Built by Lucas Silbernagel</p>
         </div>
       </footer>
