@@ -264,6 +264,10 @@ import airplaneBackground from '../assets/airplane-background.jpg'
 </html>
 
 <script>
+  // Animation timing constants
+  const TILE_ANIMATION_DELAY_MS = 150
+  const RENDER_DELAY_MS = 10
+
   // First-time visitor logic
   document.addEventListener('DOMContentLoaded', () => {
     const landingScreen = document.querySelector('#landing-screen')
@@ -279,6 +283,18 @@ import airplaneBackground from '../assets/airplane-background.jpg'
       if (homepage) homepage.classList.remove('hidden')
       if (homepageHeader) homepageHeader.classList.remove('hidden')
       if (homepageFooter) homepageFooter.classList.remove('hidden')
+
+      // Reset tiles to initial state and then animate
+      const tiles = document.querySelectorAll('.kiosk-tile')
+      for (const tile of tiles) {
+        ;(tile as HTMLElement).style.opacity = '0'
+        ;(tile as HTMLElement).style.transform = 'translateY(30px)'
+      }
+
+      // Initialize homepage animations after a brief delay to ensure initial state is rendered
+      setTimeout(() => {
+        animateTiles()
+      }, RENDER_DELAY_MS)
     } else {
       // Show landing screen for first-time visitors
       if (landingScreen) (landingScreen as HTMLElement).style.display = 'block'
@@ -290,8 +306,8 @@ import airplaneBackground from '../assets/airplane-background.jpg'
     // Initialize landing screen interactions
     initializeLandingScreen()
 
-    // Initialize homepage interactions
-    initializeHomepage()
+    // Initialize homepage interactions (boarding pass button handler)
+    initializeHomepageHandlers()
   })
 
   function initializeLandingScreen() {
@@ -301,16 +317,35 @@ import airplaneBackground from '../assets/airplane-background.jpg'
     if (checkInButton) {
       checkInButton.addEventListener('click', (e) => {
         e.preventDefault()
-        // Mark as visited and show loading transition
+        // Mark as visited and show homepage
         sessionStorage.setItem('portfolio-visited', 'true')
-        showLoadingTransition()
+        const landingScreen = document.querySelector('#landing-screen')
+        const homepage = document.querySelector('#homepage')
+        const homepageHeader = document.querySelector('#homepage-header')
+        const homepageFooter = document.querySelector('#homepage-footer')
+
+        if (landingScreen) (landingScreen as HTMLElement).style.display = 'none'
+        if (homepage) homepage.classList.remove('hidden')
+        if (homepageHeader) homepageHeader.classList.remove('hidden')
+        if (homepageFooter) homepageFooter.classList.remove('hidden')
+
+        // Reset tiles to initial state and then animate
+        const tiles = document.querySelectorAll('.kiosk-tile')
+        for (const tile of tiles) {
+          ;(tile as HTMLElement).style.opacity = '0'
+          ;(tile as HTMLElement).style.transform = 'translateY(30px)'
+        }
+
+        // Initialize homepage animations after a brief delay to ensure initial state is rendered
+        setTimeout(() => {
+          animateTiles()
+        }, RENDER_DELAY_MS)
       })
     }
   }
 
-  function initializeHomepage() {
+  function animateTiles() {
     const tiles = document.querySelectorAll('.kiosk-tile')
-    const TILE_ANIMATION_DELAY_MS = 150
 
     for (const [index, tile] of tiles.entries()) {
       // Stagger animation on load
@@ -319,7 +354,9 @@ import airplaneBackground from '../assets/airplane-background.jpg'
         ;(tile as HTMLElement).style.transform = 'translateY(0)'
       }, index * TILE_ANIMATION_DELAY_MS)
     }
+  }
 
+  function initializeHomepageHandlers() {
     // Boarding pass download handler
     const boardingPassButton = document.querySelector('#boarding-pass-download')
     if (boardingPassButton) {
@@ -333,62 +370,9 @@ import airplaneBackground from '../assets/airplane-background.jpg'
       })
     }
   }
-
-  // Loading transition function
-  function showLoadingTransition() {
-    const LOADING_TRANSITION_DURATION_MS = 3000
-    // Create loading overlay
-    const loadingOverlay = document.createElement('div')
-    loadingOverlay.className =
-      'fixed inset-0 bg-terminal-dark-gray z-50 flex flex-col justify-center items-center'
-    loadingOverlay.innerHTML = `
-			<div class="text-center">
-				<div class="mb-8 text-8xl animate-spin">✈️</div>
-				<div class="mb-8 font-terminal text-terminal-success-green text-2xl">
-					Checking in...
-				</div>
-				<div class="bg-terminal-dark-gray border-2 border-terminal-blue rounded-full w-80 h-4 overflow-hidden">
-					<div class="bg-terminal-blue h-full animate-progress-bar"></div>
-				</div>
-			</div>
-		`
-
-    document.body.append(loadingOverlay)
-
-    // Show homepage after animation
-    setTimeout(() => {
-      const landingScreen = document.querySelector('#landing-screen')
-      const homepage = document.querySelector('#homepage')
-      const homepageHeader = document.querySelector('#homepage-header')
-      const homepageFooter = document.querySelector('#homepage-footer')
-
-      if (landingScreen) (landingScreen as HTMLElement).style.display = 'none'
-      if (homepage) homepage.classList.remove('hidden')
-      if (homepageHeader) homepageHeader.classList.remove('hidden')
-      if (homepageFooter) homepageFooter.classList.remove('hidden')
-
-      // Remove loading overlay
-      loadingOverlay.remove()
-      // Initialize homepage animations
-      initializeHomepage()
-    }, LOADING_TRANSITION_DURATION_MS)
-  }
 </script>
 
 <style>
-  @keyframes progressBar {
-    0% {
-      width: 0%;
-    }
-    100% {
-      width: 100%;
-    }
-  }
-
-  .animate-progress-bar {
-    animation: progressBar 2.5s ease-in-out;
-  }
-
   .kiosk-tile {
     opacity: 0;
     transform: translateY(30px);
