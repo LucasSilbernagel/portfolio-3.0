@@ -19,6 +19,8 @@ import airplaneBackground from '../assets/airplane-background.jpg'
     <!-- Preload fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preload critical background image -->
+    <link rel="preload" as="image" href={airplaneBackground.src} />
   </head>
   <body class="bg-terminal-dark-gray font-sans text-terminal-white antialiased">
     <div class="flex flex-col min-h-screen">
@@ -26,7 +28,7 @@ import airplaneBackground from '../assets/airplane-background.jpg'
         <!-- Landing Screen (First-time visitors) -->
         <div
           id="landing-screen"
-          class="relative flex flex-col justify-center items-center bg-cover bg-no-repeat bg-center pt-12 min-h-screen overflow-hidden"
+          class="relative flex flex-col justify-center items-center bg-cover bg-no-repeat bg-center pt-12 xl:pt-0 min-h-screen overflow-hidden"
           style={`background-image: url(${airplaneBackground.src})`}
         >
           <div class="absolute inset-0 bg-terminal-dark-gray/40"></div>
@@ -72,6 +74,8 @@ import airplaneBackground from '../assets/airplane-background.jpg'
                 <img
                   src="https://placehold.co/600x600"
                   alt="Lucas Silbernagel"
+                  width="192"
+                  height="192"
                   class="rounded-full object-contain"
                 />
               </div>
@@ -279,8 +283,12 @@ import airplaneBackground from '../assets/airplane-background.jpg'
     // Check if user has visited before
     if (hasVisited === 'true') {
       // Show homepage for returning visitors
-      if (landingScreen) (landingScreen as HTMLElement).style.display = 'none'
-      if (homepage) homepage.classList.remove('hidden')
+      if (landingScreen) {
+        ;(landingScreen as HTMLElement).classList.add('hidden')
+      }
+      if (homepage) {
+        homepage.classList.remove('hidden')
+      }
       if (homepageHeader) homepageHeader.classList.remove('hidden')
       if (homepageFooter) homepageFooter.classList.remove('hidden')
 
@@ -296,9 +304,13 @@ import airplaneBackground from '../assets/airplane-background.jpg'
         animateTiles()
       }, RENDER_DELAY_MS)
     } else {
-      // Show landing screen for first-time visitors
-      if (landingScreen) (landingScreen as HTMLElement).style.display = 'block'
-      if (homepage) homepage.classList.add('hidden')
+      // Show landing screen for first-time visitors (already visible by default)
+      if (landingScreen) {
+        ;(landingScreen as HTMLElement).classList.remove('hidden')
+      }
+      if (homepage) {
+        homepage.classList.add('hidden')
+      }
       if (homepageHeader) homepageHeader.classList.add('hidden')
       if (homepageFooter) homepageFooter.classList.add('hidden')
     }
@@ -324,8 +336,12 @@ import airplaneBackground from '../assets/airplane-background.jpg'
         const homepageHeader = document.querySelector('#homepage-header')
         const homepageFooter = document.querySelector('#homepage-footer')
 
-        if (landingScreen) (landingScreen as HTMLElement).style.display = 'none'
-        if (homepage) homepage.classList.remove('hidden')
+        if (landingScreen) {
+          ;(landingScreen as HTMLElement).classList.add('hidden')
+        }
+        if (homepage) {
+          homepage.classList.remove('hidden')
+        }
         if (homepageHeader) homepageHeader.classList.remove('hidden')
         if (homepageFooter) homepageFooter.classList.remove('hidden')
 
