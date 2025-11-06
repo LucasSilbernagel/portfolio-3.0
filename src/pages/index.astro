@@ -2,6 +2,7 @@
 import '../styles/global.css'
 import airplaneBackground from '../assets/airplane-background.jpg'
 import Footer from '../components/Footer.astro'
+import Header from '../components/Header.astro'
 ---
 
 <!doctype html>
@@ -87,6 +88,7 @@ import Footer from '../components/Footer.astro'
         <!-- Homepage (Returning visitors) -->
         <div id="homepage" class="hidden">
           <h1 class="sr-only">Lucas Silbernagel - Software Developer</h1>
+          <Header id="homepage-header" showBackButton={false} />
           <div
             class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
           >

@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import TerminalButton from '../components/TerminalButton.astro'
+import Header from '../components/Header.astro'
 
 const TIMELINE_ANIMATION_DELAY_MS = 150
 const timelineData = [
@@ -146,29 +146,30 @@ const timelineData = [
 ---
 
 <Layout title="Lucas Silbernagel | Timeline">
+  <Header showBackButton={true} />
   <div
-    class="min-h-screen bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue"
+    class="bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue min-h-screen"
   >
-    <div class="container mx-auto px-4 py-12">
+    <div class="mx-auto px-4 py-12 container">
       <div class="mb-12 text-center">
-        <h1 class="mb-4 text-4xl font-bold text-white md:text-5xl">Timeline</h1>
-        <p class="font-terminal text-xl text-gray-300">
+        <h1 class="mb-4 font-bold text-white text-4xl md:text-5xl">Timeline</h1>
+        <p class="font-terminal text-gray-300 text-xl">
           Career Timeline & Professional Milestones
         </p>
       </div>
 
       <div class="mx-auto max-w-6xl">
-        <div class="terminal-card p-8">
+        <div class="p-8 terminal-card">
           <div class="space-y-6">
             {
               timelineData.map((item, index) => (
                 <div
-                  class="animate-timeline-entry border-l-4 border-terminal-blue pb-6 pl-6"
+                  class="pb-6 pl-6 border-terminal-blue border-l-4 animate-timeline-entry"
                   style={`animation-delay: ${index * TIMELINE_ANIMATION_DELAY_MS}ms`}
                 >
-                  <div class="flex flex-col md:flex-row md:items-start md:justify-between">
+                  <div class="flex md:flex-row flex-col md:justify-between md:items-start">
                     <div class="flex-1">
-                      <div class="mb-2 flex items-center space-x-3">
+                      <div class="flex items-center space-x-3 mb-2">
                         <div
                           class={`h-3 w-3 rounded-full ${
                             item.type === 'work'
@@ -178,7 +179,7 @@ const timelineData = [
                                 : 'bg-terminal-yellow'
                           }`}
                         />
-                        <span class="font-terminal text-sm uppercase tracking-wide text-gray-500">
+                        <span class="font-terminal text-gray-500 text-sm uppercase tracking-wide">
                           {item.type === 'work'
                             ? 'WORK'
                             : item.type === 'project'
@@ -186,30 +187,30 @@ const timelineData = [
                               : 'EDUCATION'}
                         </span>
                       </div>
-                      <h3 class="mb-1 text-xl font-bold text-terminal-dark-gray">
+                      <h3 class="mb-1 font-bold text-terminal-dark-gray text-xl">
                         {item.title}
                       </h3>
                       <p class="mb-2 font-semibold text-terminal-blue">
                         {item.company}
                       </p>
-                      <p class="mb-3 text-sm text-gray-500">{item.period}</p>
+                      <p class="mb-3 text-gray-500 text-sm">{item.period}</p>
                       <p class="mb-4 text-gray-600">{item.description}</p>
                     </div>
 
                     <div class="mb-4 md:mb-0 md:ml-6">
-                      <div class="rounded-lg bg-terminal-blue px-4 py-2 text-center text-white">
-                        <div class="text-2xl font-bold">{item.year}</div>
+                      <div class="bg-terminal-blue px-4 py-2 rounded-lg text-white text-center">
+                        <div class="font-bold text-2xl">{item.year}</div>
                       </div>
                     </div>
                   </div>
 
                   <div class="mt-4">
-                    <h4 class="mb-2 text-sm font-semibold uppercase tracking-wide text-terminal-dark-gray">
+                    <h4 class="mb-2 font-semibold text-terminal-dark-gray text-sm uppercase tracking-wide">
                       Key Achievements:
                     </h4>
                     <ul class="space-y-1">
                       {item.highlights.map((highlight) => (
-                        <li class="flex items-start space-x-2 text-sm text-gray-600">
+                        <li class="flex items-start space-x-2 text-gray-600 text-sm">
                           <span class="mt-1 text-terminal-success-green">
                             •
                           </span>
@@ -222,20 +223,6 @@ const timelineData = [
               ))
             }
           </div>
-        </div>
-      </div>
-
-      <div class="mt-12 text-center">
-        <div class="flex flex-wrap justify-center gap-4">
-          <TerminalButton href="/" variant="secondary" size="md">
-            🏠 Back
-          </TerminalButton>
-          <TerminalButton href="/about" variant="primary" size="md">
-            🎒 About Me
-          </TerminalButton>
-          <TerminalButton href="/projects" variant="success" size="md">
-            ✈️ View Projects
-          </TerminalButton>
         </div>
       </div>
     </div>
