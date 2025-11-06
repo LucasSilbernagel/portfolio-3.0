@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import Footer from '../components/Footer.astro'
 
 export type Props = {
   title?: string
@@ -32,18 +33,7 @@ const { title = 'Lucas Silbernagel | Software Developer' } = Astro.props
         <slot />
       </main>
 
-      <footer class="border-t border-gray-600 bg-terminal-dark-gray p-4">
-        <div class="container mx-auto text-center text-sm text-gray-400">
-          <p>
-            Built by <a
-              href="https://github.com/LucasSilbernagel/portfolio-3.0"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="underline hover:text-terminal-white">Lucas Silbernagel</a
-            >
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   </body>
 </html>

@@ -1,0 +1,32 @@
+---
+export type Props = {
+  id?: string
+  class?: string
+}
+
+const { id, class: className } = Astro.props
+const footerClasses = [
+  'border-t',
+  'border-gray-600',
+  'bg-terminal-dark-gray',
+  'p-4',
+  className,
+]
+  .filter(Boolean)
+  .join(' ')
+---
+
+<footer id={id} class={footerClasses}>
+  <div class="container mx-auto text-center text-sm text-gray-400">
+    <p>
+      Built by <a
+        href="https://github.com/LucasSilbernagel/portfolio-3.0"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline hover:text-terminal-white focus-visible:text-terminal-white"
+      >
+        Lucas Silbernagel
+      </a>
+    </p>
+  </div>
+</footer>
