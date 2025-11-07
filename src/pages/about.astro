@@ -7,19 +7,19 @@ import Header from '../components/Header.astro'
 <Layout title="Lucas Silbernagel | About">
   <Header showBackButton={true} />
   <div
-    class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 min-h-screen"
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
   >
-    <div class="z-10 relative mx-auto px-8 py-12 min-h-screen container">
+    <div class="container relative z-10 mx-auto min-h-screen px-8 py-12">
       <div class="mb-12 text-center">
-        <h1 class="mb-4 font-bold text-white text-4xl md:text-5xl">About Me</h1>
+        <h1 class="mb-4 text-4xl font-bold text-white md:text-5xl">About Me</h1>
       </div>
 
       <div class="mx-auto max-w-6xl">
-        <div class="gap-12 grid grid-cols-1 lg:grid-cols-2 mb-16">
-          <div class="p-8 kiosk-tile">
+        <div class="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
+          <div class="kiosk-tile p-8">
             <div class="text-center">
               <div
-                class="flex justify-center items-center bg-terminal-blue shadow-lg mx-auto mb-6 rounded-full w-48 h-48 terminal-glow"
+                class="terminal-glow mx-auto mb-6 flex h-48 w-48 items-center justify-center rounded-full bg-terminal-blue shadow-lg"
               >
                 <img
                   class="rounded-full object-cover"
@@ -27,14 +27,14 @@ import Header from '../components/Header.astro'
                   alt=""
                 />
               </div>
-              <h2 class="mb-2 font-bold text-terminal-dark-gray text-3xl">
+              <h2 class="mb-2 text-3xl font-bold text-terminal-dark-gray">
                 Lucas Silbernagel
               </h2>
-              <p class="mb-4 text-gray-600 text-xl">Software Developer</p>
+              <p class="mb-4 text-xl text-gray-600">Software Developer</p>
             </div>
           </div>
 
-          <div class="p-8 kiosk-tile">
+          <div class="kiosk-tile p-8">
             <div class="space-y-4 text-gray-600">
               <p>Hi, I’m Lucas!</p>
               <p>
@@ -63,10 +63,10 @@ import Header from '../components/Header.astro'
         </div>
 
         <div class="mb-16">
-          <h2 class="mb-8 font-bold text-white text-3xl text-center">
+          <h2 class="mb-8 text-center text-3xl font-bold text-white">
             Website Design Inspiration
           </h2>
-          <div class="p-8 kiosk-tile">
+          <div class="kiosk-tile p-8">
             <div class="space-y-6 text-gray-600">
               <p>
                 Inspired by my love of travel, the design of this website mimics

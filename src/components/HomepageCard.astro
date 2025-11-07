@@ -1,0 +1,65 @@
+---
+import { Icon } from 'astro-icon/components'
+
+type Props =
+  | {
+      iconName: string
+      title: string
+      titleSize?: string
+      href: string
+      id?: never
+      type?: never
+    }
+  | {
+      iconName: string
+      title: string
+      titleSize?: string
+      href?: never
+      id?: string
+      type?: 'button' | 'submit' | 'reset'
+    }
+
+const {
+  iconName,
+  title,
+  titleSize = 'text-5xl',
+  href,
+  id,
+  type = 'button',
+} = Astro.props as Props
+---
+
+{
+  (() => {
+    const cardContent = (
+      <div class="touch-target kiosk-tile h-full p-8">
+        <div class="text-center">
+          <Icon
+            name={iconName}
+            class="mx-auto mb-6 text-9xl text-terminal-blue"
+          />
+          <h2 class={`mb-4 font-bold text-terminal-dark-gray ${titleSize}`}>
+            {title}
+          </h2>
+        </div>
+      </div>
+    )
+
+    return href ? (
+      <a
+        href={href}
+        class="transition-transform duration-200 hover:scale-105 focus-visible:scale-105"
+      >
+        {cardContent}
+      </a>
+    ) : (
+      <button
+        id={id}
+        class="block h-full w-full transition-transform duration-200 hover:scale-105 focus-visible:scale-105"
+        type={type}
+      >
+        {cardContent}
+      </button>
+    )
+  })()
+}
