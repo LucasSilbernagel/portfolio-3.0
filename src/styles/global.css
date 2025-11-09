@@ -16,35 +16,35 @@
 
 @layer components {
   .terminal-button {
-    @apply transform rounded-lg bg-terminal-blue px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:bg-blue-600 active:scale-95;
+    @apply bg-terminal-blue hover:bg-blue-600 shadow-lg px-8 py-4 rounded-lg font-semibold text-white hover:scale-105 active:scale-95 transition-all duration-200 transform;
   }
 
   .terminal-card {
-    @apply rounded-lg border-2 border-gray-300 bg-terminal-light-gray text-terminal-dark-gray shadow-lg;
+    @apply bg-terminal-light-gray shadow-lg border-2 border-gray-300 rounded-lg text-terminal-dark-gray;
   }
 
   .boarding-pass {
-    @apply rounded-lg border-2 border-terminal-blue bg-white p-6 shadow-lg;
+    @apply bg-white shadow-lg p-6 border-2 border-terminal-blue rounded-lg;
   }
 
   .terminal-input {
-    @apply rounded-lg border-2 border-terminal-blue bg-terminal-dark-gray px-4 py-2 text-terminal-white focus:border-terminal-yellow focus:outline-none;
+    @apply bg-terminal-dark-gray px-4 py-2 border-2 border-terminal-blue focus:border-terminal-yellow rounded-lg focus:outline-none text-terminal-white;
   }
 
   .system-message {
-    @apply rounded-lg border border-terminal-success-green bg-terminal-dark-gray p-4 font-terminal text-terminal-success-green;
+    @apply bg-terminal-dark-gray p-4 border border-terminal-success-green rounded-lg font-terminal text-terminal-success-green;
   }
 
   .error-message {
-    @apply rounded-lg border border-terminal-error-red bg-terminal-dark-gray p-4 font-terminal text-terminal-error-red;
+    @apply bg-terminal-dark-gray p-4 border border-terminal-error-red rounded-lg font-terminal text-terminal-error-red;
   }
 
   .loading-bar {
-    @apply h-2 w-full overflow-hidden rounded-full bg-terminal-dark-gray;
+    @apply bg-terminal-dark-gray rounded-full w-full h-2 overflow-hidden;
   }
 
   .loading-progress {
-    @apply h-full bg-terminal-blue transition-all duration-1000 ease-out;
+    @apply bg-terminal-blue h-full transition-all duration-1000 ease-out;
   }
 }
 
@@ -77,7 +77,7 @@
       0 0 0 1px rgba(255, 255, 255, 0.2) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     display: block !important;
-    margin: 20px !important;
+    margin: 20px;
     padding: 20px !important;
   }
 
