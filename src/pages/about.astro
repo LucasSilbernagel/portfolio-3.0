@@ -16,8 +16,19 @@ const POSITION_CLASSES = [
   '-right-2 -bottom-36 sm:-bottom-48 sm:-right-6 lg:-right-32 lg:-bottom-1/3', // bottom-right
 ] as const
 
+const FADE_IN_IMAGE_CLASSES = [
+  'fade-in-image-3', // top-left
+  'fade-in-image-4', // top-right
+  'fade-in-image-5', // bottom-left
+  'fade-in-image-6', // bottom-right
+] as const
+
 const getPositionClasses = (index: number): string => {
   return POSITION_CLASSES[index] || ''
+}
+
+const getFadeInClass = (index: number): string => {
+  return FADE_IN_IMAGE_CLASSES[index] || ''
 }
 ---
 
@@ -28,16 +39,20 @@ const getPositionClasses = (index: number): string => {
   >
     <div class="z-10 relative mx-auto p-4 sm:px-8 py-12 min-h-screen container">
       <div class="mb-12 text-center">
-        <h1 class="mb-4 font-bold text-white text-4xl md:text-5xl">About Me</h1>
+        <h1 class="mb-4 font-bold text-white text-4xl md:text-5xl fade-in-1">
+          About Me
+        </h1>
       </div>
 
       <div class="mx-auto my-36 max-w-6xl">
         <div class="flex justify-center my-16 mt-28">
-          <div class="relative m-0 p-0 sm:p-8 max-w-screen-md kiosk-tile">
+          <div
+            class="relative m-0 p-0 sm:p-8 max-w-screen-md kiosk-tile fade-in-2"
+          >
             {
               imageSources.map((src, index) => (
                 <div
-                  class={`${getPositionClasses(index)} terminal-glow absolute z-10 mx-auto mb-6 flex h-36 w-36 items-center justify-center rounded-full bg-terminal-blue shadow-lg sm:h-60 sm:w-60`}
+                  class={`${getPositionClasses(index)} ${getFadeInClass(index)} terminal-glow absolute z-10 mx-auto mb-6 flex h-36 w-36 items-center justify-center rounded-full bg-terminal-blue shadow-lg sm:h-60 sm:w-60`}
                 >
                   <img class="rounded-full object-cover" src={src} alt="" />
                 </div>
@@ -76,3 +91,67 @@ const getPositionClasses = (index: number): string => {
     </div>
   </div>
 </Layout>
+
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in-1,
+    .fade-in-2,
+    .fade-in-image-3,
+    .fade-in-image-4,
+    .fade-in-image-5,
+    .fade-in-image-6 {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Fade-in animations with staggered delays */
+  .fade-in-1 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 0ms;
+  }
+
+  .fade-in-2 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 300ms;
+  }
+
+  .fade-in-image-3 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 600ms;
+  }
+
+  .fade-in-image-4 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 750ms;
+  }
+
+  .fade-in-image-5 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 900ms;
+  }
+
+  .fade-in-image-6 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 1050ms;
+  }
+</style>
