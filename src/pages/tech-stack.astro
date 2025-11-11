@@ -1,9 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
+import { Icon } from 'astro-icon/components'
 
 const ANIMATION_DELAY_MS = 100
 const INITIAL_ANIMATION_DELAY = 2
+const ICONS_PER_SIDE = 4
+
+const decorativeIcons = [
+  'mdi:language-html5',
+  'mdi:language-css3',
+  'mdi:language-javascript',
+  'mdi:language-typescript',
+  'mdi:react',
+  'mdi:graphql',
+  'mdi:tailwind',
+  'mdi:nodejs',
+]
 
 const techStack = [
   {
@@ -50,7 +63,7 @@ const techStack = [
 <Layout title="Lucas Silbernagel | Tech Stack">
   <Header showBackButton={true} />
   <div
-    class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 min-h-screen"
+    class="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 min-h-screen"
   >
     <div
       class="z-10 relative mx-auto px-4 sm:px-8 py-12 min-h-screen container"
@@ -61,48 +74,81 @@ const techStack = [
         </h1>
       </div>
 
-      <div class="mx-auto max-w-4xl">
-        <div class="p-2 sm:p-5 kiosk-tile fade-in-2">
-          <div class="overflow-x-auto">
-            <table class="w-full border-collapse">
-              <thead>
-                <tr class="border-terminal-blue border-b-2">
-                  <th
-                    class="px-4 sm:px-6 py-4 font-bold text-terminal-dark-gray text-lg text-left"
+      <div class="relative">
+        <div
+          class="z-0 absolute inset-0 pointer-events-none decorative-icons-wrapper"
+        >
+          <div
+            class="flex justify-between items-center mx-auto px-8 w-full h-full decorative-icons-inner container"
+          >
+            <div class="decorative-icons-column">
+              {
+                decorativeIcons.slice(0, ICONS_PER_SIDE).map((iconName, i) => (
+                  <div class="decorative-icon" data-icon-index={i}>
+                    <Icon name={iconName} />
+                  </div>
+                ))
+              }
+            </div>
+
+            <div class="decorative-icons-column">
+              {
+                decorativeIcons.slice(ICONS_PER_SIDE).map((iconName, i) => (
+                  <div
+                    class="decorative-icon"
+                    data-icon-index={i + ICONS_PER_SIDE}
                   >
-                    Category
-                  </th>
-                  <th
-                    class="px-4 sm:px-6 py-4 font-bold text-terminal-dark-gray text-lg text-left"
-                  >
-                    Technologies
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  techStack.map((item, index) => (
-                    <tr
-                      class="hover:bg-gray-50 border-gray-300 border-b-2 transition-colors"
-                      style={`animation-delay: ${(index + INITIAL_ANIMATION_DELAY) * ANIMATION_DELAY_MS}ms`}
+                    <Icon name={iconName} />
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="z-10 relative mx-auto max-w-4xl">
+          <div class="p-2 sm:p-5 kiosk-tile fade-in-2">
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse">
+                <thead>
+                  <tr class="border-terminal-blue border-b-2">
+                    <th
+                      class="px-4 sm:px-6 py-4 font-bold text-terminal-dark-gray text-lg text-left"
                     >
-                      <td class="px-4 sm:px-6 py-4 font-semibold text-terminal-dark-gray">
-                        {item.category}
-                      </td>
-                      <td class="px-4 sm:px-6 py-4 text-terminal-dark-gray">
-                        <div class="flex flex-wrap gap-2">
-                          {item.items.map((tech) => (
-                            <span class="inline-block bg-terminal-blue px-4 py-2 rounded-md font-medium text-white text-sm">
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+                      Category
+                    </th>
+                    <th
+                      class="px-4 sm:px-6 py-4 font-bold text-terminal-dark-gray text-lg text-left"
+                    >
+                      Technologies
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    techStack.map((item, index) => (
+                      <tr
+                        class="hover:bg-gray-50 border-gray-300 border-b-2 transition-colors"
+                        style={`animation-delay: ${(index + INITIAL_ANIMATION_DELAY) * ANIMATION_DELAY_MS}ms`}
+                      >
+                        <td class="px-4 sm:px-6 py-4 font-semibold text-terminal-dark-gray">
+                          {item.category}
+                        </td>
+                        <td class="px-4 sm:px-6 py-4 text-terminal-dark-gray">
+                          <div class="flex flex-wrap gap-2">
+                            {item.items.map((tech) => (
+                              <span class="inline-block bg-terminal-blue px-4 py-2 rounded-md font-medium text-white text-sm">
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -169,5 +215,51 @@ const techStack = [
     border-radius: 0.375rem;
     font-size: 0.875rem;
     font-weight: 500;
+  }
+
+  .decorative-icons-wrapper {
+    display: none;
+  }
+
+  @media (min-width: 1300px) {
+    .decorative-icons-wrapper {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .decorative-icons-inner {
+      display: flex;
+    }
+
+    .decorative-icons-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .decorative-icon {
+      display: flex;
+      height: 6rem;
+      width: 6rem;
+      min-height: 5rem;
+      min-width: 5rem;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background-color: #0066cc;
+    }
+
+    .decorative-icon svg {
+      width: 4rem;
+      height: 4rem;
+      display: block;
+      fill: white;
+    }
+
+    .decorative-icon .astro-icon {
+      display: block;
+    }
   }
 </style>
