@@ -6,6 +6,8 @@ import { Icon } from 'astro-icon/components'
 const ANIMATION_DELAY_MS = 100
 const INITIAL_ANIMATION_DELAY = 2
 const ICONS_PER_SIDE = 4
+const DECORATIVE_ICON_BASE_DELAY_MS = 1000
+const DECORATIVE_ICON_STAGGER_MS = 150
 
 const decorativeIcons = [
   'mdi:language-html5',
@@ -84,7 +86,11 @@ const techStack = [
             <div class="decorative-icons-column">
               {
                 decorativeIcons.slice(0, ICONS_PER_SIDE).map((iconName, i) => (
-                  <div class="decorative-icon" data-icon-index={i}>
+                  <div
+                    class="decorative-icon"
+                    data-icon-index={i}
+                    style={`animation-delay: ${DECORATIVE_ICON_BASE_DELAY_MS + i * DECORATIVE_ICON_STAGGER_MS}ms`}
+                  >
                     <Icon name={iconName} />
                   </div>
                 ))
@@ -97,6 +103,7 @@ const techStack = [
                   <div
                     class="decorative-icon"
                     data-icon-index={i + ICONS_PER_SIDE}
+                    style={`animation-delay: ${DECORATIVE_ICON_BASE_DELAY_MS + (i + ICONS_PER_SIDE) * DECORATIVE_ICON_STAGGER_MS}ms`}
                   >
                     <Icon name={iconName} />
                   </div>
@@ -108,7 +115,7 @@ const techStack = [
 
         <div class="z-10 relative mx-auto max-w-4xl">
           <div class="p-2 sm:p-5 kiosk-tile fade-in-2">
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto overflow-y-hidden">
               <table class="w-full border-collapse">
                 <thead>
                   <tr class="border-terminal-blue border-b-2">
@@ -172,7 +179,8 @@ const techStack = [
   @media (prefers-reduced-motion: reduce) {
     .fade-in-1,
     .fade-in-2,
-    tr {
+    tr,
+    .decorative-icon {
       animation: none;
       opacity: 1;
       transform: none;
@@ -219,6 +227,12 @@ const techStack = [
 
   .decorative-icons-wrapper {
     display: none;
+  }
+
+  .decorative-icon {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.6s ease-out forwards;
   }
 
   @media (min-width: 1300px) {

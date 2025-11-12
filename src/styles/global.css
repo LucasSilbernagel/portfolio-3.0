@@ -16,35 +16,35 @@
 
 @layer components {
   .terminal-button {
-    @apply bg-terminal-blue hover:bg-blue-600 shadow-lg px-8 py-4 rounded-lg font-semibold text-white hover:scale-105 active:scale-95 transition-all duration-200 transform;
+    @apply transform rounded-lg bg-terminal-blue px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:bg-blue-600 active:scale-95;
   }
 
   .terminal-card {
-    @apply bg-terminal-light-gray shadow-lg border-2 border-gray-300 rounded-lg text-terminal-dark-gray;
+    @apply rounded-lg border-2 border-gray-300 bg-terminal-light-gray text-terminal-dark-gray shadow-lg;
   }
 
   .boarding-pass {
-    @apply bg-white shadow-lg p-6 border-2 border-terminal-blue rounded-lg;
+    @apply rounded-lg border-2 border-terminal-blue bg-white p-6 shadow-lg;
   }
 
   .terminal-input {
-    @apply bg-terminal-dark-gray px-4 py-2 border-2 border-terminal-blue focus:border-terminal-yellow rounded-lg focus:outline-none text-terminal-white;
+    @apply rounded-lg border-2 border-terminal-blue bg-terminal-dark-gray px-4 py-2 text-terminal-white focus:border-terminal-yellow focus:outline-none;
   }
 
   .system-message {
-    @apply bg-terminal-dark-gray p-4 border border-terminal-success-green rounded-lg font-terminal text-terminal-success-green;
+    @apply rounded-lg border border-terminal-success-green bg-terminal-dark-gray p-4 font-terminal text-terminal-success-green;
   }
 
   .error-message {
-    @apply bg-terminal-dark-gray p-4 border border-terminal-error-red rounded-lg font-terminal text-terminal-error-red;
+    @apply rounded-lg border border-terminal-error-red bg-terminal-dark-gray p-4 font-terminal text-terminal-error-red;
   }
 
   .loading-bar {
-    @apply bg-terminal-dark-gray rounded-full w-full h-2 overflow-hidden;
+    @apply h-2 w-full overflow-hidden rounded-full bg-terminal-dark-gray;
   }
 
   .loading-progress {
-    @apply bg-terminal-blue h-full transition-all duration-1000 ease-out;
+    @apply h-full bg-terminal-blue transition-all duration-1000 ease-out;
   }
 }
 
