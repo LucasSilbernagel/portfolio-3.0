@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components'
+
 export type Props = {
   projectName: string
   completedYear: string
@@ -20,8 +22,6 @@ const {
   imageUrl,
   class: className = '',
 } = Astro.props
-
-const MAX_VISIBLE_TECHNOLOGIES = 5
 ---
 
 <div class={`boarding-pass ${className} group`}>
@@ -41,33 +41,45 @@ const MAX_VISIBLE_TECHNOLOGIES = 5
     </div>
   </div>
 
-  <div class="bg-white p-6">
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-      <div class="space-y-4">
-        <div>
-          <div class="text-xs uppercase tracking-wide text-gray-500">
-            Project
+  <div class="bg-white p-2 md:p-6">
+    <div
+      class="grid grid-cols-1 gap-6 md:[grid-template-columns:minmax(0,2fr)_minmax(0,1fr)]"
+    >
+      <div
+        class="flex flex-col items-center gap-6 text-center lg:flex-row lg:items-center lg:text-left"
+      >
+        <div class="w-full space-y-4 md:flex-1">
+          <div>
+            <div class="text-xs uppercase tracking-wide text-gray-500">
+              Project
+            </div>
+            <div class="text-lg font-bold text-terminal-dark-gray">
+              {projectName}
+            </div>
           </div>
-          <div class="text-lg font-bold text-terminal-dark-gray">
-            {projectName}
+          <div>
+            <div class="text-xs uppercase tracking-wide text-gray-500">
+              Completed
+            </div>
+            <div class="text-sm text-gray-700">{completedYear}</div>
           </div>
         </div>
-        <div>
-          <div class="text-xs uppercase tracking-wide text-gray-500">
-            Completed
-          </div>
-          <div class="text-sm text-gray-700">{completedYear}</div>
-        </div>
-      </div>
 
-      <div class="flex items-center justify-center">
+        <Icon
+          name="mdi:airplane"
+          class="h-20 w-20 flex-shrink-0 text-terminal-light-gray md:h-44 md:w-44"
+          aria-hidden="true"
+        />
+
         {
-          (
-            <img
-              src={imageUrl}
-              alt={projectName}
-              class="h-32 w-full rounded-lg object-cover shadow-md"
-            />
+          imageUrl && (
+            <div class="w-full md:flex-1">
+              <img
+                src={imageUrl}
+                alt={projectName}
+                class="h-32 w-full rounded-lg object-cover shadow-md"
+              />
+            </div>
           )
         }
       </div>
@@ -79,20 +91,11 @@ const MAX_VISIBLE_TECHNOLOGIES = 5
           </div>
           <div class="mt-1 flex flex-wrap gap-1">
             {
-              technologies
-                .slice(0, MAX_VISIBLE_TECHNOLOGIES)
-                .map((tech) => (
-                  <span class="rounded bg-terminal-light-gray px-2 py-1 text-xs text-terminal-dark-gray">
-                    {tech}
-                  </span>
-                ))
-            }
-            {
-              technologies.length > MAX_VISIBLE_TECHNOLOGIES && (
-                <span class="text-xs text-gray-500">
-                  +{technologies.length - MAX_VISIBLE_TECHNOLOGIES} more
+              technologies.map((tech) => (
+                <span class="rounded bg-terminal-light-gray px-2 py-1 text-xs text-terminal-dark-gray">
+                  {tech}
                 </span>
-              )
+              ))
             }
           </div>
         </div>
