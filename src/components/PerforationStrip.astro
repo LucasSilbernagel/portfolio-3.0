@@ -1,0 +1,21 @@
+---
+const DEFAULT_ROW_COUNT = 2
+const DEFAULT_DOT_COUNT = 4
+
+const { rows = DEFAULT_ROW_COUNT, dots = DEFAULT_DOT_COUNT } = Astro.props
+
+const rowArray = Array.from({ length: rows })
+const dotArray = Array.from({ length: dots })
+---
+
+<div class="flex justify-between mt-4" aria-hidden="true">
+  {
+    rowArray.map(() => (
+      <div class="flex space-x-1">
+        {dotArray.map(() => (
+          <div class="bg-gray-300 rounded-full w-2 h-2" />
+        ))}
+      </div>
+    ))
+  }
+</div>
