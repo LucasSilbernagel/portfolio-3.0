@@ -2,6 +2,52 @@
 import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import { Icon } from 'astro-icon/components'
+
+type ContactMethod = {
+  label: string
+  href: string
+  display: string
+  icon: string
+  backgroundClass: string
+  isExternal?: boolean
+}
+
+const contactLinkClass =
+  'break-all font-semibold text-terminal-blue hover:text-blue-600 focus-visible:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue focus-visible:ring-offset-2 focus-visible:ring-offset-terminal-light-gray'
+
+const contactMethods: ContactMethod[] = [
+  {
+    label: 'Email',
+    href: 'mailto:hello@lucassilbernagel.com',
+    display: 'hello@lucassilbernagel.com',
+    icon: 'mdi:email',
+    backgroundClass: 'bg-terminal-blue',
+  },
+  {
+    label: 'GitHub',
+    href: 'https://github.com/LucasSilbernagel',
+    display: 'github.com/LucasSilbernagel',
+    icon: 'mdi:github',
+    backgroundClass: 'bg-terminal-success-green',
+    isExternal: true,
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/lucassilbernagel/',
+    display: 'linkedin.com/in/lucassilbernagel',
+    icon: 'mdi:linkedin',
+    backgroundClass: 'bg-terminal-yellow',
+    isExternal: true,
+  },
+  {
+    label: 'Bluesky',
+    href: 'https://bsky.app/profile/lucassilbernagel.com',
+    display: 'bsky.app/profile/lucassilbernagel.com',
+    icon: 'ri:bluesky-fill',
+    backgroundClass: 'bg-purple-600',
+    isExternal: true,
+  },
+]
 ---
 
 <Layout title="Lucas Silbernagel | Contact">
@@ -26,111 +72,36 @@ import { Icon } from 'astro-icon/components'
             </h2>
 
             <div class="space-y-6">
-              <div
-                class="flex sm:flex-row flex-col items-start sm:items-center gap-y-2 sm:space-x-4"
-              >
-                <div
-                  class="flex justify-center items-center bg-terminal-blue rounded-full w-12 h-12"
-                >
-                  <Icon
-                    name="mdi:email"
-                    aria-hidden="true"
-                    class="text-white text-2xl"
-                  />
-                </div>
-                <div>
-                  <div class="text-gray-500 text-sm uppercase tracking-wide">
-                    Email
+              {
+                contactMethods.map((method) => (
+                  <div class="flex sm:flex-row flex-col items-start sm:items-center gap-y-2 sm:space-x-4">
+                    <div
+                      class={`flex h-12 w-12 items-center justify-center rounded-full ${method.backgroundClass}`}
+                    >
+                      <Icon
+                        name={method.icon}
+                        aria-hidden="true"
+                        class="text-white text-2xl"
+                      />
+                    </div>
+                    <div>
+                      <div class="text-gray-500 text-sm uppercase tracking-wide">
+                        {method.label}
+                      </div>
+                      <a
+                        href={method.href}
+                        target={method.isExternal ? '_blank' : undefined}
+                        rel={
+                          method.isExternal ? 'noopener noreferrer' : undefined
+                        }
+                        class={contactLinkClass}
+                      >
+                        {method.display}
+                      </a>
+                    </div>
                   </div>
-                  <a
-                    href="mailto:hello@lucassilbernagel.com"
-                    class="font-semibold text-terminal-blue hover:text-blue-600 break-all"
-                  >
-                    hello@lucassilbernagel.com
-                  </a>
-                </div>
-              </div>
-
-              <div
-                class="flex sm:flex-row flex-col items-start sm:items-center gap-y-2 sm:space-x-4"
-              >
-                <div
-                  class="flex justify-center items-center bg-terminal-success-green rounded-full w-12 h-12"
-                >
-                  <Icon
-                    name="mdi:github"
-                    aria-hidden="true"
-                    class="text-white text-2xl"
-                  />
-                </div>
-                <div>
-                  <div class="text-gray-500 text-sm uppercase tracking-wide">
-                    GitHub
-                  </div>
-                  <a
-                    href="https://github.com/LucasSilbernagel"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-semibold text-terminal-blue hover:text-blue-600 break-all"
-                  >
-                    github.com/LucasSilbernagel
-                  </a>
-                </div>
-              </div>
-
-              <div
-                class="flex sm:flex-row flex-col items-start sm:items-center gap-y-2 sm:space-x-4"
-              >
-                <div
-                  class="flex justify-center items-center bg-terminal-yellow rounded-full w-12 h-12"
-                >
-                  <Icon
-                    name="mdi:linkedin"
-                    aria-hidden="true"
-                    class="text-white text-2xl"
-                  />
-                </div>
-                <div>
-                  <div class="text-gray-500 text-sm uppercase tracking-wide">
-                    LinkedIn
-                  </div>
-                  <a
-                    href="https://www.linkedin.com/in/lucassilbernagel/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-semibold text-terminal-blue hover:text-blue-600 break-all"
-                  >
-                    linkedin.com/in/lucassilbernagel
-                  </a>
-                </div>
-              </div>
-
-              <div
-                class="flex sm:flex-row flex-col items-start sm:items-center gap-y-2 sm:space-x-4"
-              >
-                <div
-                  class="flex justify-center items-center bg-purple-600 rounded-full w-12 h-12"
-                >
-                  <Icon
-                    name="ri:bluesky-fill"
-                    aria-hidden="true"
-                    class="text-white text-2xl"
-                  />
-                </div>
-                <div>
-                  <div class="text-gray-500 text-sm uppercase tracking-wide">
-                    Bluesky
-                  </div>
-                  <a
-                    href="https://bsky.app/profile/lucassilbernagel.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-semibold text-terminal-blue hover:text-blue-600 break-all"
-                  >
-                    https://bsky.app/profile/lucassilbernagel.com
-                  </a>
-                </div>
-              </div>
+                ))
+              }
             </div>
 
             <div class="bg-terminal-light-gray mt-8 p-4 rounded-lg">
