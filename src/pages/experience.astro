@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
+import { Icon } from 'astro-icon/components'
 
 type Experience = {
   company: string
@@ -146,7 +147,7 @@ const ANIMATION_DELAY_STEP_MS = 120
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {experience.company}
+                      {experience.company} <Icon name="mdi:external-link" />
                     </a>
                     <h2 class="mt-2 font-bold text-terminal-dark-gray text-2xl sm:text-3xl">
                       {experience.title}

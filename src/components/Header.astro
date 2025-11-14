@@ -9,29 +9,29 @@ const { showBackButton = false, id } = Astro.props
 
 <header
   id={id}
-  class="w-full border-b-4 border-terminal-blue bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 px-8 py-6"
+  class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 px-8 py-6 border-terminal-blue border-b-4 w-full"
 >
   <div
-    class="container mx-auto flex flex-col items-center justify-between gap-6 sm:gap-4 md:flex-row"
+    class="flex md:flex-row flex-col justify-between items-center gap-6 sm:gap-4 mx-auto container"
   >
     <a
       href="/"
-      class="flex flex-wrap items-center justify-center gap-6 transition-opacity duration-200 hover:opacity-90 focus-visible:opacity-90 sm:justify-start"
+      class="flex flex-wrap justify-center sm:justify-start items-center gap-6 hover:opacity-90 focus-visible:opacity-90 transition-opacity duration-200"
     >
       <div
-        class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-4 border-white shadow-lg"
+        class="flex justify-center items-center shadow-lg border-4 border-white rounded-full w-16 h-16 overflow-hidden"
       >
         <img
           src="https://placehold.co/400x400"
           alt="Lucas Silbernagel"
-          class="h-16 w-16 rounded-full object-cover"
+          class="rounded-full w-16 h-16 object-cover"
         />
       </div>
       <div class="flex flex-col items-center sm:items-start">
-        <h1 class="text-2xl font-bold text-terminal-white md:text-3xl">
+        <h1 class="font-bold text-terminal-white text-2xl md:text-3xl">
           Lucas Silbernagel
         </h1>
-        <p class="text-lg font-semibold text-terminal-yellow md:text-xl">
+        <p class="font-semibold text-terminal-yellow text-lg md:text-xl">
           Software Developer
         </p>
       </div>
@@ -43,7 +43,7 @@ const { showBackButton = false, id } = Astro.props
         <div class="flex items-center">
           <a
             href="/"
-            class="kiosk-button inline-block px-8 py-4 text-lg font-bold uppercase text-white transition-all duration-200 hover:scale-105 focus-visible:scale-105 active:scale-95"
+            class="inline-block px-8 py-4 font-bold text-white text-lg uppercase hover:scale-105 focus-visible:scale-105 active:scale-95 transition-all duration-200 kiosk-button"
           >
             ← Back
           </a>
