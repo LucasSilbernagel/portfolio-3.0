@@ -139,6 +139,24 @@ import HomepageCard from '../components/HomepageCard.astro'
 
       <Footer id="homepage-footer" class="hidden" />
     </div>
+
+    <!-- Loading Overlay displayed while printing resume -->
+    <div
+      id="loading-overlay"
+      class="hidden z-50 fixed inset-0 justify-center items-center bg-terminal-dark-gray/95 backdrop-blur-sm"
+    >
+      <div class="flex flex-col items-center gap-4">
+        <div
+          class="border-4 border-terminal-blue border-t-transparent rounded-full w-16 h-16 animate-spin"
+        >
+        </div>
+        <p
+          class="font-terminal text-terminal-yellow text-xl uppercase tracking-wider"
+        >
+          Printing...
+        </p>
+      </div>
+    </div>
   </body>
 </html>
 
@@ -146,6 +164,7 @@ import HomepageCard from '../components/HomepageCard.astro'
   // Animation timing constants
   const TILE_ANIMATION_DELAY_MS = 150
   const RENDER_DELAY_MS = 10
+  const LOADING_OVERLAY_DURATION_MS = 2000
 
   // First-time visitor logic
   document.addEventListener('DOMContentLoaded', () => {
@@ -250,14 +269,26 @@ import HomepageCard from '../components/HomepageCard.astro'
   function initializeHomepageHandlers() {
     // Boarding pass download handler
     const boardingPassButton = document.querySelector('#boarding-pass-download')
-    if (boardingPassButton) {
+    const loadingOverlay = document.querySelector('#loading-overlay')
+
+    if (boardingPassButton && loadingOverlay) {
       boardingPassButton.addEventListener('click', () => {
+        loadingOverlay.classList.add('flex')
+        loadingOverlay.classList.remove('hidden')
+
+        // Start download immediately while overlay is showing
         const link = document.createElement('a')
         link.href = '/resume.pdf'
         link.download = 'lucas-silbernagel-resume.pdf'
         document.body.append(link)
         link.click()
         link.remove()
+
+        // Hide overlay after delay (download continues in background)
+        setTimeout(() => {
+          loadingOverlay.classList.add('hidden')
+          loadingOverlay.classList.remove('flex')
+        }, LOADING_OVERLAY_DURATION_MS)
       })
     }
   }
