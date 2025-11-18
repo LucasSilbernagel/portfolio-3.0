@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components'
+
 export type Props = {
   showBackButton?: boolean
   id?: string
@@ -43,9 +45,9 @@ const { showBackButton = false, id } = Astro.props
         <div class="flex items-center">
           <a
             href="/"
-            class="kiosk-button inline-block px-8 py-4 text-lg font-bold uppercase text-white transition-all duration-200 hover:scale-105 focus-visible:scale-105 active:scale-95"
+            class="kiosk-button flex items-center px-8 py-4 text-lg font-bold uppercase text-white transition-all duration-200 hover:scale-105 focus-visible:scale-105 active:scale-95"
           >
-            ← Back
+            <Icon name="mdi:arrow-back" /> <span class="ml-2">Back</span>
           </a>
         </div>
       )
@@ -54,6 +56,10 @@ const { showBackButton = false, id } = Astro.props
 </header>
 
 <style>
+  .kiosk-button {
+    display: flex;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     header a {
       transition: none;

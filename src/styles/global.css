@@ -126,7 +126,7 @@
       0 4px 16px rgba(0, 102, 204, 0.3),
       0 0 0 1px rgba(255, 255, 255, 0.2) !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    display: inline-block !important;
+    display: inline-block;
     padding: 12px 24px !important;
   }
 
