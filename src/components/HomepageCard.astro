@@ -63,3 +63,19 @@ const {
     )
   })()
 }
+
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    a[href],
+    button {
+      transition: none;
+    }
+
+    a[href]:hover,
+    a[href]:focus,
+    button:hover,
+    button:focus {
+      transform: none;
+    }
+  }
+</style>

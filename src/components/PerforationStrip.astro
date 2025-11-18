@@ -8,12 +8,12 @@ const rowArray = Array.from({ length: rows })
 const dotArray = Array.from({ length: dots })
 ---
 
-<div class="flex justify-between mt-4" aria-hidden="true">
+<div class="mt-4 flex justify-between" aria-hidden="true">
   {
     rowArray.map(() => (
       <div class="flex space-x-1">
         {dotArray.map(() => (
-          <div class="bg-gray-300 rounded-full w-2 h-2" />
+          <div class="h-2 w-2 rounded-full bg-gray-300" />
         ))}
       </div>
     ))

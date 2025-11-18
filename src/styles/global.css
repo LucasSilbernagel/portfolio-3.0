@@ -12,11 +12,37 @@
   body {
     @apply bg-terminal-dark-gray text-terminal-white;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
   .terminal-button {
     @apply transform rounded-lg bg-terminal-blue px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:bg-blue-600 active:scale-95;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .terminal-button {
+      transition: none;
+    }
+
+    .terminal-button:hover,
+    .terminal-button:focus {
+      transform: none;
+    }
+
+    .terminal-button:active {
+      transform: none;
+    }
   }
 
   .terminal-card {
@@ -45,6 +71,12 @@
 
   .loading-progress {
     @apply h-full bg-terminal-blue transition-all duration-1000 ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loading-progress {
+      transition: none;
+    }
   }
 }
 
@@ -80,6 +112,12 @@
     padding: 20px;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .kiosk-tile {
+      transition: none !important;
+    }
+  }
+
   .kiosk-button {
     background: linear-gradient(135deg, #0066cc 0%, #004499 100%) !important;
     border: 3px solid #ffffff !important;
@@ -103,6 +141,21 @@
 
   .kiosk-button:active {
     transform: translateY(0) scale(0.98) !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kiosk-button {
+      transition: none !important;
+    }
+
+    .kiosk-button:hover,
+    .kiosk-button:focus {
+      transform: none !important;
+    }
+
+    .kiosk-button:active {
+      transform: none !important;
+    }
   }
 
   .touch-target {

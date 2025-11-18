@@ -141,4 +141,12 @@ const projects = [
       transform: translateY(0);
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>

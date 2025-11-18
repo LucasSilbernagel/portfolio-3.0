@@ -53,20 +53,20 @@ const contactMethods: ContactMethod[] = [
 <Layout title="Lucas Silbernagel | Contact">
   <Header showBackButton={true} />
   <div
-    class="bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue min-h-screen"
+    class="min-h-screen bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue"
   >
-    <div class="mx-auto px-4 py-12 container">
+    <div class="container mx-auto px-4 py-12">
       <div class="mb-12 text-center">
-        <h1 class="mb-4 font-bold text-white text-4xl md:text-5xl fade-in-1">
+        <h1 class="fade-in-1 mb-4 text-4xl font-bold text-white md:text-5xl">
           Contact Me
         </h1>
       </div>
 
       <div class="mx-auto max-w-6xl">
-        <div class="gap-12 grid grid-cols-1 lg:grid-cols-2 mb-16">
-          <div class="p-3 sm:p8 fade-in-2 terminal-card">
+        <div class="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
+          <div class="sm:p8 fade-in-2 terminal-card p-3">
             <h2
-              class="flex items-center mb-6 font-bold text-terminal-dark-gray text-2xl"
+              class="mb-6 flex items-center text-2xl font-bold text-terminal-dark-gray"
             >
               Contact Information
             </h2>
@@ -74,18 +74,18 @@ const contactMethods: ContactMethod[] = [
             <div class="space-y-6">
               {
                 contactMethods.map((method) => (
-                  <div class="flex sm:flex-row flex-col items-start sm:items-center gap-y-2 sm:space-x-4">
+                  <div class="flex flex-col items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-4">
                     <div
                       class={`flex h-12 w-12 items-center justify-center rounded-full ${method.backgroundClass}`}
                     >
                       <Icon
                         name={method.icon}
                         aria-hidden="true"
-                        class="text-white text-2xl"
+                        class="text-2xl text-white"
                       />
                     </div>
                     <div>
-                      <div class="text-gray-500 text-sm uppercase tracking-wide">
+                      <div class="text-sm uppercase tracking-wide text-gray-500">
                         {method.label}
                       </div>
                       <a
@@ -104,14 +104,14 @@ const contactMethods: ContactMethod[] = [
               }
             </div>
 
-            <div class="bg-terminal-light-gray mt-8 p-4 rounded-lg">
+            <div class="mt-8 rounded-lg bg-terminal-light-gray p-4">
               <h3
-                class="flex items-center gap-1 mb-2 font-bold text-terminal-dark-gray text-lg"
+                class="mb-2 flex items-center gap-1 text-lg font-bold text-terminal-dark-gray"
               >
                 <Icon
                   name="mdi:location"
                   aria-hidden="true"
-                  class="text-terminal-blue text-2xl"
+                  class="text-2xl text-terminal-blue"
                 />
                 Location
               </h3>
@@ -121,9 +121,9 @@ const contactMethods: ContactMethod[] = [
             </div>
           </div>
 
-          <div class="p-3 sm:p-8 fade-in-3 terminal-card">
+          <div class="fade-in-3 terminal-card p-3 sm:p-8">
             <h2
-              class="flex items-center mb-6 font-bold text-terminal-dark-gray text-2xl"
+              class="mb-6 flex items-center text-2xl font-bold text-terminal-dark-gray"
             >
               Send Message
             </h2>
@@ -133,7 +133,7 @@ const contactMethods: ContactMethod[] = [
                 class="flex flex-col items-center space-y-6 py-12 text-center"
               >
                 <p
-                  class="font-semibold text-terminal-success-green text-lg text-left"
+                  class="text-left text-lg font-semibold text-terminal-success-green"
                   aria-live="polite"
                 >
                   Thanks for your message! I'll get back to you as soon as I
@@ -151,7 +151,7 @@ const contactMethods: ContactMethod[] = [
                     id="name"
                     name="name"
                     required
-                    class="w-full terminal-input"
+                    class="terminal-input w-full"
                     placeholder="Your name"
                   />
                 </div>
@@ -162,7 +162,7 @@ const contactMethods: ContactMethod[] = [
                     id="email"
                     name="email"
                     required
-                    class="w-full terminal-input"
+                    class="terminal-input w-full"
                     placeholder="Your email address"
                   />
                 </div>
@@ -175,21 +175,21 @@ const contactMethods: ContactMethod[] = [
                   name="message"
                   rows="6"
                   required
-                  class="w-full min-h-[100px] resize-none terminal-input"
+                  class="terminal-input min-h-[100px] w-full resize-none"
                   placeholder="Your message..."></textarea>
               </div>
 
-              <div class="flex flex-col items-center w-full">
-                <div id="form-error" class="hidden mb-4" aria-live="polite">
-                  <p class="text-terminal-error-red text-sm"></p>
+              <div class="flex w-full flex-col items-center">
+                <div id="form-error" class="mb-4 hidden" aria-live="polite">
+                  <p class="text-sm text-terminal-error-red"></p>
                 </div>
 
-                <div id="form-loading" class="hidden mb-4">
+                <div id="form-loading" class="mb-4 hidden">
                   <div
-                    class="flex justify-center items-center space-x-2 text-terminal-blue"
+                    class="flex items-center justify-center space-x-2 text-terminal-blue"
                   >
                     <div
-                      class="border-terminal-blue border-b-2 rounded-full w-6 h-6 animate-spin"
+                      class="h-6 w-6 animate-spin rounded-full border-b-2 border-terminal-blue"
                     >
                     </div>
                     <span class="font-terminal">Processing your message...</span
@@ -200,7 +200,7 @@ const contactMethods: ContactMethod[] = [
                 <button
                   type="submit"
                   id="submit-button"
-                  class="w-full terminal-button"
+                  class="terminal-button w-full"
                   name="submit"
                 >
                   Send message
