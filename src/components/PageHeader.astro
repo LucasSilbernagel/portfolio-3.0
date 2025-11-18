@@ -1,0 +1,27 @@
+---
+export type Props = {
+  title: string
+  subtitle?: string
+  class?: string
+  titleClass?: string
+}
+
+const {
+  title,
+  subtitle,
+  class: className = '',
+  titleClass = '',
+} = Astro.props
+
+const defaultTitleClass =
+  'mb-4 text-4xl font-bold text-white md:text-5xl'
+const finalTitleClass = titleClass || defaultTitleClass
+---
+
+<div class={`mb-12 text-center ${className}`}>
+  <h1 class={finalTitleClass}>{title}</h1>
+  {subtitle && (
+    <p class="text-lg text-blue-100 md:text-xl">{subtitle}</p>
+  )}
+</div>
+

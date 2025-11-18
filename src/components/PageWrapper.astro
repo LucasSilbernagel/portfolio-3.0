@@ -1,0 +1,18 @@
+---
+export type Props = {
+  class?: string
+  backgroundClass?: string
+}
+
+const {
+  class: className = '',
+  backgroundClass = 'bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800',
+} = Astro.props
+---
+
+<div class={`min-h-screen ${backgroundClass} ${className}`}>
+  <div class="container relative z-10 mx-auto min-h-screen px-4 py-12 sm:px-8">
+    <slot />
+  </div>
+</div>
+

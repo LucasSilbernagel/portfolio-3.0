@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
+import PageWrapper from '../components/PageWrapper.astro'
+import PageHeader from '../components/PageHeader.astro'
 import { Icon } from 'astro-icon/components'
 
 type ContactMethod = {
@@ -52,15 +54,8 @@ const contactMethods: ContactMethod[] = [
 
 <Layout title="Lucas Silbernagel | Contact">
   <Header showBackButton={true} />
-  <div
-    class="min-h-screen bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue"
-  >
-    <div class="container mx-auto px-4 py-12">
-      <div class="mb-12 text-center">
-        <h1 class="fade-in-1 mb-4 text-4xl font-bold text-white md:text-5xl">
-          Contact Me
-        </h1>
-      </div>
+  <PageWrapper backgroundClass="bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue">
+    <PageHeader title="Contact Me" titleClass="fade-in-1 mb-4 text-4xl font-bold text-white md:text-5xl" />
 
       <div class="mx-auto max-w-6xl">
         <div class="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
@@ -210,8 +205,7 @@ const contactMethods: ContactMethod[] = [
           </div>
         </div>
       </div>
-    </div>
-  </div>
+  </PageWrapper>
 </Layout>
 
 <style>
