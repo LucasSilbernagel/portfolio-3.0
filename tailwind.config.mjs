@@ -20,15 +20,6 @@ export default {
         terminal: ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
-      animation: {
-        'progress-bar': 'progressBar 2s ease-in-out',
-      },
-      keyframes: {
-        progressBar: {
-          '0%': { width: '0%' },
-          '100%': { width: '100%' },
-        },
-      },
     },
   },
   plugins: [typography],

@@ -84,13 +84,15 @@ const actionLinks = [
         />
 
         {
-          imageUrl && (
+          imageUrl && liveUrl && (
             <div class="w-full md:flex-1">
-              <img
-                src={imageUrl}
-                alt={projectName}
-                class="h-32 w-full rounded-lg object-cover shadow-md"
-              />
+              <a href={liveUrl} target="_blank" rel="noopener noreferrer">
+                <img
+                  src={imageUrl}
+                  alt={projectName}
+                  class="h-32 w-full rounded-lg object-cover shadow-md"
+                />
+              </a>
             </div>
           )
         }

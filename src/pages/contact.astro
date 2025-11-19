@@ -15,7 +15,7 @@ type ContactMethod = {
 }
 
 const contactLinkClass =
-  'break-all font-semibold text-terminal-blue hover:text-blue-600 focus-visible:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue focus-visible:ring-offset-2 focus-visible:ring-offset-terminal-light-gray'
+  'break-all font-semibold text-terminal-blue hover:text-blue-600 focus-visible:text-blue-600 focus-visible:underline hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue focus-visible:ring-offset-2 focus-visible:ring-offset-terminal-light-gray'
 
 const contactMethods: ContactMethod[] = [
   {
@@ -54,157 +54,182 @@ const contactMethods: ContactMethod[] = [
 
 <Layout title="Lucas Silbernagel | Contact">
   <Header showBackButton={true} />
-  <PageWrapper backgroundClass="bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue">
-    <PageHeader title="Contact Me" titleClass="fade-in-1 mb-4 text-4xl font-bold text-white md:text-5xl" />
+  <PageWrapper
+    backgroundClass="bg-gradient-to-br from-terminal-dark-gray via-gray-800 to-terminal-blue"
+  >
+    <PageHeader
+      title="Contact Me"
+      titleClass="fade-in-1 mb-4 text-4xl font-bold text-white md:text-5xl"
+    />
 
-      <div class="mx-auto max-w-6xl">
-        <div class="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
-          <div class="sm:p8 fade-in-2 terminal-card p-3">
-            <h2
-              class="mb-6 flex items-center text-2xl font-bold text-terminal-dark-gray"
-            >
-              Contact Information
-            </h2>
+    <div class="mx-auto max-w-6xl">
+      <div class="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
+        <div class="sm:p8 fade-in-2 terminal-card p-3">
+          <h2
+            class="mb-6 flex items-center text-2xl font-bold text-terminal-dark-gray"
+          >
+            Contact Information
+          </h2>
 
-            <div class="space-y-6">
-              {
-                contactMethods.map((method) => (
-                  <div class="flex flex-col items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-4">
-                    <div
-                      class={`flex h-12 w-12 items-center justify-center rounded-full ${method.backgroundClass}`}
-                    >
-                      <Icon
-                        name={method.icon}
-                        aria-hidden="true"
-                        class="text-2xl text-white"
-                      />
-                    </div>
-                    <div>
-                      <div class="text-sm uppercase tracking-wide text-gray-500">
-                        {method.label}
-                      </div>
-                      <a
-                        href={method.href}
-                        target={method.isExternal ? '_blank' : undefined}
-                        rel={
-                          method.isExternal ? 'noopener noreferrer' : undefined
-                        }
-                        class={contactLinkClass}
-                      >
-                        {method.display}
-                      </a>
-                    </div>
+          <div class="space-y-6">
+            {
+              contactMethods.map((method) => (
+                <div class="flex flex-col items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-4">
+                  <div
+                    class={`flex h-12 w-12 items-center justify-center rounded-full ${method.backgroundClass}`}
+                  >
+                    <Icon
+                      name={method.icon}
+                      aria-hidden="true"
+                      class="text-2xl text-white"
+                    />
                   </div>
-                ))
-              }
-            </div>
+                  <div>
+                    <div class="text-sm uppercase tracking-wide text-gray-500">
+                      {method.label}
+                    </div>
+                    <a
+                      href={method.href}
+                      target={method.isExternal ? '_blank' : undefined}
+                      rel={
+                        method.isExternal ? 'noopener noreferrer' : undefined
+                      }
+                      class={contactLinkClass}
+                    >
+                      {method.display}
+                    </a>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
 
-            <div class="mt-8 rounded-lg bg-terminal-light-gray p-4">
-              <h3
-                class="mb-2 flex items-center gap-1 text-lg font-bold text-terminal-dark-gray"
+          <div class="mt-8 rounded-lg bg-terminal-light-gray p-4">
+            <h3
+              class="mb-2 flex items-center gap-1 text-lg font-bold text-terminal-dark-gray"
+            >
+              <Icon
+                name="mdi:location"
+                aria-hidden="true"
+                class="text-2xl text-terminal-blue"
+              />
+              Location
+            </h3>
+            <p class="flex items-center text-gray-600">
+              Toronto, Ontario, Canada <span class="ml-2 text-2xl">🇨🇦</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="fade-in-3 terminal-card p-3 sm:p-8">
+          <h2
+            class="mb-6 flex items-center text-2xl font-bold text-terminal-dark-gray"
+          >
+            Send Message
+          </h2>
+
+          <div id="success-message" class="hidden">
+            <div class="flex flex-col items-center space-y-6 py-12 text-center">
+              <p
+                class="text-left text-lg font-semibold text-terminal-success-green"
+                aria-live="polite"
               >
-                <Icon
-                  name="mdi:location"
-                  aria-hidden="true"
-                  class="text-2xl text-terminal-blue"
-                />
-                Location
-              </h3>
-              <p class="flex items-center text-gray-600">
-                Toronto, Ontario, Canada <span class="ml-2 text-2xl">🇨🇦</span>
+                Thanks for your message! I'll get back to you as soon as I can.
               </p>
             </div>
           </div>
 
-          <div class="fade-in-3 terminal-card p-3 sm:p-8">
-            <h2
-              class="mb-6 flex items-center text-2xl font-bold text-terminal-dark-gray"
-            >
-              Send Message
-            </h2>
-
-            <div id="success-message" class="hidden">
-              <div
-                class="flex flex-col items-center space-y-6 py-12 text-center"
-              >
-                <p
-                  class="text-left text-lg font-semibold text-terminal-success-green"
+          <form class="space-y-6" id="contact-form" novalidate>
+            <div class="flex flex-col gap-4">
+              <div>
+                <label for="name" class="sr-only"> Name </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  aria-describedby="name-error"
+                  aria-invalid="false"
+                  class="terminal-input w-full"
+                  placeholder="Your name"
+                />
+                <div
+                  id="name-error"
+                  class="mt-1 hidden text-sm text-terminal-error-red"
+                  role="alert"
                   aria-live="polite"
                 >
-                  Thanks for your message! I'll get back to you as soon as I
-                  can.
-                </p>
+                </div>
+              </div>
+              <div>
+                <label for="email" class="sr-only"> Email </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  aria-describedby="email-error"
+                  aria-invalid="false"
+                  class="terminal-input w-full"
+                  placeholder="Your email address"
+                />
+                <div
+                  id="email-error"
+                  class="mt-1 hidden text-sm text-terminal-error-red"
+                  role="alert"
+                  aria-live="polite"
+                >
+                </div>
               </div>
             </div>
 
-            <form class="space-y-6" id="contact-form">
-              <div class="flex flex-col gap-4">
-                <div>
-                  <label for="name" class="sr-only"> Name </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    class="terminal-input w-full"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label for="email" class="sr-only"> Email </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    class="terminal-input w-full"
-                    placeholder="Your email address"
-                  />
-                </div>
+            <div>
+              <label for="message" class="sr-only"> Message </label>
+              <textarea
+                id="message"
+                name="message"
+                rows="6"
+                aria-describedby="message-error"
+                aria-invalid="false"
+                class="terminal-input min-h-[100px] w-full resize-none"
+                placeholder="Your message..."></textarea>
+              <div
+                id="message-error"
+                class="mt-1 hidden text-sm text-terminal-error-red"
+                role="alert"
+                aria-live="polite"
+              >
+              </div>
+            </div>
+
+            <div class="flex w-full flex-col items-center">
+              <div id="form-error" class="mb-4 hidden" aria-live="polite">
+                <p class="text-sm text-terminal-error-red"></p>
               </div>
 
-              <div>
-                <label for="message" class="sr-only"> Message </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows="6"
-                  required
-                  class="terminal-input min-h-[100px] w-full resize-none"
-                  placeholder="Your message..."></textarea>
-              </div>
-
-              <div class="flex w-full flex-col items-center">
-                <div id="form-error" class="mb-4 hidden" aria-live="polite">
-                  <p class="text-sm text-terminal-error-red"></p>
-                </div>
-
-                <div id="form-loading" class="mb-4 hidden">
-                  <div
-                    class="flex items-center justify-center space-x-2 text-terminal-blue"
-                  >
-                    <div
-                      class="h-6 w-6 animate-spin rounded-full border-b-2 border-terminal-blue"
-                    >
-                    </div>
-                    <span class="font-terminal">Processing your message...</span
-                    >
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  id="submit-button"
-                  class="terminal-button w-full"
-                  name="submit"
+              <div id="form-loading" class="mb-4 hidden">
+                <div
+                  class="flex items-center justify-center space-x-2 text-terminal-blue"
                 >
-                  Send message
-                </button>
+                  <div
+                    class="h-6 w-6 animate-spin rounded-full border-b-2 border-terminal-blue"
+                  >
+                  </div>
+                  <span class="font-terminal">Processing your message...</span>
+                </div>
               </div>
-            </form>
-          </div>
+
+              <button
+                type="submit"
+                id="submit-button"
+                class="terminal-button w-full"
+                name="submit"
+              >
+                Send message
+              </button>
+            </div>
+          </form>
         </div>
       </div>
+    </div>
   </PageWrapper>
 </Layout>
 
@@ -248,11 +273,62 @@ const contactMethods: ContactMethod[] = [
   .fade-in-3 {
     animation-delay: 400ms;
   }
+
+  .terminal-input.input-error {
+    border-color: #ef4444;
+  }
 </style>
 
 <script>
+  import { z } from 'zod'
+
   // Contact form handling
   document.addEventListener('DOMContentLoaded', () => {
+    // Validation constants
+    const MIN_NAME_LENGTH = 2
+    const MAX_NAME_LENGTH = 100
+    const MAX_EMAIL_LENGTH = 255
+    const MIN_MESSAGE_LENGTH = 10
+    const MAX_MESSAGE_LENGTH = 2000
+
+    // Validation schema
+    const contactFormSchema = z.object({
+      name: z
+        .string()
+        .min(
+          MIN_NAME_LENGTH,
+          `Name must be at least ${MIN_NAME_LENGTH} characters`
+        )
+        .max(
+          MAX_NAME_LENGTH,
+          `Name must be less than ${MAX_NAME_LENGTH} characters`
+        )
+        .refine((val) => val.trim().length >= MIN_NAME_LENGTH, {
+          message: 'Name cannot be only spaces',
+        }),
+      emailAddress: z
+        .string()
+        .min(1, 'Email is required')
+        .max(
+          MAX_EMAIL_LENGTH,
+          `Email must be less than ${MAX_EMAIL_LENGTH} characters`
+        )
+        .pipe(z.email('Please enter a valid email address')),
+      message: z
+        .string()
+        .min(
+          MIN_MESSAGE_LENGTH,
+          `Message must be at least ${MIN_MESSAGE_LENGTH} characters`
+        )
+        .max(
+          MAX_MESSAGE_LENGTH,
+          `Message must be less than ${MAX_MESSAGE_LENGTH} characters`
+        )
+        .refine((val) => val.trim().length >= MIN_MESSAGE_LENGTH, {
+          message: 'Message cannot be only spaces',
+        }),
+    })
+
     const DEFAULT_FORM_SUBMISSION = {
       name: '',
       emailAddress: '',
@@ -274,29 +350,170 @@ const contactMethods: ContactMethod[] = [
       '#message'
     ) as HTMLTextAreaElement
 
+    const nameError = document.querySelector('#name-error')
+    const emailError = document.querySelector('#email-error')
+    const messageError = document.querySelector('#message-error')
+
     let formSubmission = { ...DEFAULT_FORM_SUBMISSION }
+    let touchedFields = {
+      name: false,
+      email: false,
+      message: false,
+    }
+
+    // Validation helper functions
+    const showFieldError = (
+      field: HTMLInputElement | HTMLTextAreaElement,
+      errorElement: Element | null,
+      message: string
+    ) => {
+      field.setAttribute('aria-invalid', 'true')
+      field.classList.add('input-error')
+      if (errorElement) {
+        errorElement.textContent = message
+        errorElement.classList.remove('hidden')
+      }
+    }
+
+    const clearFieldError = (
+      field: HTMLInputElement | HTMLTextAreaElement,
+      errorElement: Element | null
+    ) => {
+      field.setAttribute('aria-invalid', 'false')
+      field.classList.remove('input-error')
+      if (errorElement) {
+        errorElement.textContent = ''
+        errorElement.classList.add('hidden')
+      }
+    }
+
+    const validateField = (
+      fieldName: 'name' | 'emailAddress' | 'message',
+      value: string,
+      field: HTMLInputElement | HTMLTextAreaElement,
+      errorElement: Element | null
+    ) => {
+      const result = contactFormSchema.shape[fieldName].safeParse(value)
+      if (!result.success) {
+        showFieldError(
+          field,
+          errorElement,
+          result.error.issues[0]?.message || ''
+        )
+        return false
+      }
+      clearFieldError(field, errorElement)
+      return true
+    }
+
+    const validateAllFields = () => {
+      let isValid = true
+
+      if (nameInput) {
+        const nameValid = validateField(
+          'name',
+          formSubmission.name,
+          nameInput,
+          nameError
+        )
+        isValid = nameValid && isValid
+      }
+
+      if (emailInput) {
+        const emailValid = validateField(
+          'emailAddress',
+          formSubmission.emailAddress,
+          emailInput,
+          emailError
+        )
+        isValid = emailValid && isValid
+      }
+
+      if (messageInput) {
+        const messageValid = validateField(
+          'message',
+          formSubmission.message,
+          messageInput,
+          messageError
+        )
+        isValid = messageValid && isValid
+      }
+
+      return isValid
+    }
 
     const updateFormState = () => {
       if (nameInput) nameInput.value = formSubmission.name
       if (emailInput) emailInput.value = formSubmission.emailAddress
       if (messageInput) messageInput.value = formSubmission.message
+      // Clear all errors when resetting
+      if (nameInput && nameError) clearFieldError(nameInput, nameError)
+      if (emailInput && emailError) clearFieldError(emailInput, emailError)
+      if (messageInput && messageError)
+        clearFieldError(messageInput, messageError)
+      touchedFields = { name: false, email: false, message: false }
     }
 
+    // Real-time validation on input (only after field has been touched)
     if (nameInput) {
       nameInput.addEventListener('input', (e) => {
         formSubmission.name = (e.target as HTMLInputElement).value
+        if (touchedFields.name) {
+          validateField('name', formSubmission.name, nameInput, nameError)
+        }
+      })
+
+      nameInput.addEventListener('blur', () => {
+        touchedFields.name = true
+        validateField('name', formSubmission.name, nameInput, nameError)
       })
     }
 
     if (emailInput) {
       emailInput.addEventListener('input', (e) => {
         formSubmission.emailAddress = (e.target as HTMLInputElement).value
+        if (touchedFields.email) {
+          validateField(
+            'emailAddress',
+            formSubmission.emailAddress,
+            emailInput,
+            emailError
+          )
+        }
+      })
+
+      emailInput.addEventListener('blur', () => {
+        touchedFields.email = true
+        validateField(
+          'emailAddress',
+          formSubmission.emailAddress,
+          emailInput,
+          emailError
+        )
       })
     }
 
     if (messageInput) {
       messageInput.addEventListener('input', (e) => {
         formSubmission.message = (e.target as HTMLTextAreaElement).value
+        if (touchedFields.message) {
+          validateField(
+            'message',
+            formSubmission.message,
+            messageInput,
+            messageError
+          )
+        }
+      })
+
+      messageInput.addEventListener('blur', () => {
+        touchedFields.message = true
+        validateField(
+          'message',
+          formSubmission.message,
+          messageInput,
+          messageError
+        )
       })
     }
 
@@ -304,12 +521,50 @@ const contactMethods: ContactMethod[] = [
       form.addEventListener('submit', async (e) => {
         e.preventDefault()
 
+        // Mark all fields as touched
+        touchedFields = { name: true, email: true, message: true }
+
         // Hide previous error
         if (formError) {
           formError.classList.add('hidden')
         }
         if (successMessage) {
           successMessage.classList.add('hidden')
+        }
+
+        // Validate all fields
+        const isValid = validateAllFields()
+
+        if (!isValid) {
+          // Focus first invalid field
+          if (nameInput && nameInput.getAttribute('aria-invalid') === 'true') {
+            nameInput.focus()
+          } else if (
+            emailInput &&
+            emailInput.getAttribute('aria-invalid') === 'true'
+          ) {
+            emailInput.focus()
+          } else if (
+            messageInput &&
+            messageInput.getAttribute('aria-invalid') === 'true'
+          ) {
+            messageInput.focus()
+          }
+          return
+        }
+
+        // Validate with Zod schema
+        const validationResult = contactFormSchema.safeParse(formSubmission)
+
+        if (!validationResult.success) {
+          // This shouldn't happen if validateAllFields passed, but just in case
+          const firstError = validationResult.error.issues[0]
+          if (formError && formErrorText) {
+            formErrorText.textContent =
+              firstError?.message || 'Validation failed'
+            formError.classList.remove('hidden')
+          }
+          return
         }
 
         // Show loading state
@@ -320,72 +575,53 @@ const contactMethods: ContactMethod[] = [
           submitButton.disabled = true
         }
 
-        // Validate form
-        if (
-          formSubmission.name.length > 0 &&
-          formSubmission.emailAddress.length > 0 &&
-          formSubmission.message.length > 0
-        ) {
-          try {
-            const formsparkId = import.meta.env.PUBLIC_FORMSPARK_ID
+        try {
+          const formsparkId = import.meta.env.PUBLIC_FORMSPARK_ID
 
-            if (!formsparkId) {
-              throw new Error('Formspark ID is not configured')
+          if (!formsparkId) {
+            throw new Error('Formspark ID is not configured')
+          }
+
+          const response = await fetch(
+            `https://submit-form.com/${formsparkId}`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+              body: JSON.stringify(formSubmission),
             }
+          )
 
-            const response = await fetch(
-              `https://submit-form.com/${formsparkId}`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Accept: 'application/json',
-                },
-                body: JSON.stringify(formSubmission),
-              }
-            )
+          if (response.ok) {
+            formSubmission = { ...DEFAULT_FORM_SUBMISSION }
+            updateFormState()
 
-            if (response.ok) {
-              formSubmission = { ...DEFAULT_FORM_SUBMISSION }
-              updateFormState()
-
-              // Hide form and show success message
-              if (form) {
-                form.classList.add('hidden')
-              }
-              if (successMessage) {
-                successMessage.classList.remove('hidden')
-              }
-            } else {
-              const errorText = 'Something went wrong, please try again.'
-              if (formError && formErrorText) {
-                formErrorText.textContent = errorText
-                formError.classList.remove('hidden')
-              }
+            // Hide form and show success message
+            if (form) {
+              form.classList.add('hidden')
             }
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error(error)
-            const errorText =
-              error instanceof Error ? error.message : String(error)
+            if (successMessage) {
+              successMessage.classList.remove('hidden')
+            }
+          } else {
+            const errorText = 'Something went wrong, please try again.'
             if (formError && formErrorText) {
               formErrorText.textContent = errorText
               formError.classList.remove('hidden')
             }
-          } finally {
-            if (formLoading) {
-              formLoading.classList.add('hidden')
-            }
-            if (submitButton) {
-              submitButton.disabled = false
-            }
           }
-        } else {
-          const errorText = 'Please fill out all required fields.'
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(error)
+          const errorText =
+            error instanceof Error ? error.message : String(error)
           if (formError && formErrorText) {
             formErrorText.textContent = errorText
             formError.classList.remove('hidden')
           }
+        } finally {
           if (formLoading) {
             formLoading.classList.add('hidden')
           }

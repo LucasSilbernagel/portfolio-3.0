@@ -168,7 +168,7 @@ import HomepageCard from '../components/HomepageCard.astro'
     const homepage = document.querySelector('#homepage')
     const homepageHeader = document.querySelector('#homepage-header')
     const homepageFooter = document.querySelector('#homepage-footer')
-    const hasVisited = sessionStorage.getItem('portfolio-visited')
+    const hasVisited = sessionStorage.getItem('checked-in')
 
     // Check if user has visited before
     if (hasVisited === 'true') {
@@ -220,7 +220,7 @@ import HomepageCard from '../components/HomepageCard.astro'
       checkInButton.addEventListener('click', (e) => {
         e.preventDefault()
         // Mark as visited and show homepage
-        sessionStorage.setItem('portfolio-visited', 'true')
+        sessionStorage.setItem('checked-in', 'true')
         const landingScreen = document.querySelector('#landing-screen')
         const homepage = document.querySelector('#homepage')
         const homepageHeader = document.querySelector('#homepage-header')
