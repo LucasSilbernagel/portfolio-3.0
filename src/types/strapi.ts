@@ -56,6 +56,16 @@ export type AboutPageContent = {
   publishedAt: string
 }
 
+export type ProfilePhotoContent = {
+  id: number
+  documentId?: string
+  image: StrapiImage[]
+  localTitle: string
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+}
+
 export type StrapiResponse<T> = {
   data: T
   meta: {

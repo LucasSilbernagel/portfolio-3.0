@@ -1,0 +1,29 @@
+{
+  "kind": "singleType",
+  "collectionName": "profile_photos",
+  "info": {
+    "singularName": "profile-photo",
+    "pluralName": "profile-photos",
+    "displayName": "ProfilePhoto"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "localTitle": {
+      "type": "string",
+      "default": "Profile Photo",
+      "required": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": true,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    }
+  }
+}

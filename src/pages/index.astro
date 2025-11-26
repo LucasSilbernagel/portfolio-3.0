@@ -4,6 +4,30 @@ import airplaneBackground from '../assets/airplane-background.jpg'
 import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
 import HomepageCard from '../components/HomepageCard.astro'
+import fetchApi, { formatImageUrl } from '../lib/strapi'
+import type { ProfilePhotoContent } from '../types/strapi'
+
+let profilePhoto: ProfilePhotoContent | null = null
+
+try {
+  profilePhoto = await fetchApi<ProfilePhotoContent | null>({
+    endpoint: 'profile-photo',
+    query: {
+      populate: '*',
+    },
+    wrappedByKey: 'data',
+  })
+} catch (error) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    `Failed to fetch profile photo from Strapi: ${error instanceof Error ? error.message : String(error)}.`
+  )
+}
+
+const profileImage = profilePhoto?.image?.[0]
+const profilePhotoUrl = profileImage ? formatImageUrl(profileImage) : ''
+const profilePhotoAlt =
+  profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
 ---
 
 <!doctype html>
@@ -44,8 +68,8 @@ import HomepageCard from '../components/HomepageCard.astro'
                 class="flex h-48 w-48 items-center justify-center rounded-full border-8 border-white bg-gradient-to-br from-terminal-blue to-blue-600 shadow-2xl"
               >
                 <img
-                  src="https://placehold.co/600x600"
-                  alt="Lucas Silbernagel"
+                  src={profilePhotoUrl}
+                  alt={profilePhotoAlt}
                   width="192"
                   height="192"
                   class="rounded-full object-contain"

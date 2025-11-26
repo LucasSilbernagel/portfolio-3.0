@@ -1,5 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components'
+import fetchApi, { formatImageUrl } from '../lib/strapi'
+import type { ProfilePhotoContent } from '../types/strapi'
 
 export type Props = {
   showBackButton?: boolean
@@ -7,6 +9,28 @@ export type Props = {
 }
 
 const { showBackButton = false, id } = Astro.props
+
+let profilePhoto: ProfilePhotoContent | null = null
+
+try {
+  profilePhoto = await fetchApi<ProfilePhotoContent | null>({
+    endpoint: 'profile-photo',
+    query: {
+      populate: '*',
+    },
+    wrappedByKey: 'data',
+  })
+} catch (error) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    `Failed to fetch profile photo from Strapi: ${error instanceof Error ? error.message : String(error)}..`
+  )
+}
+
+const profileImage = profilePhoto?.image?.[0]
+const profilePhotoUrl = profileImage ? formatImageUrl(profileImage) : ''
+const profilePhotoAlt =
+  profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
 ---
 
 <header
@@ -24,8 +48,8 @@ const { showBackButton = false, id } = Astro.props
         class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-4 border-white shadow-lg"
       >
         <img
-          src="https://placehold.co/400x400"
-          alt="Lucas Silbernagel"
+          src={profilePhotoUrl}
+          alt={profilePhotoAlt}
           class="h-16 w-16 rounded-full object-cover"
         />
       </div>

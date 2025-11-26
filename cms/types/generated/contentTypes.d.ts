@@ -464,6 +464,38 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
   }
 }
 
+export interface ApiProfilePhotoProfilePhoto extends Struct.SingleTypeSchema {
+  collectionName: 'profile_photos'
+  info: {
+    displayName: 'ProfilePhoto'
+    pluralName: 'profile-photos'
+    singularName: 'profile-photo'
+  }
+  options: {
+    draftAndPublish: true
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+    image: Schema.Attribute.Media<'images' | 'files', true> &
+      Schema.Attribute.Required
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::profile-photo.profile-photo'
+    > &
+      Schema.Attribute.Private
+    localTitle: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Profile Photo'>
+    publishedAt: Schema.Attribute.DateTime
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases'
@@ -975,6 +1007,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission
       'admin::user': AdminUser
       'api::about-page.about-page': ApiAboutPageAboutPage
+      'api::profile-photo.profile-photo': ApiProfilePhotoProfilePhoto
       'plugin::content-releases.release': PluginContentReleasesRelease
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction
       'plugin::i18n.locale': PluginI18NLocale
