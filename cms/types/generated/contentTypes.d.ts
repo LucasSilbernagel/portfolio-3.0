@@ -496,6 +496,37 @@ export interface ApiProfilePhotoProfilePhoto extends Struct.SingleTypeSchema {
   }
 }
 
+export interface ApiTechStackTechStack extends Struct.SingleTypeSchema {
+  collectionName: 'tech_stacks'
+  info: {
+    displayName: 'TechStack'
+    pluralName: 'tech-stacks'
+    singularName: 'tech-stack'
+  }
+  options: {
+    draftAndPublish: true
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::tech-stack.tech-stack'
+    > &
+      Schema.Attribute.Private
+    localTitle: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Tech Stack'>
+    publishedAt: Schema.Attribute.DateTime
+    technologies: Schema.Attribute.JSON & Schema.Attribute.Required
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases'
@@ -1008,6 +1039,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser
       'api::about-page.about-page': ApiAboutPageAboutPage
       'api::profile-photo.profile-photo': ApiProfilePhotoProfilePhoto
+      'api::tech-stack.tech-stack': ApiTechStackTechStack
       'plugin::content-releases.release': PluginContentReleasesRelease
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction
       'plugin::i18n.locale': PluginI18NLocale

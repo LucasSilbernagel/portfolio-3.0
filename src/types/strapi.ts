@@ -66,6 +66,21 @@ export type ProfilePhotoContent = {
   publishedAt: string
 }
 
+export type TechStackItem = {
+  category: string
+  items: string[]
+}
+
+export type TechStackContent = {
+  id: number
+  documentId?: string
+  localTitle: string
+  technologies: TechStackItem[]
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+}
+
 export type StrapiResponse<T> = {
   data: T
   meta: {
