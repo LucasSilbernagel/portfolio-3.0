@@ -1,5 +1,5 @@
 {
-  "kind": "singleType",
+  "kind": "collectionType",
   "collectionName": "experiences",
   "info": {
     "singularName": "experience",
@@ -11,13 +11,31 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "localLabel": {
-      "type": "string",
-      "default": "Experience",
+    "startDate": {
+      "type": "date",
       "required": true
     },
-    "experience": {
-      "type": "json",
+    "endDate": {
+      "type": "date"
+    },
+    "Company": {
+      "type": "string",
+      "required": true
+    },
+    "Position": {
+      "type": "string",
+      "required": true
+    },
+    "Location": {
+      "type": "string",
+      "required": true
+    },
+    "Website": {
+      "type": "string",
+      "required": true
+    },
+    "Highlights": {
+      "type": "blocks",
       "required": true
     }
   }

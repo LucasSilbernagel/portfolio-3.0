@@ -5,17 +5,18 @@ import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
 import { Icon } from 'astro-icon/components'
 import fetchApi from '../lib/strapi'
-import type { ExperienceContent } from '../types/strapi'
+import type { ExperienceItem, BlockType } from '../types/strapi'
 
 const ANIMATION_DELAY_STEP_MS = 120
 
-let strapiResponse: ExperienceContent | null
+let strapiResponse: ExperienceItem[]
 
 try {
-  strapiResponse = await fetchApi<ExperienceContent | null>({
-    endpoint: 'experience',
+  strapiResponse = await fetchApi<ExperienceItem[]>({
+    endpoint: 'experiences',
     query: {
       populate: '*',
+      sort: 'startDate:desc',
     },
     wrappedByKey: 'data',
   })
@@ -25,20 +26,69 @@ try {
   )
 }
 
-if (!strapiResponse) {
+if (
+  !strapiResponse ||
+  !Array.isArray(strapiResponse) ||
+  strapiResponse.length === 0
+) {
   throw new Error(
     'Experience content not found in Strapi. Please:\n1. Create and publish the content in the Strapi admin panel\n2. Go to Settings > Users & Permissions Plugin > Roles > Public\n3. Enable "find" permission for "Experience"'
   )
 }
 
-// Validate required fields
-if (!strapiResponse.experience || !Array.isArray(strapiResponse.experience)) {
-  throw new Error(
-    'Experience experience field is required and must be an array'
-  )
+// Format date to period string
+// Parse date string (YYYY-MM-DD) as local date to avoid timezone issues
+const parseLocalDate = (dateString: string): Date => {
+  const [year, month, day] = dateString.split('-').map(Number)
+  // month is 0-indexed in Date constructor
+  return new Date(year, month - 1, day)
 }
 
-const experiences = strapiResponse.experience
+const formatPeriod = (startDate: string, endDate: string | null): string => {
+  const start = parseLocalDate(startDate)
+  const startMonth = start.toLocaleDateString('en-US', { month: 'long' })
+  const startYear = start.getFullYear()
+
+  if (!endDate) {
+    return `${startMonth} ${startYear} - present`
+  }
+
+  const end = parseLocalDate(endDate)
+  const endMonth = end.toLocaleDateString('en-US', { month: 'long' })
+  const endYear = end.getFullYear()
+
+  // If same month and year, return just the month and year
+  if (startMonth === endMonth && startYear === endYear) {
+    return `${startMonth} ${startYear}`
+  }
+
+  return `${startMonth} ${startYear} - ${endMonth} ${endYear}`
+}
+
+// Extract text from blocks content
+const extractHighlights = (highlights: unknown): string[] => {
+  if (typeof highlights === 'string') {
+    return highlights.split('\n').filter((line) => line.trim())
+  }
+
+  if (Array.isArray(highlights)) {
+    return highlights
+      .map((block: unknown) => {
+        if (typeof block === 'object' && block !== null && 'type' in block) {
+          const blockObj = block as BlockType
+          if (blockObj.type === 'paragraph' && blockObj.children) {
+            return blockObj.children.map((child) => child.text || '').join('')
+          }
+        }
+        return null
+      })
+      .filter((text): text is string => text !== null && text.trim() !== '')
+  }
+
+  return []
+}
+
+const experiences = strapiResponse
 ---
 
 <Layout title="Lucas Silbernagel | Experience">
@@ -80,22 +130,22 @@ const experiences = strapiResponse.experience
                 <header class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <a
-                      href={experience.website}
+                      href={experience.Website}
                       class="inline-flex items-center gap-2 font-terminal text-lg uppercase tracking-[0.20em] text-terminal-dark-gray transition-colors hover:text-terminal-blue focus-visible:text-terminal-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terminal-blue"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {experience.company} <Icon name="mdi:external-link" />
+                      {experience.Company} <Icon name="mdi:external-link" />
                     </a>
                     <h2 class="mt-2 text-2xl font-bold text-terminal-dark-gray sm:text-3xl">
-                      {experience.title}
+                      {experience.Position}
                     </h2>
                   </div>
                   <div class="flex flex-col text-sm text-terminal-dark-gray/80 sm:items-end">
                     <span class="font-semibold text-terminal-blue">
-                      {experience.period}
+                      {formatPeriod(experience.startDate, experience.endDate)}
                     </span>
-                    <span>{experience.location}</span>
+                    <span>{experience.Location}</span>
                   </div>
                 </header>
 
@@ -103,7 +153,7 @@ const experiences = strapiResponse.experience
                   class="mt-6 space-y-3 text-base leading-relaxed"
                   role="list"
                 >
-                  {experience.highlights.map((highlight) => (
+                  {extractHighlights(experience.Highlights).map((highlight) => (
                     <li class="flex gap-3">
                       <span class="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-terminal-blue" />
                       <p>{highlight}</p>

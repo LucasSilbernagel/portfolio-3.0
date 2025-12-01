@@ -81,20 +81,22 @@ export type TechStackContent = {
   publishedAt: string
 }
 
-export type ExperienceItem = {
-  company: string
-  period: string
-  title: string
-  location: string
-  website: string
-  highlights: string[]
+// Type for Blocks content structure
+export type BlockType = {
+  type: string
+  children?: Array<{ text?: string }>
 }
 
-export type ExperienceContent = {
+export type ExperienceItem = {
   id: number
   documentId?: string
-  localLabel: string
-  experience: ExperienceItem[]
+  startDate: string
+  endDate: string | null
+  Company: string
+  Position: string
+  Location: string
+  Website: string
+  Highlights: unknown // Blocks type - can be string or structured content
   createdAt: string
   updatedAt: string
   publishedAt: string

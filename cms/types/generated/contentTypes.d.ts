@@ -464,7 +464,7 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
   }
 }
 
-export interface ApiExperienceExperience extends Struct.SingleTypeSchema {
+export interface ApiExperienceExperience extends Struct.CollectionTypeSchema {
   collectionName: 'experiences'
   info: {
     displayName: 'Experience'
@@ -475,23 +475,26 @@ export interface ApiExperienceExperience extends Struct.SingleTypeSchema {
     draftAndPublish: true
   }
   attributes: {
+    Company: Schema.Attribute.String & Schema.Attribute.Required
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private
-    experience: Schema.Attribute.JSON & Schema.Attribute.Required
+    endDate: Schema.Attribute.Date
+    Highlights: Schema.Attribute.Blocks & Schema.Attribute.Required
     locale: Schema.Attribute.String & Schema.Attribute.Private
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::experience.experience'
     > &
       Schema.Attribute.Private
-    localLabel: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'Experience'>
+    Location: Schema.Attribute.String & Schema.Attribute.Required
+    Position: Schema.Attribute.String & Schema.Attribute.Required
     publishedAt: Schema.Attribute.DateTime
+    startDate: Schema.Attribute.Date & Schema.Attribute.Required
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private
+    Website: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
 
