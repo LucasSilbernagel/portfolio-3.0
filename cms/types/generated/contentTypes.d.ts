@@ -530,6 +530,50 @@ export interface ApiProfilePhotoProfilePhoto extends Struct.SingleTypeSchema {
   }
 }
 
+export interface ApiProjectProject extends Struct.CollectionTypeSchema {
+  collectionName: 'projects'
+  info: {
+    displayName: 'Project'
+    pluralName: 'projects'
+    singularName: 'project'
+  }
+  options: {
+    defaultSortBy: 'createdAt:desc'
+    draftAndPublish: true
+  }
+  attributes: {
+    completedYear: Schema.Attribute.String & Schema.Attribute.Required
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+    description: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique
+    githubUrl: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique
+    image: Schema.Attribute.Media<'images' | 'files'> &
+      Schema.Attribute.Required
+    liveUrl: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::project.project'
+    > &
+      Schema.Attribute.Private
+    projectName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique
+    publishedAt: Schema.Attribute.DateTime
+    technologies: Schema.Attribute.JSON & Schema.Attribute.Required
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiTechStackTechStack extends Struct.SingleTypeSchema {
   collectionName: 'tech_stacks'
   info: {
@@ -1074,6 +1118,7 @@ declare module '@strapi/strapi' {
       'api::about-page.about-page': ApiAboutPageAboutPage
       'api::experience.experience': ApiExperienceExperience
       'api::profile-photo.profile-photo': ApiProfilePhotoProfilePhoto
+      'api::project.project': ApiProjectProject
       'api::tech-stack.tech-stack': ApiTechStackTechStack
       'plugin::content-releases.release': PluginContentReleasesRelease
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction

@@ -102,6 +102,21 @@ export type ExperienceItem = {
   publishedAt: string
 }
 
+export type ProjectContent = {
+  id: number
+  documentId?: string
+  projectName: string
+  completedYear: string
+  technologies: string[] // JSON field parsed as array
+  description: string
+  liveUrl: string
+  githubUrl: string
+  image: StrapiImage | StrapiImage[] // Single media field, but may be returned as array when populated
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+}
+
 export type StrapiResponse<T> = {
   data: T
   meta: {

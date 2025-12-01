@@ -4,91 +4,47 @@ import BoardingPass from '../components/BoardingPass.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
+import fetchApi, { formatImageUrl } from '../lib/strapi'
+import type { ProjectContent } from '../types/strapi'
 
 const ANIMATION_DELAY_MS = 100
 
-const projects = [
-  {
-    projectName: 'Word Game DB v2',
-    completedYear: '2024',
-    technologies: [
-      'Next.js',
-      'React',
-      'MongoDB',
-      'TypeScript',
-      'Tailwind',
-      'Radix UI',
-    ],
-    description:
-      'A read-only REST API for building word games and puzzles. Modernized from the original MERN stack application using Next.js for both frontend and backend with new functionality and endpoints.',
-    liveUrl: 'https://wordgamedb.com',
-    githubUrl: 'https://github.com/lucassilbernagel/word-game-db-v2',
-    imageUrl: 'https://placehold.co/300x200',
-  },
-  {
-    projectName: 'Housing Solver',
-    completedYear: '2024',
-    technologies: [
-      'React',
-      'Vite',
-      'TypeScript',
-      'Zustand',
-      'Tailwind',
-      'Radix UI',
-      'TanStack Router',
-    ],
-    description:
-      'Think you have what it takes to solve the affordable housing crisis? Prove it in this incremental clicker game! Features complex economic simulation and engaging gameplay mechanics.',
-    liveUrl: 'https://housing-solver.vercel.app',
-    githubUrl: 'https://github.com/lucassilbernagel/housing-solver',
-    imageUrl: 'https://placehold.co/300x200',
-  },
-  {
-    projectName: 'Decision Tree',
-    completedYear: '2023',
-    technologies: ['React', 'Remix', 'TypeScript', 'Tailwind', 'shadcn/ui'],
-    description:
-      'A simple generator of shareable and accessible decision trees. Decision tree data is serialized and saved in the URL, making it easy to share and save created decision trees.',
-    liveUrl: 'https://decision-tree-remix.vercel.app',
-    githubUrl: 'https://github.com/lucassilbernagel/decision-tree',
-    imageUrl: 'https://placehold.co/300x200',
-  },
-  {
-    projectName: 'Blizzard Rush',
-    completedYear: '2023',
-    technologies: [
-      'Remix',
-      'React',
-      'Shopify',
-      'TypeScript',
-      'Tailwind',
-      'shadcn/ui',
-      'Zustand',
-      'TanStack Query',
-    ],
-    description:
-      'A Shopify development store that sells snowboards. Test data is rendered on the Remix front end through Shopify APIs, and Shopify handles the checkout process.',
-    githubUrl: 'https://github.com/lucassilbernagel/blizzard-rush',
-    imageUrl: 'https://placehold.co/300x200',
-  },
-  {
-    projectName: 'Super Simon',
-    completedYear: '2023',
-    technologies: [
-      'Next.js',
-      'React',
-      'TypeScript',
-      'Tailwind',
-      'Redux',
-      'Firebase',
-    ],
-    description:
-      'The classic memory game Simon, with a twist! How long of a sequence can you remember? Super Simon is a Progressive Web App that can be played on the web, installed on your device, and even played offline!',
-    liveUrl: 'https://super-simon.vercel.app',
-    githubUrl: 'https://github.com/lucassilbernagel/super-simon',
-    imageUrl: 'https://placehold.co/300x200',
-  },
-]
+let strapiProjects: ProjectContent[]
+
+try {
+  strapiProjects = await fetchApi<ProjectContent[]>({
+    endpoint: 'projects',
+    query: {
+      populate: '*',
+      sort: 'createdAt:desc',
+    },
+    wrappedByKey: 'data',
+  })
+} catch (error) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    `Failed to fetch projects from Strapi: ${error instanceof Error ? error.message : String(error)}.`
+  )
+  strapiProjects = []
+}
+
+const projects = strapiProjects.map((project) => {
+  // Handle image - could be single object or array
+  const projectImage = Array.isArray(project.image)
+    ? project.image[0]
+    : project.image
+  const imageUrl = projectImage ? formatImageUrl(projectImage) : undefined
+
+  return {
+    projectName: project.projectName,
+    completedYear: project.completedYear,
+    technologies: project.technologies,
+    description: project.description,
+    liveUrl: project.liveUrl,
+    githubUrl: project.githubUrl,
+    imageUrl,
+  }
+})
 ---
 
 <Layout title="Lucas Silbernagel | Projects">
