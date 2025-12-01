@@ -464,6 +464,37 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
   }
 }
 
+export interface ApiExperienceExperience extends Struct.SingleTypeSchema {
+  collectionName: 'experiences'
+  info: {
+    displayName: 'Experience'
+    pluralName: 'experiences'
+    singularName: 'experience'
+  }
+  options: {
+    draftAndPublish: true
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+    experience: Schema.Attribute.JSON & Schema.Attribute.Required
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::experience.experience'
+    > &
+      Schema.Attribute.Private
+    localLabel: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Experience'>
+    publishedAt: Schema.Attribute.DateTime
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiProfilePhotoProfilePhoto extends Struct.SingleTypeSchema {
   collectionName: 'profile_photos'
   info: {
@@ -1038,6 +1069,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission
       'admin::user': AdminUser
       'api::about-page.about-page': ApiAboutPageAboutPage
+      'api::experience.experience': ApiExperienceExperience
       'api::profile-photo.profile-photo': ApiProfilePhotoProfilePhoto
       'api::tech-stack.tech-stack': ApiTechStackTechStack
       'plugin::content-releases.release': PluginContentReleasesRelease

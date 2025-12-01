@@ -81,6 +81,25 @@ export type TechStackContent = {
   publishedAt: string
 }
 
+export type ExperienceItem = {
+  company: string
+  period: string
+  title: string
+  location: string
+  website: string
+  highlights: string[]
+}
+
+export type ExperienceContent = {
+  id: number
+  documentId?: string
+  localLabel: string
+  experience: ExperienceItem[]
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+}
+
 export type StrapiResponse<T> = {
   data: T
   meta: {
