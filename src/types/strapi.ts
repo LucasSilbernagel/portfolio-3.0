@@ -140,6 +140,15 @@ export type ResumeContent = {
   publishedAt: string
 }
 
+export type MapContent = {
+  id: number
+  documentId?: string
+  mapIframeSrc: string
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+}
+
 export type StrapiResponse<T> = {
   data: T
   meta: {

@@ -498,6 +498,31 @@ export interface ApiExperienceExperience extends Struct.CollectionTypeSchema {
   }
 }
 
+export interface ApiMapMap extends Struct.SingleTypeSchema {
+  collectionName: 'maps'
+  info: {
+    displayName: 'Map'
+    pluralName: 'maps'
+    singularName: 'map'
+  }
+  options: {
+    draftAndPublish: true
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::map.map'> &
+      Schema.Attribute.Private
+    mapIframeSrc: Schema.Attribute.Text & Schema.Attribute.Required
+    publishedAt: Schema.Attribute.DateTime
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiProfilePhotoProfilePhoto extends Struct.SingleTypeSchema {
   collectionName: 'profile_photos'
   info: {
@@ -1142,6 +1167,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser
       'api::about-page.about-page': ApiAboutPageAboutPage
       'api::experience.experience': ApiExperienceExperience
+      'api::map.map': ApiMapMap
       'api::profile-photo.profile-photo': ApiProfilePhotoProfilePhoto
       'api::project.project': ApiProjectProject
       'api::resume.resume': ApiResumeResume
