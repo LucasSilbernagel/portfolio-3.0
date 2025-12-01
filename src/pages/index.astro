@@ -4,8 +4,8 @@ import airplaneBackground from '../assets/airplane-background.jpg'
 import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
 import HomepageCard from '../components/HomepageCard.astro'
-import fetchApi, { formatImageUrl } from '../lib/strapi'
-import type { ProfilePhotoContent } from '../types/strapi'
+import fetchApi, { formatImageUrl, getStrapiMedia } from '../lib/strapi'
+import type { ProfilePhotoContent, ResumeContent } from '../types/strapi'
 
 let profilePhoto: ProfilePhotoContent | null = null
 
@@ -24,10 +24,30 @@ try {
   )
 }
 
-const profileImage = profilePhoto?.image?.[0]
+const profileImage = profilePhoto?.image
 const profilePhotoUrl = profileImage ? formatImageUrl(profileImage) : ''
 const profilePhotoAlt =
   profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
+
+let resume: ResumeContent | null = null
+
+try {
+  resume = await fetchApi<ResumeContent | null>({
+    endpoint: 'resume',
+    query: {
+      populate: '*',
+    },
+    wrappedByKey: 'data',
+  })
+} catch (error) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    `Failed to fetch resume from Strapi: ${error instanceof Error ? error.message : String(error)}.`
+  )
+}
+
+const resumeUrl = resume?.Resume ? getStrapiMedia(resume.Resume.url) : null
+const resumeFileName = resume?.Resume?.name || 'lucas-silbernagel-resume.pdf'
 ---
 
 <!doctype html>
@@ -149,6 +169,8 @@ const profilePhotoAlt =
                   iconName="mdi:ticket-account"
                   title="Print Boarding Pass"
                   titleSize="text-3xl"
+                  dataResumeUrl={resumeUrl || ''}
+                  dataResumeFilename={resumeFileName}
                 />
                 <HomepageCard href="/map" iconName="mdi:map" title="Map" />
               </div>
@@ -303,23 +325,55 @@ const profilePhotoAlt =
     const loadingOverlay = document.querySelector('#loading-overlay')
 
     if (boardingPassButton && loadingOverlay) {
-      boardingPassButton.addEventListener('click', () => {
+      boardingPassButton.addEventListener('click', async () => {
+        const resumeUrl = (boardingPassButton as HTMLElement).dataset.resumeUrl
+        const resumeFilename =
+          (boardingPassButton as HTMLElement).dataset.resumeFilename ||
+          'lucas-silbernagel-resume.pdf'
+
+        if (!resumeUrl) {
+          // eslint-disable-next-line no-console
+          console.error('Resume URL not available')
+          return
+        }
+
         loadingOverlay.classList.add('flex')
         loadingOverlay.classList.remove('hidden')
 
-        // Start download immediately while overlay is showing
-        const link = document.createElement('a')
-        link.href = '/resume.pdf'
-        link.download = 'lucas-silbernagel-resume.pdf'
-        document.body.append(link)
-        link.click()
-        link.remove()
+        try {
+          // Fetch the file as a blob to ensure it downloads instead of opening
+          const response = await fetch(resumeUrl)
+          if (!response.ok) {
+            throw new Error(`Failed to fetch resume: ${response.statusText}`)
+          }
 
-        // Hide overlay after delay (download continues in background)
-        setTimeout(() => {
+          const blob = await response.blob()
+          const blobUrl = URL.createObjectURL(blob)
+
+          // Create download link with blob URL
+          const link = document.createElement('a')
+          link.href = blobUrl
+          link.download = resumeFilename
+          document.body.append(link)
+          link.click()
+          link.remove()
+
+          // Clean up blob URL after a short delay
+          setTimeout(() => {
+            URL.revokeObjectURL(blobUrl)
+          }, 100)
+
+          // Hide overlay after delay (download continues in background)
+          setTimeout(() => {
+            loadingOverlay.classList.add('hidden')
+            loadingOverlay.classList.remove('flex')
+          }, LOADING_OVERLAY_DURATION_MS)
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('Error downloading resume:', error)
           loadingOverlay.classList.add('hidden')
           loadingOverlay.classList.remove('flex')
-        }, LOADING_OVERLAY_DURATION_MS)
+        }
       })
     }
   }

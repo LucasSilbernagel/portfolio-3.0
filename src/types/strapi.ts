@@ -59,7 +59,7 @@ export type AboutPageContent = {
 export type ProfilePhotoContent = {
   id: number
   documentId?: string
-  image: StrapiImage[]
+  image: StrapiImage
   localTitle: string
   createdAt: string
   updatedAt: string
@@ -112,6 +112,29 @@ export type ProjectContent = {
   liveUrl: string
   githubUrl: string
   image: StrapiImage | StrapiImage[] // Single media field, but may be returned as array when populated
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+}
+
+// Strapi file type (for non-image files like PDFs)
+export type StrapiFile = {
+  id: number
+  documentId?: string
+  name: string
+  alternativeText: string | null
+  caption: string | null
+  url: string
+  hash: string
+  ext: string
+  mime: string
+  size: number
+}
+
+export type ResumeContent = {
+  id: number
+  documentId?: string
+  Resume: StrapiFile
   createdAt: string
   updatedAt: string
   publishedAt: string

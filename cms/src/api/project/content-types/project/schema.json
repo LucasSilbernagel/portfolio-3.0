@@ -7,8 +7,7 @@
     "displayName": "Project"
   },
   "options": {
-    "draftAndPublish": true,
-    "defaultSortBy": "createdAt:desc"
+    "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
@@ -44,7 +43,9 @@
       "type": "media",
       "multiple": false,
       "required": true,
-      "allowedTypes": ["images", "files"]
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }

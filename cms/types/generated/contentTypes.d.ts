@@ -512,8 +512,7 @@ export interface ApiProfilePhotoProfilePhoto extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private
-    image: Schema.Attribute.Media<'images' | 'files', true> &
-      Schema.Attribute.Required
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required
     locale: Schema.Attribute.String & Schema.Attribute.Private
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -538,7 +537,6 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     singularName: 'project'
   }
   options: {
-    defaultSortBy: 'createdAt:desc'
     draftAndPublish: true
   }
   attributes: {
@@ -552,8 +550,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     githubUrl: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique
-    image: Schema.Attribute.Media<'images' | 'files'> &
-      Schema.Attribute.Required
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required
     liveUrl: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique
@@ -568,6 +565,34 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
       Schema.Attribute.Unique
     publishedAt: Schema.Attribute.DateTime
     technologies: Schema.Attribute.JSON & Schema.Attribute.Required
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiResumeResume extends Struct.SingleTypeSchema {
+  collectionName: 'resumes'
+  info: {
+    displayName: 'Resume'
+    pluralName: 'resumes'
+    singularName: 'resume'
+  }
+  options: {
+    draftAndPublish: true
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::resume.resume'
+    > &
+      Schema.Attribute.Private
+    publishedAt: Schema.Attribute.DateTime
+    Resume: Schema.Attribute.Media<'files'> & Schema.Attribute.Required
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private
@@ -1119,6 +1144,7 @@ declare module '@strapi/strapi' {
       'api::experience.experience': ApiExperienceExperience
       'api::profile-photo.profile-photo': ApiProfilePhotoProfilePhoto
       'api::project.project': ApiProjectProject
+      'api::resume.resume': ApiResumeResume
       'api::tech-stack.tech-stack': ApiTechStackTechStack
       'plugin::content-releases.release': PluginContentReleasesRelease
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction

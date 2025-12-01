@@ -27,7 +27,7 @@ try {
   )
 }
 
-const profileImage = profilePhoto?.image?.[0]
+const profileImage = profilePhoto?.image
 const profilePhotoUrl = profileImage ? formatImageUrl(profileImage) : ''
 const profilePhotoAlt =
   profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
