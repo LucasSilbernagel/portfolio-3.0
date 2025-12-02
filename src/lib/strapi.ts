@@ -75,8 +75,9 @@ export default async function fetchApi<T>({
 
       // If it's a network error and we have retries left, wait and retry
       if (
-        (lastError instanceof TypeError && lastError.message.includes('fetch')) ||
-        (lastError.message.includes('Failed to connect'))
+        (lastError instanceof TypeError &&
+          lastError.message.includes('fetch')) ||
+        lastError.message.includes('Failed to connect')
       ) {
         if (attempt < maxRetries - 1) {
           await new Promise((resolve) => setTimeout(resolve, retryDelay))
@@ -125,10 +126,34 @@ export type StrapiImage = {
   width: number
   height: number
   formats?: {
-    thumbnail?: { url: string; width: number; height: number; size: number; sizeInBytes: number }
-    small?: { url: string; width: number; height: number; size: number; sizeInBytes: number }
-    medium?: { url: string; width: number; height: number; size: number; sizeInBytes: number }
-    large?: { url: string; width: number; height: number; size: number; sizeInBytes: number }
+    thumbnail?: {
+      url: string
+      width: number
+      height: number
+      size: number
+      sizeInBytes: number
+    }
+    small?: {
+      url: string
+      width: number
+      height: number
+      size: number
+      sizeInBytes: number
+    }
+    medium?: {
+      url: string
+      width: number
+      height: number
+      size: number
+      sizeInBytes: number
+    }
+    large?: {
+      url: string
+      width: number
+      height: number
+      size: number
+      sizeInBytes: number
+    }
   }
   url: string
   hash: string

@@ -624,6 +624,40 @@ export interface ApiResumeResume extends Struct.SingleTypeSchema {
   }
 }
 
+export interface ApiSocialShareImageSocialShareImage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'social_share_images'
+  info: {
+    displayName: 'Social Share Image'
+    pluralName: 'social-share-images'
+    singularName: 'social-share-image'
+  }
+  options: {
+    draftAndPublish: true
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::social-share-image.social-share-image'
+    > &
+      Schema.Attribute.Private
+    localLabel: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Private &
+      Schema.Attribute.DefaultTo<'Social Share Image'>
+    publishedAt: Schema.Attribute.DateTime
+    socialShareImage: Schema.Attribute.Media<'images'> &
+      Schema.Attribute.Required
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiTechStackTechStack extends Struct.SingleTypeSchema {
   collectionName: 'tech_stacks'
   info: {
@@ -1171,6 +1205,7 @@ declare module '@strapi/strapi' {
       'api::profile-photo.profile-photo': ApiProfilePhotoProfilePhoto
       'api::project.project': ApiProjectProject
       'api::resume.resume': ApiResumeResume
+      'api::social-share-image.social-share-image': ApiSocialShareImageSocialShareImage
       'api::tech-stack.tech-stack': ApiTechStackTechStack
       'plugin::content-releases.release': PluginContentReleasesRelease
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction

@@ -149,6 +149,15 @@ export type MapContent = {
   publishedAt: string
 }
 
+export type SocialShareImageContent = {
+  id: number
+  documentId?: string
+  socialShareImage: StrapiImage
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+}
+
 export type StrapiResponse<T> = {
   data: T
   meta: {

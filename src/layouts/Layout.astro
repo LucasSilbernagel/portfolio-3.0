@@ -1,12 +1,49 @@
 ---
 import '../styles/global.css'
 import Footer from '../components/Footer.astro'
+import fetchApi, { formatImageUrl } from '../lib/strapi'
+import type { SocialShareImageContent } from '../types/strapi'
 
 export type Props = {
   title?: string
+  description?: string
 }
 
-const { title = 'Lucas Silbernagel | Software Developer' } = Astro.props
+const {
+  title = 'Lucas Silbernagel | Software Developer',
+  description = 'Personal website and software development portfolio for Lucas Silbernagel',
+} = Astro.props
+
+// Fetch social share image from Strapi
+let socialShareImageUrl: string | undefined
+
+try {
+  const socialShareImage = await fetchApi<SocialShareImageContent | null>({
+    endpoint: 'social-share-image',
+    query: {
+      populate: '*',
+    },
+    wrappedByKey: 'data',
+  })
+
+  if (socialShareImage?.socialShareImage) {
+    socialShareImageUrl = formatImageUrl(socialShareImage.socialShareImage)
+  }
+} catch (error) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    `Failed to fetch social share image from Strapi: ${error instanceof Error ? error.message : String(error)}.`
+  )
+}
+
+const siteUrl = Astro.site?.href || 'https://lucassilbernagel.com'
+const pageUrl = new URL(Astro.url.pathname, siteUrl).href
+
+const ogImageUrl = socialShareImageUrl
+  ? socialShareImageUrl.startsWith('http')
+    ? socialShareImageUrl
+    : new URL(socialShareImageUrl, siteUrl).href
+  : undefined
 ---
 
 <!doctype html>
@@ -16,11 +53,28 @@ const { title = 'Lucas Silbernagel | Software Developer' } = Astro.props
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <meta
-      name="description"
-      content="Personal website and software development portfolio for Lucas Silbernagel"
-    />
+    <meta name="description" content={description} />
     <title>{title}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {
+      ogImageUrl && (
+        <>
+          <meta property="og:image" content={ogImageUrl} />
+          <meta property="og:image:alt" content={description} />
+        </>
+      )
+    }
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 
     <!-- Preload fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
