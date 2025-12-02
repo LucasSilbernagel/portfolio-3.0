@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css'
 import Footer from '../components/Footer.astro'
-import fetchApi, { formatImageUrl } from '../lib/strapi'
+import { formatImageUrl, safeFetchSingleType } from '../lib/strapi'
 import type { SocialShareImageContent } from '../types/strapi'
 
 export type Props = {
@@ -15,26 +15,14 @@ const {
 } = Astro.props
 
 // Fetch social share image from Strapi
-let socialShareImageUrl: string | undefined
+const socialShareImage = await safeFetchSingleType<SocialShareImageContent>({
+  endpoint: 'social-share-image',
+  contentTypeName: 'social share image',
+})
 
-try {
-  const socialShareImage = await fetchApi<SocialShareImageContent | null>({
-    endpoint: 'social-share-image',
-    query: {
-      populate: '*',
-    },
-    wrappedByKey: 'data',
-  })
-
-  if (socialShareImage?.socialShareImage) {
-    socialShareImageUrl = formatImageUrl(socialShareImage.socialShareImage)
-  }
-} catch (error) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    `Failed to fetch social share image from Strapi: ${error instanceof Error ? error.message : String(error)}.`
-  )
-}
+const socialShareImageUrl = socialShareImage?.socialShareImage
+  ? formatImageUrl(socialShareImage.socialShareImage)
+  : undefined
 
 const siteUrl = Astro.site?.href || 'https://lucassilbernagel.com'
 const pageUrl = new URL(Astro.url.pathname, siteUrl).href

@@ -4,7 +4,7 @@ import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
 import { Icon } from 'astro-icon/components'
-import fetchApi from '../lib/strapi'
+import { fetchSingleTypeWithValidation } from '../lib/strapi'
 import type { TechStackContent } from '../types/strapi'
 
 const ANIMATION_DELAY_MS = 100
@@ -24,27 +24,10 @@ const decorativeIcons = [
   'mdi:nodejs',
 ]
 
-let strapiResponse: TechStackContent | null
-
-try {
-  strapiResponse = await fetchApi<TechStackContent | null>({
-    endpoint: 'tech-stack',
-    query: {
-      populate: '*',
-    },
-    wrappedByKey: 'data',
-  })
-} catch (error) {
-  throw new Error(
-    `Failed to fetch content from Strapi: ${error instanceof Error ? error.message : String(error)}. Make sure Strapi is running and the Tech Stack content type has public permissions enabled.`
-  )
-}
-
-if (!strapiResponse) {
-  throw new Error(
-    'Tech stack content not found in Strapi. Please:\n1. Create and publish the content in the Strapi admin panel\n2. Go to Settings > Users & Permissions Plugin > Roles > Public\n3. Enable "find" permission for "Tech Stack"'
-  )
-}
+const strapiResponse = await fetchSingleTypeWithValidation<TechStackContent>({
+  endpoint: 'tech-stack',
+  contentTypeName: 'Tech Stack',
+})
 
 // Validate required fields
 if (

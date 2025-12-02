@@ -4,37 +4,18 @@ import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
 import { Icon } from 'astro-icon/components'
-import fetchApi from '../lib/strapi'
+import { fetchCollectionWithValidation } from '../lib/strapi'
 import type { ExperienceItem, BlockType } from '../types/strapi'
 
 const ANIMATION_DELAY_STEP_MS = 120
 
-let strapiResponse: ExperienceItem[]
-
-try {
-  strapiResponse = await fetchApi<ExperienceItem[]>({
-    endpoint: 'experiences',
-    query: {
-      populate: '*',
-      sort: 'startDate:desc',
-    },
-    wrappedByKey: 'data',
-  })
-} catch (error) {
-  throw new Error(
-    `Failed to fetch content from Strapi: ${error instanceof Error ? error.message : String(error)}. Make sure Strapi is running and the Experience content type has public permissions enabled.`
-  )
-}
-
-if (
-  !strapiResponse ||
-  !Array.isArray(strapiResponse) ||
-  strapiResponse.length === 0
-) {
-  throw new Error(
-    'Experience content not found in Strapi. Please:\n1. Create and publish the content in the Strapi admin panel\n2. Go to Settings > Users & Permissions Plugin > Roles > Public\n3. Enable "find" permission for "Experience"'
-  )
-}
+const strapiResponse = await fetchCollectionWithValidation<ExperienceItem>({
+  endpoint: 'experiences',
+  query: {
+    sort: 'startDate:desc',
+  },
+  contentTypeName: 'Experience',
+})
 
 // Format date to period string
 // Parse date string (YYYY-MM-DD) as local date to avoid timezone issues

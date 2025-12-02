@@ -4,47 +4,27 @@ import airplaneBackground from '../assets/airplane-background.jpg'
 import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
 import HomepageCard from '../components/HomepageCard.astro'
-import fetchApi, { formatImageUrl, getStrapiMedia } from '../lib/strapi'
+import {
+  formatImageUrl,
+  getStrapiMedia,
+  safeFetchSingleType,
+} from '../lib/strapi'
 import type { ProfilePhotoContent, ResumeContent } from '../types/strapi'
 
-let profilePhoto: ProfilePhotoContent | null = null
-
-try {
-  profilePhoto = await fetchApi<ProfilePhotoContent | null>({
-    endpoint: 'profile-photo',
-    query: {
-      populate: '*',
-    },
-    wrappedByKey: 'data',
-  })
-} catch (error) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    `Failed to fetch profile photo from Strapi: ${error instanceof Error ? error.message : String(error)}.`
-  )
-}
+const profilePhoto = await safeFetchSingleType<ProfilePhotoContent>({
+  endpoint: 'profile-photo',
+  contentTypeName: 'profile photo',
+})
 
 const profileImage = profilePhoto?.image
 const profilePhotoUrl = profileImage ? formatImageUrl(profileImage) : ''
 const profilePhotoAlt =
   profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
 
-let resume: ResumeContent | null = null
-
-try {
-  resume = await fetchApi<ResumeContent | null>({
-    endpoint: 'resume',
-    query: {
-      populate: '*',
-    },
-    wrappedByKey: 'data',
-  })
-} catch (error) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    `Failed to fetch resume from Strapi: ${error instanceof Error ? error.message : String(error)}.`
-  )
-}
+const resume = await safeFetchSingleType<ResumeContent>({
+  endpoint: 'resume',
+  contentTypeName: 'resume',
+})
 
 const resumeUrl = resume?.Resume ? getStrapiMedia(resume.Resume.url) : null
 const resumeFileName = resume?.Resume?.name || 'lucas-silbernagel-resume.pdf'
@@ -207,6 +187,7 @@ const resumeFileName = resume?.Resume?.name || 'lucas-silbernagel-resume.pdf'
   const TILE_ANIMATION_DELAY_MS = 150
   const RENDER_DELAY_MS = 10
   const LOADING_OVERLAY_DURATION_MS = 2000
+  const BLOB_URL_REVOKE_DELAY_MS = 100
 
   // First-time visitor logic
   document.addEventListener('DOMContentLoaded', () => {
@@ -357,11 +338,10 @@ const resumeFileName = resume?.Resume?.name || 'lucas-silbernagel-resume.pdf'
           document.body.append(link)
           link.click()
           link.remove()
-
           // Clean up blob URL after a short delay
           setTimeout(() => {
             URL.revokeObjectURL(blobUrl)
-          }, 100)
+          }, BLOB_URL_REVOKE_DELAY_MS)
 
           // Hide overlay after delay (download continues in background)
           setTimeout(() => {

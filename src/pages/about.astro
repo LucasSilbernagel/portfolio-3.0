@@ -3,30 +3,13 @@ import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
-import fetchApi, { formatImageUrl } from '../lib/strapi'
-import type { AboutPageContent } from '../types/strapi'
+import { formatImageUrl, fetchSingleTypeWithValidation } from '../lib/strapi'
+import type { AboutPageContent, BlockType } from '../types/strapi'
 
-let strapiResponse: AboutPageContent | null
-
-try {
-  strapiResponse = await fetchApi<AboutPageContent | null>({
-    endpoint: 'about-page',
-    query: {
-      populate: '*',
-    },
-    wrappedByKey: 'data',
-  })
-} catch (error) {
-  throw new Error(
-    `Failed to fetch content from Strapi: ${error instanceof Error ? error.message : String(error)}. Make sure Strapi is running and the About Page content type has public permissions enabled.`
-  )
-}
-
-if (!strapiResponse) {
-  throw new Error(
-    'About page content not found in Strapi. Please:\n1. Create and publish the content in the Strapi admin panel\n2. Go to Settings > Users & Permissions Plugin > Roles > Public\n3. Enable "find" permission for "About Page"'
-  )
-}
+const strapiResponse = await fetchSingleTypeWithValidation<AboutPageContent>({
+  endpoint: 'about-page',
+  contentTypeName: 'About Page',
+})
 
 // For single types in Strapi v5, fields are returned directly without an attributes wrapper
 // Validate required fields
@@ -69,12 +52,6 @@ const getPositionClasses = (index: number): string => {
 
 const getFadeInClass = (index: number): string => {
   return FADE_IN_IMAGE_CLASSES[index] || ''
-}
-
-// Type for Blocks content structure
-type BlockType = {
-  type: string
-  children?: Array<{ text?: string }>
 }
 ---
 

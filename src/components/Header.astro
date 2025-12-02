@@ -1,6 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components'
-import fetchApi, { formatImageUrl } from '../lib/strapi'
+import { formatImageUrl, safeFetchSingleType } from '../lib/strapi'
 import type { ProfilePhotoContent } from '../types/strapi'
 
 export type Props = {
@@ -10,22 +10,10 @@ export type Props = {
 
 const { showBackButton = false, id } = Astro.props
 
-let profilePhoto: ProfilePhotoContent | null = null
-
-try {
-  profilePhoto = await fetchApi<ProfilePhotoContent | null>({
-    endpoint: 'profile-photo',
-    query: {
-      populate: '*',
-    },
-    wrappedByKey: 'data',
-  })
-} catch (error) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    `Failed to fetch profile photo from Strapi: ${error instanceof Error ? error.message : String(error)}..`
-  )
-}
+const profilePhoto = await safeFetchSingleType<ProfilePhotoContent>({
+  endpoint: 'profile-photo',
+  contentTypeName: 'profile photo',
+})
 
 const profileImage = profilePhoto?.image
 const profilePhotoUrl = profileImage ? formatImageUrl(profileImage) : ''

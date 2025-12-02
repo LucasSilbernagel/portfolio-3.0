@@ -3,26 +3,13 @@ import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
-import fetchApi from '../lib/strapi'
+import { safeFetchSingleType } from '../lib/strapi'
 import type { MapContent } from '../types/strapi'
 
-let mapData: MapContent | null
-
-try {
-  mapData = await fetchApi<MapContent | null>({
-    endpoint: 'map',
-    query: {
-      populate: '*',
-    },
-    wrappedByKey: 'data',
-  })
-} catch (error) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    `Failed to fetch map data from Strapi: ${error instanceof Error ? error.message : String(error)}.`
-  )
-  mapData = null
-}
+const mapData = await safeFetchSingleType<MapContent>({
+  endpoint: 'map',
+  contentTypeName: 'map',
+})
 
 const iframeSrc = mapData?.mapIframeSrc || ''
 ---

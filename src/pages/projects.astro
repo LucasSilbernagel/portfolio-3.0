@@ -4,29 +4,18 @@ import BoardingPass from '../components/BoardingPass.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
-import fetchApi, { formatImageUrl } from '../lib/strapi'
+import { formatImageUrl, safeFetchCollection } from '../lib/strapi'
 import type { ProjectContent } from '../types/strapi'
 
 const ANIMATION_DELAY_MS = 100
 
-let strapiProjects: ProjectContent[]
-
-try {
-  strapiProjects = await fetchApi<ProjectContent[]>({
-    endpoint: 'projects',
-    query: {
-      populate: '*',
-      sort: 'createdAt:desc',
-    },
-    wrappedByKey: 'data',
-  })
-} catch (error) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    `Failed to fetch projects from Strapi: ${error instanceof Error ? error.message : String(error)}.`
-  )
-  strapiProjects = []
-}
+const strapiProjects = await safeFetchCollection<ProjectContent>({
+  endpoint: 'projects',
+  query: {
+    sort: 'createdAt:desc',
+  },
+  contentTypeName: 'projects',
+})
 
 const projects = strapiProjects.map((project) => {
   // Handle image - could be single object or array

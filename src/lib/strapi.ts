@@ -1,3 +1,5 @@
+import type { StrapiImage } from '../types/strapi'
+
 type FetchApiOptions = {
   endpoint: string
   query?: Record<string, string>
@@ -21,14 +23,15 @@ export default async function fetchApi<T>({
   const url = new URL(`${import.meta.env.STRAPI_URL}/api/${endpoint}`)
 
   if (query) {
-    Object.entries(query).forEach(([key, value]) => {
+    for (const [key, value] of Object.entries(query)) {
       url.searchParams.append(key, value)
-    })
+    }
   }
 
   // Retry logic for when Strapi is still starting up
   const maxRetries = 10
   const retryDelay = 1000 // 1 second
+  const HTTP_NOT_FOUND = 404
   let lastError: Error | null = null
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -37,8 +40,7 @@ export default async function fetchApi<T>({
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}))
-        // If it's a 404 and we're in early retries, might be Strapi still starting
-        if (res.status === 404 && attempt < maxRetries - 1) {
+        if (res.status === HTTP_NOT_FOUND && attempt < maxRetries - 1) {
           await new Promise((resolve) => setTimeout(resolve, retryDelay))
           continue
         }
@@ -49,10 +51,9 @@ export default async function fetchApi<T>({
 
       let data = await res.json()
 
-      // Check for Strapi error response structure
       if (data.error) {
         // If it's a 404 and we're in early retries, might be Strapi still starting
-        if (data.error.status === 404 && attempt < maxRetries - 1) {
+        if (data.error.status === HTTP_NOT_FOUND && attempt < maxRetries - 1) {
           await new Promise((resolve) => setTimeout(resolve, retryDelay))
           continue
         }
@@ -116,53 +117,145 @@ export function getStrapiMedia(url: string | null): string {
 /**
  * Format Strapi image data for use in components
  */
-// Strapi v5 returns media fields as flat objects when populated
-export type StrapiImage = {
-  id: number
-  documentId?: string
-  name: string
-  alternativeText: string | null
-  caption: string | null
-  width: number
-  height: number
-  formats?: {
-    thumbnail?: {
-      url: string
-      width: number
-      height: number
-      size: number
-      sizeInBytes: number
-    }
-    small?: {
-      url: string
-      width: number
-      height: number
-      size: number
-      sizeInBytes: number
-    }
-    medium?: {
-      url: string
-      width: number
-      height: number
-      size: number
-      sizeInBytes: number
-    }
-    large?: {
-      url: string
-      width: number
-      height: number
-      size: number
-      sizeInBytes: number
-    }
-  }
-  url: string
-  hash: string
-  ext: string
-  mime: string
-  size: number
-}
-
 export function formatImageUrl(image: StrapiImage): string {
   // Strapi v5 returns media fields as flat objects, so url is directly on the image
   return getStrapiMedia(image.url)
+}
+
+type FetchSingleTypeOptions = {
+  endpoint: string
+  query?: Record<string, string>
+}
+
+type FetchCollectionTypeOptions = {
+  endpoint: string
+  query?: Record<string, string>
+}
+
+/**
+ * Helper to fetch a single Strapi content type (single type)
+ */
+export async function fetchSingleType<T>({
+  endpoint,
+  query = {},
+}: FetchSingleTypeOptions): Promise<T | null> {
+  return fetchApi<T | null>({
+    endpoint,
+    query: {
+      populate: '*',
+      ...query,
+    },
+    wrappedByKey: 'data',
+  })
+}
+
+/**
+ * Helper to fetch a collection of Strapi content (collection type)
+ */
+export async function fetchCollection<T>({
+  endpoint,
+  query = {},
+}: FetchCollectionTypeOptions): Promise<T[]> {
+  return fetchApi<T[]>({
+    endpoint,
+    query: {
+      populate: '*',
+      ...query,
+    },
+    wrappedByKey: 'data',
+  })
+}
+
+/**
+ * Helper to safely fetch Strapi data with error handling
+ * Returns null on error and logs a warning
+ */
+export async function safeFetchSingleType<T>({
+  endpoint,
+  query = {},
+  contentTypeName,
+}: FetchSingleTypeOptions & { contentTypeName?: string }): Promise<T | null> {
+  try {
+    return await fetchSingleType<T>({ endpoint, query })
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `Failed to fetch ${contentTypeName || endpoint} from Strapi: ${error instanceof Error ? error.message : String(error)}.`
+    )
+    return null
+  }
+}
+
+/**
+ * Helper to safely fetch Strapi collection with error handling
+ * Returns empty array on error and logs a warning
+ */
+export async function safeFetchCollection<T>({
+  endpoint,
+  query = {},
+  contentTypeName,
+}: FetchCollectionTypeOptions & { contentTypeName?: string }): Promise<T[]> {
+  try {
+    return await fetchCollection<T>({ endpoint, query })
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `Failed to fetch ${contentTypeName || endpoint} from Strapi: ${error instanceof Error ? error.message : String(error)}.`
+    )
+    return []
+  }
+}
+
+/**
+ * Helper to fetch Strapi data with validation and error throwing
+ * Throws descriptive error if content is not found
+ */
+export async function fetchSingleTypeWithValidation<T>({
+  endpoint,
+  query = {},
+  contentTypeName,
+}: FetchSingleTypeOptions & { contentTypeName: string }): Promise<T> {
+  try {
+    const data = await fetchSingleType<T>({ endpoint, query })
+    if (!data) {
+      throw new Error(
+        `${contentTypeName} content not found in Strapi. Please:\n1. Create and publish the content in the Strapi admin panel\n2. Go to Settings > Users & Permissions Plugin > Roles > Public\n3. Enable "find" permission for "${contentTypeName}"`
+      )
+    }
+    return data
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('content not found')) {
+      throw error
+    }
+    throw new Error(
+      `Failed to fetch content from Strapi: ${error instanceof Error ? error.message : String(error)}. Make sure Strapi is running and the ${contentTypeName} content type has public permissions enabled.`
+    )
+  }
+}
+
+/**
+ * Helper to fetch Strapi collection with validation and error throwing
+ * Throws descriptive error if collection is empty
+ */
+export async function fetchCollectionWithValidation<T>({
+  endpoint,
+  query = {},
+  contentTypeName,
+}: FetchCollectionTypeOptions & { contentTypeName: string }): Promise<T[]> {
+  try {
+    const data = await fetchCollection<T>({ endpoint, query })
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      throw new Error(
+        `${contentTypeName} content not found in Strapi. Please:\n1. Create and publish the content in the Strapi admin panel\n2. Go to Settings > Users & Permissions Plugin > Roles > Public\n3. Enable "find" permission for "${contentTypeName}"`
+      )
+    }
+    return data
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('content not found')) {
+      throw error
+    }
+    throw new Error(
+      `Failed to fetch content from Strapi: ${error instanceof Error ? error.message : String(error)}. Make sure Strapi is running and the ${contentTypeName} content type has public permissions enabled.`
+    )
+  }
 }
