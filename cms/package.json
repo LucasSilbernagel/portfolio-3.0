@@ -4,6 +4,8 @@
   "private": true,
   "description": "Strapi CMS backend for lucassilbernagel.com",
   "scripts": {
+    "prebuild": "mkdir -p public/uploads",
+    "prestart": "mkdir -p public/uploads",
     "build": "strapi build",
     "console": "strapi console",
     "deploy": "strapi deploy",
