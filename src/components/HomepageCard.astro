@@ -8,6 +8,8 @@ type Props =
       titleSize?: string
       href: string
       id?: never
+      dataResumeUrl?: never
+      dataResumeFilename?: never
     }
   | {
       iconName: string
@@ -15,6 +17,8 @@ type Props =
       titleSize?: string
       href?: never
       id?: string
+      dataResumeUrl?: string
+      dataResumeFilename?: string
     }
 
 const {
@@ -23,6 +27,8 @@ const {
   titleSize = 'text-5xl',
   href,
   id,
+  dataResumeUrl,
+  dataResumeFilename,
 } = Astro.props as Props
 ---
 
@@ -53,6 +59,8 @@ const {
       <button
         id={id}
         class="block h-full w-full transition-transform duration-200 hover:scale-105 focus-visible:scale-105"
+        data-resume-url={dataResumeUrl}
+        data-resume-filename={dataResumeFilename}
       >
         {cardContent}
       </button>

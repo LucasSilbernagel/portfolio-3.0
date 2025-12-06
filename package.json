@@ -10,7 +10,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "cms:dev": "cd cms && npm run develop",
+    "cms:build": "cd cms && npm run build",
+    "cms:start": "cd cms && npm run start",
+    "dev:all": "concurrently \"npm run dev\" \"npm run cms:dev\"",
+    "build:all": "npm run build && npm run cms:build"
   },
   "dependencies": {
     "@astrojs/tailwind": "^6.0.2",
@@ -25,6 +30,7 @@
     "@eslint/js": "^9.38.0",
     "@tailwindcss/typography": "^0.5.19",
     "@typescript-eslint/parser": "^8.46.2",
+    "concurrently": "^9.2.1",
     "eslint": "^9.38.0",
     "eslint-plugin-astro": "^1.3.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -32,6 +38,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-organize-imports": "^4.3.0",
-    "prettier-plugin-tailwindcss": "^0.7.1"
+    "prettier-plugin-tailwindcss": "^0.7.1",
+    "typescript-eslint": "^8.48.0"
   }
 }

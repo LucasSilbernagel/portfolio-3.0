@@ -4,6 +4,8 @@ import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
 import { Icon } from 'astro-icon/components'
+import { fetchSingleTypeWithValidation } from '../lib/strapi'
+import type { TechStackContent } from '../types/strapi'
 
 const ANIMATION_DELAY_MS = 100
 const INITIAL_ANIMATION_DELAY = 2
@@ -22,46 +24,22 @@ const decorativeIcons = [
   'mdi:nodejs',
 ]
 
-const techStack = [
-  {
-    category: 'Languages',
-    items: ['HTML', 'CSS', 'JavaScript', 'TypeScript'],
-  },
-  {
-    category: 'Libraries and frameworks',
-    items: ['React', 'Next.js', 'Gatsby', 'Remix', 'Astro'],
-  },
-  {
-    category: 'State management',
-    items: [
-      'React Context',
-      'Zustand',
-      'Apollo Client',
-      'TanStack Query',
-      'etc.',
-    ],
-  },
-  {
-    category: 'Styling and component libraries',
-    items: ['Tailwind CSS', 'MUI', 'shadcn/ui', 'etc.'],
-  },
-  {
-    category: 'Data',
-    items: ['REST APIs', 'GraphQL APIs'],
-  },
-  {
-    category: 'Backend',
-    items: ['Node.js', 'Express', 'Apollo Server', 'MongoDB', 'Firebase'],
-  },
-  {
-    category: 'Content management',
-    items: ['Sanity', 'Strapi', 'Shopify', 'WordPress'],
-  },
-  {
-    category: 'Software testing',
-    items: ['Jest', 'React Testing Library', 'Vitest', 'Playwright', 'etc.'],
-  },
-]
+const strapiResponse = await fetchSingleTypeWithValidation<TechStackContent>({
+  endpoint: 'tech-stack',
+  contentTypeName: 'Tech Stack',
+})
+
+// Validate required fields
+if (
+  !strapiResponse.technologies ||
+  !Array.isArray(strapiResponse.technologies)
+) {
+  throw new Error(
+    'Tech stack technologies field is required and must be an array'
+  )
+}
+
+const techStack = strapiResponse.technologies
 ---
 
 <Layout title="Lucas Silbernagel | Tech Stack">

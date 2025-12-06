@@ -3,13 +3,34 @@ import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
+import { formatImageUrl, fetchSingleTypeWithValidation } from '../lib/strapi'
+import type { AboutPageContent, BlockType } from '../types/strapi'
 
-const imageSources = [
-  'https://placehold.co/900x900',
-  'https://placehold.co/900x900',
-  'https://placehold.co/900x900',
-  'https://placehold.co/900x900',
-]
+const strapiResponse = await fetchSingleTypeWithValidation<AboutPageContent>({
+  endpoint: 'about-page',
+  contentTypeName: 'About Page',
+})
+
+// For single types in Strapi v5, fields are returned directly without an attributes wrapper
+// Validate required fields
+if (!strapiResponse.title) {
+  throw new Error('About page title is required')
+}
+
+if (!strapiResponse.description) {
+  throw new Error('Description is required')
+}
+
+// Extract image URLs and alt text from media structure
+const imageData = strapiResponse.images.map((image) => {
+  if (!image) {
+    throw new Error('Image data is missing')
+  }
+  return {
+    src: formatImageUrl(image),
+    alt: image.alternativeText || image.name || '',
+  }
+})
 
 const POSITION_CLASSES = [
   '-top-28 -left-2 sm:-top-48 sm:-left-6 lg:-top-1/3 lg:-left-32', // top-left
@@ -48,11 +69,15 @@ const getFadeInClass = (index: number): string => {
           class="kiosk-tile fade-in-2 relative m-0 max-w-screen-md p-0 sm:p-8"
         >
           {
-            imageSources.map((src, index) => (
+            imageData.map((image, index) => (
               <div
                 class={`${getPositionClasses(index)} ${getFadeInClass(index)} terminal-glow absolute z-10 mx-auto mb-6 flex h-36 w-36 items-center justify-center rounded-full bg-terminal-blue shadow-lg sm:h-60 sm:w-60`}
               >
-                <img class="rounded-full object-cover" src={src} alt="" />
+                <img
+                  class="h-full w-full rounded-full object-cover"
+                  src={image.src}
+                  alt={image.alt}
+                />
               </div>
             ))
           }
@@ -60,24 +85,36 @@ const getFadeInClass = (index: number): string => {
             class="space-y-4 px-2 pb-6 pt-6 text-base text-gray-600 sm:px-24 sm:pb-16 sm:text-lg"
           >
             <p class="text-center text-2xl font-bold text-black sm:text-3xl">
-              Hi, I’m Lucas!
+              {strapiResponse.title}
             </p>
-            <p>
-              I’m a Toronto-based software developer, and I've been specializing
-              in front-end development since 2020. My main passion is crafting
-              accessible, high-performance user experiences.
-            </p>
-            <p>
-              I thrive in a little bit of chaos, where my collaborative and
-              organizational skills really shine. Stakeholders and teammates
-              appreciate my ability to iterate rabidly while maintaining and
-              improving code quality.
-            </p>
-            <p>
-              Beyond my technical work, I really enjoy empowering other
-              developers with detailed documentation, educational presentations,
-              and one-on-one mentoring conversations.
-            </p>
+            {
+              typeof strapiResponse.description === 'string' ? (
+                <div set:html={strapiResponse.description} />
+              ) : Array.isArray(strapiResponse.description) ? (
+                strapiResponse.description.map((block: unknown) => {
+                  // Handle Blocks content structure
+                  if (
+                    typeof block === 'object' &&
+                    block !== null &&
+                    'type' in block
+                  ) {
+                    const blockObj = block as BlockType
+                    if (blockObj.type === 'paragraph' && blockObj.children) {
+                      return (
+                        <p>
+                          {blockObj.children
+                            .map((child) => child.text || '')
+                            .join('')}
+                        </p>
+                      )
+                    }
+                  }
+                  return null
+                })
+              ) : (
+                <p>{String(strapiResponse.description)}</p>
+              )
+            }
             <p class="text-sm italic">
               Inspired by my love of travel, the design of this website mimics
               the user interface of an airport check-in terminal.
