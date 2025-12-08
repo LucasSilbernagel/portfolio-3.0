@@ -4,8 +4,6 @@
   "private": true,
   "description": "Strapi CMS backend for lucassilbernagel.com",
   "scripts": {
-    "prebuild": "node scripts/ensure-uploads-dir.js",
-    "prestart": "node scripts/ensure-uploads-dir.js",
     "build": "strapi build",
     "console": "strapi console",
     "deploy": "strapi deploy",
