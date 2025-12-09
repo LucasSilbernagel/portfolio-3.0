@@ -9,7 +9,11 @@ import {
   getStrapiMedia,
   safeFetchSingleType,
 } from '../lib/strapi'
-import type { ProfilePhotoContent, ResumeContent } from '../types/strapi'
+import type {
+  ProfilePhotoContent,
+  ResumeContent,
+  SocialShareImageContent,
+} from '../types/strapi'
 
 const profilePhoto = await safeFetchSingleType<ProfilePhotoContent>({
   endpoint: 'profile-photo',
@@ -28,6 +32,29 @@ const resume = await safeFetchSingleType<ResumeContent>({
 
 const resumeUrl = resume?.Resume ? getStrapiMedia(resume.Resume.url) : null
 const resumeFileName = resume?.Resume?.name || 'lucas-silbernagel-resume.pdf'
+
+// Fetch social share image from Strapi
+const socialShareImage = await safeFetchSingleType<SocialShareImageContent>({
+  endpoint: 'social-share-image',
+  contentTypeName: 'social share image',
+})
+
+const socialShareImageUrl = socialShareImage?.socialShareImage
+  ? formatImageUrl(socialShareImage.socialShareImage)
+  : undefined
+
+const siteUrl = Astro.site?.href || 'https://lucassilbernagel.com'
+const pageUrl = new URL(Astro.url.pathname, siteUrl).href
+
+const ogImageUrl = socialShareImageUrl
+  ? socialShareImageUrl.startsWith('http')
+    ? socialShareImageUrl
+    : new URL(socialShareImageUrl, siteUrl).href
+  : undefined
+
+const title = 'Lucas Silbernagel | Software Developer'
+const description =
+  'Personal website and software development portfolio for Lucas Silbernagel'
 ---
 
 <!doctype html>
@@ -36,12 +63,29 @@ const resumeFileName = resume?.Resume?.name || 'lucas-silbernagel-resume.pdf'
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content="Astro" />
-    <meta
-      name="description"
-      content="Personal website and software development portfolio for Lucas Silbernagel"
-    />
-    <title>Lucas Silbernagel | Software Developer</title>
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {
+      ogImageUrl && (
+        <>
+          <meta property="og:image" content={ogImageUrl} />
+          <meta property="og:image:alt" content={description} />
+        </>
+      )
+    }
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 
     <!-- Preload fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
