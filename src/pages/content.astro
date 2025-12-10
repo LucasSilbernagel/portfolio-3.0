@@ -1,6 +1,7 @@
 ---
 const STRAPI_ADMIN_URL =
   'https://legendary-acoustics-7132a2ff6b.strapiapp.com/admin'
+const REDIRECT_DELAY_MS = 100
 ---
 
 <!doctype html>
@@ -11,12 +12,25 @@ const STRAPI_ADMIN_URL =
     <title>Redirecting to Content Management...</title>
   </head>
   <body>
-    <script define:vars={{ STRAPI_ADMIN_URL }}>
+    <div id="redirect-data" data-strapi-url={STRAPI_ADMIN_URL}></div>
+    <script define:vars={{ redirectDelay: REDIRECT_DELAY_MS }}>
       // Open Strapi admin in a new tab
-      window.open(STRAPI_ADMIN_URL, '_blank')
+      const dataElement = document.querySelector('#redirect-data')
+      const strapiUrl =
+        dataElement && dataElement.dataset.strapiUrl
+          ? dataElement.dataset.strapiUrl
+          : ''
+      const newWindow = window.open(strapiUrl, '_blank')
 
-      // Redirect current page to homepage
-      window.location.href = '/'
+      // If popup was blocked, redirect to Strapi admin directly
+      if (!newWindow || newWindow.closed || newWindow.closed === undefined) {
+        window.location.href = strapiUrl
+      } else {
+        // Small delay to ensure new tab opens, then redirect current page to homepage
+        setTimeout(() => {
+          window.location.href = '/'
+        }, redirectDelay)
+      }
     </script>
   </body>
 </html>
