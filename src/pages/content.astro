@@ -1,0 +1,22 @@
+---
+const STRAPI_ADMIN_URL =
+  'https://legendary-acoustics-7132a2ff6b.strapiapp.com/admin'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting to Content Management...</title>
+  </head>
+  <body>
+    <script define:vars={{ STRAPI_ADMIN_URL }}>
+      // Open Strapi admin in a new tab
+      window.open(STRAPI_ADMIN_URL, '_blank')
+
+      // Redirect current page to homepage
+      window.location.href = '/'
+    </script>
+  </body>
+</html>
