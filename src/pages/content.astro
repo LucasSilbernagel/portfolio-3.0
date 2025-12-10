@@ -1,0 +1,18 @@
+---
+const STRAPI_ADMIN_URL = import.meta.env.PUBLIC_STRAPI_ADMIN_URL
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting to Content Management...</title>
+  </head>
+  <body>
+    <script define:vars={{ strapiAdminUrl: STRAPI_ADMIN_URL }}>
+      // Redirect to Strapi admin
+      window.location.href = strapiAdminUrl
+    </script>
+  </body>
+</html>
