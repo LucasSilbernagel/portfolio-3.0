@@ -1,6 +1,5 @@
 ---
 const STRAPI_ADMIN_URL = import.meta.env.PUBLIC_STRAPI_ADMIN_URL
-const REDIRECT_DELAY_MS = 100
 ---
 
 <!doctype html>
@@ -11,25 +10,9 @@ const REDIRECT_DELAY_MS = 100
     <title>Redirecting to Content Management...</title>
   </head>
   <body>
-    <div id="redirect-data" data-strapi-url={STRAPI_ADMIN_URL}></div>
-    <script define:vars={{ redirectDelay: REDIRECT_DELAY_MS }}>
-      // Open Strapi admin in a new tab
-      const dataElement = document.querySelector('#redirect-data')
-      const strapiUrl =
-        dataElement && dataElement.dataset.strapiUrl
-          ? dataElement.dataset.strapiUrl
-          : ''
-      const newWindow = window.open(strapiUrl, '_blank')
-
-      // If popup was blocked, redirect to Strapi admin directly
-      if (!newWindow || newWindow.closed || newWindow.closed === undefined) {
-        window.location.href = strapiUrl
-      } else {
-        // Small delay to ensure new tab opens, then redirect current page to homepage
-        setTimeout(() => {
-          window.location.href = '/'
-        }, redirectDelay)
-      }
+    <script define:vars={{ strapiAdminUrl: STRAPI_ADMIN_URL }}>
+      // Redirect to Strapi admin
+      window.location.href = strapiAdminUrl
     </script>
   </body>
 </html>
