@@ -24,3 +24,15 @@ pnpm-debug.log*
 .idea/
 
 .cursorrules
+
+# Strapi CMS
+cms/.env
+cms/.env.*
+cms/build/
+cms/dist/
+cms/.strapi/
+cms/exports/
+cms/.cache/
+cms/src/admin/
+cms/public/uploads/*
+!cms/public/uploads/.gitkeep

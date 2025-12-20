@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Header from '../components/Header.astro'
+import PageWrapper from '../components/PageWrapper.astro'
+import notFoundImage from '../assets/not-found.jpg'
+---
+
+<Layout title="404 | Lucas Silbernagel">
+  <Header showBackButton={true} />
+  <PageWrapper
+    class="flex min-h-[calc(100vh-200px)] items-center justify-center p-4"
+  >
+    <div class="mx-auto max-w-4xl text-center">
+      <div class="fade-in-1 mb-8">
+        <h1
+          class="mb-4 font-terminal text-8xl font-bold leading-none text-terminal-yellow drop-shadow-lg"
+        >
+          404
+        </h1>
+        <h2
+          class="mb-6 text-3xl font-bold text-terminal-white drop-shadow-lg sm:text-4xl"
+        >
+          Missed Connection
+        </h2>
+      </div>
+
+      <div class="fade-in-2 mb-8">
+        <img
+          src={notFoundImage.src}
+          alt=""
+          class="mx-auto max-h-64 w-full max-w-3xl rounded-lg object-cover shadow-lg sm:max-h-80"
+        />
+      </div>
+
+      <div class="fade-in-3 mb-8">
+        <p class="mx-auto max-w-2xl text-xl text-terminal-white/90 sm:text-2xl">
+          Page not found!
+        </p>
+        <p class="mx-auto max-w-2xl text-lg text-terminal-white/90">
+          The page you're looking for doesn't exist at this destination.
+        </p>
+      </div>
+
+      <div class="fade-in-5">
+        <a
+          href="/"
+          class="kiosk-button inline-block px-12 py-6 text-2xl font-bold uppercase text-white transition-all duration-200 hover:scale-105 focus-visible:scale-105 active:scale-95"
+        >
+          Go Back
+        </a>
+      </div>
+    </div>
+  </PageWrapper>
+</Layout>
+
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in-1,
+    .fade-in-2,
+    .fade-in-3,
+    .fade-in-4,
+    .fade-in-5 {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Fade-in animations with staggered delays */
+  .fade-in-1 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 0ms;
+  }
+
+  .fade-in-2 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 200ms;
+  }
+
+  .fade-in-3 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 400ms;
+  }
+
+  .fade-in-4 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 600ms;
+  }
+
+  .fade-in-5 {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-delay: 800ms;
+  }
+</style>

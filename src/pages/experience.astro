@@ -4,97 +4,72 @@ import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
 import { Icon } from 'astro-icon/components'
-
-type Experience = {
-  company: string
-  period: string
-  title: string
-  location: string
-  website: string
-  highlights: string[]
-}
-
-const experiences: Experience[] = [
-  {
-    company: 'theScore',
-    period: 'March 2025 - present',
-    title: 'Senior Software Engineer',
-    location: 'Toronto, Canada',
-    website: 'https://www.scoremediaandgaming.com/',
-    highlights: [
-      'Drove accelerated market entry for theScore Casino web application, launching the product two months ahead of schedule, which involved end-to-end setup of the new app theme, Google Tag Manager, visual regression testing, and build pipeline updates.',
-      'Spearheaded development for high-value casino features including the complex In-House Jackpots system, introducing the Rive animation framework to the repository, and developing the animated cash rolodex component for the lobby.',
-      'Led or collaborated on multiple major features concurrently, consistently delivering on aggressive deadlines and navigating unexpected technical obstacles to achieve successful project completion.',
-      'Enhanced web platform scalability and developer velocity by writing and presenting several RFCs to establish architectural improvements, including proposals to take advantage of more of the performance-enhancing features provided by Next.js.',
-      'Improved application stability and user experience by architecting a new theme testing strategy across standalone casino products and implementing a centralized persistence management solution for one-time user messages (e.g., tooltips and modals).',
-    ],
-  },
-  {
-    company: 'theScore',
-    period: 'March 2024 - March 2025',
-    title: 'Software Developer',
-    location: 'Toronto, Canada',
-    website: 'https://www.scoremediaandgaming.com/',
-    highlights: [
-      'Led the web development effort for the Hollywood Casino application launch on Next.js, resulting in a deployment six weeks ahead of schedule and enabling immediate revenue generation.',
-      'Engineered critical casino promo credits features, including the order of funds selection modal, Available Rewards section, and account settings integration, achieving feature parity with competitors.',
-      'Improved technical visibility and operations by creating a Casino Client Page Load Performance dashboard in Datadog and consolidating performance metrics, while personally handling multiple non-production and production deployments.',
-      'Spearheaded documentation and cross-functional coordination by writing a technical RFC and ticket planning document to align web, infrastructure, DevOps, and platform teams for the standalone casino project.',
-      'Championed web accessibility and development standards by working on features like animated game card focus states and refactoring CI pipeline configuration to enable visual regression and accessibility testing for new applications such as Hollywood Casino.',
-    ],
-  },
-  {
-    company: 'Xanadu',
-    period: 'January 2023 - March 2024',
-    title: 'Software Developer II',
-    location: 'Toronto, Canada',
-    website: 'https://xanadu.ai/',
-    highlights: [
-      'Enhanced the Xanadu.ai website by implementing server-side rendering, image optimization, and several new pages, while leveraging Shopify APIs to seamlessly integrate the Xanadu merchandise shop into the website.',
-      'Drove the front-end work for a refresh of the quantum hackathon software challenge dashboard.',
-      'Migrated the PennyLane.ai website from a Python templating system to a modern development framework using Gatsby, React, TypeScript, and Tailwind.',
-      'Led front-end development of the Generic Datasets project for visualizing and interacting with quantum datasets, covering scoping, requirements gathering, and implementation.',
-    ],
-  },
-  {
-    company: 'Xanadu',
-    period: 'April 2022 - December 2022',
-    title: 'Front-End Developer',
-    location: 'Toronto, Canada',
-    website: 'https://xanadu.ai/',
-    highlights: [
-      'Led a company-wide accessibility audit and advocated for compliance with web accessibility best practices.',
-      'Co-created a reusable component library built with React, TypeScript, Tailwind, and Storybook.',
-      "Developed key features of Xanadu's quantum hackathon software with React, TypeScript, Tailwind, and GraphQL.",
-    ],
-  },
-  {
-    company: 'CarbonCure Technologies',
-    period: 'March 2021 - April 2022',
-    title: 'Front-End Developer',
-    location: 'Toronto, Canada (remote)',
-    website: 'https://www.carboncure.com/',
-    highlights: [
-      "Responsible for planning, building, testing, and improving CarbonCure's internal suite of software applications.",
-      'Served as lead developer of two key projects built with React, TypeScript, and MUI, incorporating map layers, tables, and other data visualizations.',
-      'Published release notes and performed live and pre-recorded product demos for stakeholders.',
-    ],
-  },
-  {
-    company: 'Greenpeace Canada',
-    period: 'July 2020 - February 2021',
-    title: 'Front-End Developer',
-    location: 'Toronto, Canada',
-    website: 'https://www.greenpeace.org/canada/en/',
-    highlights: [
-      'Maintained and improved the Greenpeace Canada website using WordPress, HTML, CSS, and JavaScript.',
-      "Developed petition pages, donation pages, and emails using Greenpeace Canada's advocacy tools.",
-      'Managed relationships with external designers, developers, and internal end users.',
-    ],
-  },
-]
+import { fetchCollectionWithValidation } from '../lib/strapi'
+import type { ExperienceItem, BlockType } from '../types/strapi'
 
 const ANIMATION_DELAY_STEP_MS = 120
+
+const strapiResponse = await fetchCollectionWithValidation<ExperienceItem>({
+  endpoint: 'experiences',
+  query: {
+    sort: 'startDate:desc',
+  },
+  contentTypeName: 'Experience',
+})
+
+// Format date to period string
+// Parse date string (YYYY-MM-DD) as local date to avoid timezone issues
+const parseLocalDate = (dateString: string): Date => {
+  const [year, month, day] = dateString.split('-').map(Number)
+  // month is 0-indexed in Date constructor
+  return new Date(year, month - 1, day)
+}
+
+const formatPeriod = (startDate: string, endDate: string | null): string => {
+  const start = parseLocalDate(startDate)
+  const startMonth = start.toLocaleDateString('en-US', { month: 'long' })
+  const startYear = start.getFullYear()
+
+  if (!endDate) {
+    return `${startMonth} ${startYear} - present`
+  }
+
+  const end = parseLocalDate(endDate)
+  const endMonth = end.toLocaleDateString('en-US', { month: 'long' })
+  const endYear = end.getFullYear()
+
+  // If same month and year, return just the month and year
+  if (startMonth === endMonth && startYear === endYear) {
+    return `${startMonth} ${startYear}`
+  }
+
+  return `${startMonth} ${startYear} - ${endMonth} ${endYear}`
+}
+
+// Extract text from blocks content
+const extractHighlights = (highlights: unknown): string[] => {
+  if (typeof highlights === 'string') {
+    return highlights.split('\n').filter((line) => line.trim())
+  }
+
+  if (Array.isArray(highlights)) {
+    return highlights
+      .map((block: unknown) => {
+        if (typeof block === 'object' && block !== null && 'type' in block) {
+          const blockObj = block as BlockType
+          if (blockObj.type === 'paragraph' && blockObj.children) {
+            return blockObj.children.map((child) => child.text || '').join('')
+          }
+        }
+        return null
+      })
+      .filter((text): text is string => text !== null && text.trim() !== '')
+  }
+
+  return []
+}
+
+const experiences = strapiResponse
 ---
 
 <Layout title="Lucas Silbernagel | Experience">
@@ -136,22 +111,22 @@ const ANIMATION_DELAY_STEP_MS = 120
                 <header class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <a
-                      href={experience.website}
+                      href={experience.Website}
                       class="inline-flex items-center gap-2 font-terminal text-lg uppercase tracking-[0.20em] text-terminal-dark-gray transition-colors hover:text-terminal-blue focus-visible:text-terminal-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terminal-blue"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {experience.company} <Icon name="mdi:external-link" />
+                      {experience.Company} <Icon name="mdi:external-link" />
                     </a>
                     <h2 class="mt-2 text-2xl font-bold text-terminal-dark-gray sm:text-3xl">
-                      {experience.title}
+                      {experience.Position}
                     </h2>
                   </div>
                   <div class="flex flex-col text-sm text-terminal-dark-gray/80 sm:items-end">
                     <span class="font-semibold text-terminal-blue">
-                      {experience.period}
+                      {formatPeriod(experience.startDate, experience.endDate)}
                     </span>
-                    <span>{experience.location}</span>
+                    <span>{experience.Location}</span>
                   </div>
                 </header>
 
@@ -159,7 +134,7 @@ const ANIMATION_DELAY_STEP_MS = 120
                   class="mt-6 space-y-3 text-base leading-relaxed"
                   role="list"
                 >
-                  {experience.highlights.map((highlight) => (
+                  {extractHighlights(experience.Highlights).map((highlight) => (
                     <li class="flex gap-3">
                       <span class="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-terminal-blue" />
                       <p>{highlight}</p>

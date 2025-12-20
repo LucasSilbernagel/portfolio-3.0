@@ -4,6 +4,57 @@ import airplaneBackground from '../assets/airplane-background.jpg'
 import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
 import HomepageCard from '../components/HomepageCard.astro'
+import {
+  formatImageUrl,
+  getStrapiMedia,
+  safeFetchSingleType,
+} from '../lib/strapi'
+import type {
+  ProfilePhotoContent,
+  ResumeContent,
+  SocialShareImageContent,
+} from '../types/strapi'
+
+const profilePhoto = await safeFetchSingleType<ProfilePhotoContent>({
+  endpoint: 'profile-photo',
+  contentTypeName: 'profile photo',
+})
+
+const profileImage = profilePhoto?.image
+const profilePhotoUrl = profileImage ? formatImageUrl(profileImage) : ''
+const profilePhotoAlt =
+  profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
+
+const resume = await safeFetchSingleType<ResumeContent>({
+  endpoint: 'resume',
+  contentTypeName: 'resume',
+})
+
+const resumeUrl = resume?.Resume ? getStrapiMedia(resume.Resume.url) : null
+const resumeFileName = resume?.Resume?.name || 'lucas-silbernagel-resume.pdf'
+
+// Fetch social share image from Strapi
+const socialShareImage = await safeFetchSingleType<SocialShareImageContent>({
+  endpoint: 'social-share-image',
+  contentTypeName: 'social share image',
+})
+
+const socialShareImageUrl = socialShareImage?.socialShareImage
+  ? formatImageUrl(socialShareImage.socialShareImage)
+  : undefined
+
+const siteUrl = Astro.site?.href || 'https://lucassilbernagel.com'
+const pageUrl = new URL(Astro.url.pathname, siteUrl).href
+
+const ogImageUrl = socialShareImageUrl
+  ? socialShareImageUrl.startsWith('http')
+    ? socialShareImageUrl
+    : new URL(socialShareImageUrl, siteUrl).href
+  : undefined
+
+const title = 'Lucas Silbernagel | Software Developer'
+const description =
+  'Personal website and software development portfolio for Lucas Silbernagel'
 ---
 
 <!doctype html>
@@ -12,12 +63,29 @@ import HomepageCard from '../components/HomepageCard.astro'
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content="Astro" />
-    <meta
-      name="description"
-      content="Personal website and software development portfolio for Lucas Silbernagel"
-    />
-    <title>Lucas Silbernagel | Software Developer</title>
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {
+      ogImageUrl && (
+        <>
+          <meta property="og:image" content={ogImageUrl} />
+          <meta property="og:image:alt" content={description} />
+        </>
+      )
+    }
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 
     <!-- Preload fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,8 +112,8 @@ import HomepageCard from '../components/HomepageCard.astro'
                 class="flex h-48 w-48 items-center justify-center rounded-full border-8 border-white bg-gradient-to-br from-terminal-blue to-blue-600 shadow-2xl"
               >
                 <img
-                  src="https://placehold.co/600x600"
-                  alt="Lucas Silbernagel"
+                  src={profilePhotoUrl}
+                  alt={profilePhotoAlt}
                   width="192"
                   height="192"
                   class="rounded-full object-contain"
@@ -125,6 +193,8 @@ import HomepageCard from '../components/HomepageCard.astro'
                   iconName="mdi:ticket-account"
                   title="Print Boarding Pass"
                   titleSize="text-3xl"
+                  dataResumeUrl={resumeUrl || ''}
+                  dataResumeFilename={resumeFileName}
                 />
                 <HomepageCard href="/map" iconName="mdi:map" title="Map" />
               </div>
@@ -161,6 +231,7 @@ import HomepageCard from '../components/HomepageCard.astro'
   const TILE_ANIMATION_DELAY_MS = 150
   const RENDER_DELAY_MS = 10
   const LOADING_OVERLAY_DURATION_MS = 2000
+  const BLOB_URL_REVOKE_DELAY_MS = 100
 
   // First-time visitor logic
   document.addEventListener('DOMContentLoaded', () => {
@@ -279,23 +350,54 @@ import HomepageCard from '../components/HomepageCard.astro'
     const loadingOverlay = document.querySelector('#loading-overlay')
 
     if (boardingPassButton && loadingOverlay) {
-      boardingPassButton.addEventListener('click', () => {
+      boardingPassButton.addEventListener('click', async () => {
+        const resumeUrl = (boardingPassButton as HTMLElement).dataset.resumeUrl
+        const resumeFilename =
+          (boardingPassButton as HTMLElement).dataset.resumeFilename ||
+          'lucas-silbernagel-resume.pdf'
+
+        if (!resumeUrl) {
+          // eslint-disable-next-line no-console
+          console.error('Resume URL not available')
+          return
+        }
+
         loadingOverlay.classList.add('flex')
         loadingOverlay.classList.remove('hidden')
 
-        // Start download immediately while overlay is showing
-        const link = document.createElement('a')
-        link.href = '/resume.pdf'
-        link.download = 'lucas-silbernagel-resume.pdf'
-        document.body.append(link)
-        link.click()
-        link.remove()
+        try {
+          // Fetch the file as a blob to ensure it downloads instead of opening
+          const response = await fetch(resumeUrl)
+          if (!response.ok) {
+            throw new Error(`Failed to fetch resume: ${response.statusText}`)
+          }
 
-        // Hide overlay after delay (download continues in background)
-        setTimeout(() => {
+          const blob = await response.blob()
+          const blobUrl = URL.createObjectURL(blob)
+
+          // Create download link with blob URL
+          const link = document.createElement('a')
+          link.href = blobUrl
+          link.download = resumeFilename
+          document.body.append(link)
+          link.click()
+          link.remove()
+          // Clean up blob URL after a short delay
+          setTimeout(() => {
+            URL.revokeObjectURL(blobUrl)
+          }, BLOB_URL_REVOKE_DELAY_MS)
+
+          // Hide overlay after delay (download continues in background)
+          setTimeout(() => {
+            loadingOverlay.classList.add('hidden')
+            loadingOverlay.classList.remove('flex')
+          }, LOADING_OVERLAY_DURATION_MS)
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('Error downloading resume:', error)
           loadingOverlay.classList.add('hidden')
           loadingOverlay.classList.remove('flex')
-        }, LOADING_OVERLAY_DURATION_MS)
+        }
       })
     }
   }

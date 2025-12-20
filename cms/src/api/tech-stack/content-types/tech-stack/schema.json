@@ -1,0 +1,42 @@
+{
+  "kind": "singleType",
+  "collectionName": "tech_stacks",
+  "info": {
+    "singularName": "tech-stack",
+    "pluralName": "tech-stacks",
+    "displayName": "TechStack"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "localTitle": {
+      "type": "string",
+      "default": "Tech Stack",
+      "required": true
+    },
+    "technologies": {
+      "type": "json",
+      "required": true,
+      "jsonSchema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": ["category", "items"]
+        }
+      }
+    }
+  }
+}

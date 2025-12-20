@@ -2,12 +2,20 @@ import js from '@eslint/js'
 import astro from 'eslint-plugin-astro'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import unicorn from 'eslint-plugin-unicorn'
+import tseslint from 'typescript-eslint'
 
 export default [
   js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.json',
+      },
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
@@ -55,13 +63,37 @@ export default [
     },
   },
   {
-    files: ['**/*.js'],
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       globals: {
         console: 'readonly',
         process: 'readonly',
         global: 'readonly',
       },
+    },
+  },
+  {
+    files: ['cms/scripts/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'script',
+      globals: {
+        require: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        module: 'readonly',
+        exports: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+        global: 'readonly',
+      },
+    },
+    rules: {
+      'no-console': 'off',
+      'unicorn/prefer-node-protocol': 'off',
+      'unicorn/no-process-exit': 'off',
     },
   },
   ...astro.configs.recommended,
@@ -83,6 +115,11 @@ export default [
     },
   },
   {
-    ignores: ['node_modules/**', 'dist/**', '.astro/**'],
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      '.astro/**',
+      'cms/types/generated/**',
+    ],
   },
 ]
