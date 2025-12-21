@@ -5,8 +5,10 @@
  * Usage: /api/image-proxy?url=<encoded-strapi-image-url>
  */
 
-export async function GET({ url }: { url: URL }) {
-  const imageUrl = url.searchParams.get('url')
+import type { APIContext } from 'astro'
+
+export async function GET(context: APIContext) {
+  const imageUrl = context.url.searchParams.get('url')
 
   if (!imageUrl) {
     return new Response('Missing url parameter', { status: 400 })
