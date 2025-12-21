@@ -17,13 +17,7 @@ export async function GET({ url }: { url: URL }) {
     const decodedUrl = decodeURIComponent(imageUrl)
 
     // Validate that the URL is from Strapi
-    const strapiUrl = import.meta.env.STRAPI_URL
-    if (!strapiUrl) {
-      return new Response('Strapi URL not configured', { status: 500 })
-    }
-
-    // Only allow proxying of Strapi URLs for security
-    // URL must be a valid HTTP(S) URL and must include the Strapi URL
+    // URL must be a valid HTTP(S) URL
     if (
       !decodedUrl.startsWith('http://') &&
       !decodedUrl.startsWith('https://')
@@ -31,10 +25,17 @@ export async function GET({ url }: { url: URL }) {
       return new Response('Invalid image URL: must be HTTP(S)', { status: 400 })
     }
 
-    if (!decodedUrl.includes(strapiUrl)) {
-      return new Response('Invalid image URL: must be from Strapi', {
-        status: 400,
-      })
+    // Validate that the URL is from Strapi (either API URL or media CDN)
+    const strapiUrl = import.meta.env.STRAPI_URL
+    const isStrapiApiUrl = strapiUrl && decodedUrl.includes(strapiUrl)
+    // Strapi Cloud uses *.media.strapiapp.com for media files
+    const isStrapiMediaCdn = decodedUrl.includes('.media.strapiapp.com')
+
+    if (!isStrapiApiUrl && !isStrapiMediaCdn) {
+      return new Response(
+        'Invalid image URL: must be from Strapi API or media CDN',
+        { status: 400 }
+      )
     }
 
     // Fetch the image from Strapi
