@@ -99,27 +99,50 @@ export default async function fetchApi<T>({
 }
 
 /**
+ * Proxy an image URL through our image proxy endpoint to add proper cache headers
+ * This improves Lighthouse cache lifetime scores by serving images with long cache TTL
+ */
+function proxyImageUrl(imageUrl: string): string {
+  // Only use proxy in production (when site URL is available)
+  // In development, use direct Strapi URLs for easier debugging
+  const isProduction = import.meta.env.PROD && import.meta.env.SITE
+  if (!isProduction) {
+    return imageUrl
+  }
+
+  // Encode the URL to pass as a query parameter
+  const encodedUrl = encodeURIComponent(imageUrl)
+  return `/api/image-proxy?url=${encodedUrl}`
+}
+
+/**
  * Get media URL from Strapi
  */
-export function getStrapiMedia(url: string | null): string {
+export function getStrapiMedia(url: string | null, useProxy = true): string {
   if (!url) {
     return ''
   }
 
   // Return API URL if url is relative
-  if (url.startsWith('/')) {
-    return `${import.meta.env.STRAPI_URL}${url}`
+  const fullUrl = url.startsWith('/')
+    ? `${import.meta.env.STRAPI_URL}${url}`
+    : url
+
+  // Use proxy for images to add proper cache headers
+  const imageExtensionRegex = /\.(jpg|jpeg|png|gif|webp|svg|avif)(\?|$)/i
+  if (useProxy && imageExtensionRegex.test(fullUrl)) {
+    return proxyImageUrl(fullUrl)
   }
 
-  return url
+  return fullUrl
 }
 
 /**
  * Format Strapi image data for use in components
  */
-export function formatImageUrl(image: StrapiImage): string {
+export function formatImageUrl(image: StrapiImage, useProxy = true): string {
   // Strapi v5 returns media fields as flat objects, so url is directly on the image
-  return getStrapiMedia(image.url)
+  return getStrapiMedia(image.url, useProxy)
 }
 
 /**
@@ -130,7 +153,8 @@ export function formatImageUrl(image: StrapiImage): string {
 export function formatImageUrlWithSize(
   image: StrapiImage,
   width: number,
-  format: 'webp' | 'jpg' | 'png' = 'webp'
+  format: 'webp' | 'jpg' | 'png' = 'webp',
+  useProxy = true
 ): string {
   // Check if there's a pre-generated format suitable for the desired size
   if (image.formats) {
@@ -156,7 +180,7 @@ export function formatImageUrlWithSize(
           bestFormat = format
         }
       }
-      return getStrapiMedia(bestFormat.format.url)
+      return getStrapiMedia(bestFormat.format.url, useProxy)
     }
 
     // If no format is large enough, use the largest available format
@@ -167,15 +191,16 @@ export function formatImageUrlWithSize(
           largestFormat = format
         }
       }
-      return getStrapiMedia(largestFormat.format.url)
+      return getStrapiMedia(largestFormat.format.url, useProxy)
     }
   }
 
   // Fallback: use query parameters for on-the-fly transformation
-  const baseUrl = getStrapiMedia(image.url)
+  // First get the base URL without proxy to build the query params
+  const baseUrlWithoutProxy = getStrapiMedia(image.url, false)
 
   try {
-    const url = new URL(baseUrl)
+    const url = new URL(baseUrlWithoutProxy)
 
     // Add width parameter for optimization
     url.searchParams.set('width', width.toString())
@@ -183,10 +208,11 @@ export function formatImageUrlWithSize(
     // Add format parameter for better compression (WebP is smaller than JPG/PNG)
     url.searchParams.set('format', format)
 
-    return url.toString()
+    // Now apply proxy if needed
+    return useProxy ? proxyImageUrl(url.toString()) : url.toString()
   } catch {
-    // If URL parsing fails, return the original URL
-    return baseUrl
+    // If URL parsing fails, return the original URL (with or without proxy)
+    return getStrapiMedia(image.url, useProxy)
   }
 }
 

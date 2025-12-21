@@ -13,4 +13,9 @@ export default defineConfig({
     icon(),
   ],
   site: 'https://lucassilbernagel.com',
+  vite: {
+    build: {
+      cssCodeSplit: false,
+    },
+  },
 })
