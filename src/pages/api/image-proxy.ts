@@ -8,7 +8,19 @@
 import type { APIContext } from 'astro'
 
 export async function GET(context: APIContext) {
-  const imageUrl = context.url.searchParams.get('url')
+  // Get URL from request - try multiple approaches for compatibility
+  let imageUrl: string | null = null
+
+  // Try context.url.searchParams first (Astro's preferred method)
+  if (context.url) {
+    imageUrl = context.url.searchParams.get('url')
+  }
+
+  // Fallback to constructing URL from request
+  if (!imageUrl && context.request?.url) {
+    const requestUrl = new URL(context.request.url)
+    imageUrl = requestUrl.searchParams.get('url')
+  }
 
   if (!imageUrl) {
     return new Response('Missing url parameter', { status: 400 })
