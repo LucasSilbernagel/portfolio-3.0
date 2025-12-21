@@ -122,6 +122,74 @@ export function formatImageUrl(image: StrapiImage): string {
   return getStrapiMedia(image.url)
 }
 
+/**
+ * Format Strapi image URL with size optimization
+ * First tries to use a pre-generated format if it's close to the desired size,
+ * otherwise adds width and format query parameters
+ */
+export function formatImageUrlWithSize(
+  image: StrapiImage,
+  width: number,
+  format: 'webp' | 'jpg' | 'png' = 'webp'
+): string {
+  // Check if there's a pre-generated format suitable for the desired size
+  if (image.formats) {
+    // Collect all available formats
+    const formats = [
+      { name: 'large', format: image.formats.large },
+      { name: 'medium', format: image.formats.medium },
+      { name: 'small', format: image.formats.small },
+      { name: 'thumbnail', format: image.formats.thumbnail },
+    ].filter((f) => f.format !== undefined) as Array<{
+      name: string
+      format: NonNullable<(typeof image.formats)[keyof typeof image.formats]>
+    }>
+
+    // Find formats that are at least the desired width (to avoid upscaling)
+    const suitableFormats = formats.filter((f) => f.format.width >= width)
+
+    if (suitableFormats.length > 0) {
+      // Use the smallest format that's still >= desired width (closest match)
+      let bestFormat = suitableFormats[0]
+      for (const format of suitableFormats) {
+        if (format.format.width < bestFormat.format.width) {
+          bestFormat = format
+        }
+      }
+      return getStrapiMedia(bestFormat.format.url)
+    }
+
+    // If no format is large enough, use the largest available format
+    if (formats.length > 0) {
+      let largestFormat = formats[0]
+      for (const format of formats) {
+        if (format.format.width > largestFormat.format.width) {
+          largestFormat = format
+        }
+      }
+      return getStrapiMedia(largestFormat.format.url)
+    }
+  }
+
+  // Fallback: use query parameters for on-the-fly transformation
+  const baseUrl = getStrapiMedia(image.url)
+
+  try {
+    const url = new URL(baseUrl)
+
+    // Add width parameter for optimization
+    url.searchParams.set('width', width.toString())
+
+    // Add format parameter for better compression (WebP is smaller than JPG/PNG)
+    url.searchParams.set('format', format)
+
+    return url.toString()
+  } catch {
+    // If URL parsing fails, return the original URL
+    return baseUrl
+  }
+}
+
 type FetchSingleTypeOptions = {
   endpoint: string
   query?: Record<string, string>

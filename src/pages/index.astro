@@ -6,6 +6,7 @@ import Header from '../components/Header.astro'
 import HomepageCard from '../components/HomepageCard.astro'
 import {
   formatImageUrl,
+  formatImageUrlWithSize,
   getStrapiMedia,
   safeFetchSingleType,
 } from '../lib/strapi'
@@ -21,7 +22,15 @@ const profilePhoto = await safeFetchSingleType<ProfilePhotoContent>({
 })
 
 const profileImage = profilePhoto?.image
-const profilePhotoUrl = profileImage ? formatImageUrl(profileImage) : ''
+// Profile photo display size: 192px (h-48 w-48 = 12rem = 192px)
+// Use 2x size (384px) for retina displays
+const PROFILE_PHOTO_DISPLAY_SIZE = 192
+const RETINA_SCALE_FACTOR = 2
+const PROFILE_PHOTO_OPTIMIZED_SIZE =
+  PROFILE_PHOTO_DISPLAY_SIZE * RETINA_SCALE_FACTOR
+const profilePhotoUrl = profileImage
+  ? formatImageUrlWithSize(profileImage, PROFILE_PHOTO_OPTIMIZED_SIZE, 'webp')
+  : ''
 const profilePhotoAlt =
   profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
 
