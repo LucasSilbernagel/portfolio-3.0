@@ -101,18 +101,22 @@ export default async function fetchApi<T>({
 /**
  * Proxy an image URL through our image proxy endpoint to add proper cache headers
  * This improves Lighthouse cache lifetime scores by serving images with long cache TTL
+ *
+ * NOTE: Currently disabled because API routes don't work reliably on Netlify for static sites.
+ * TODO: Implement alternative solution (Netlify Edge Functions, _headers file, or CDN)
  */
 function proxyImageUrl(imageUrl: string): string {
-  // Only use proxy in production (when site URL is available)
-  // In development, use direct Strapi URLs for easier debugging
-  const isProduction = import.meta.env.PROD && import.meta.env.SITE
-  if (!isProduction) {
-    return imageUrl
-  }
+  // Disabled for now - API routes don't work on Netlify static sites
+  // Return direct URL instead
+  return imageUrl
 
-  // Encode the URL to pass as a query parameter
-  const encodedUrl = encodeURIComponent(imageUrl)
-  return `/api/image-proxy?url=${encodedUrl}`
+  // Original implementation (disabled):
+  // const isProduction = import.meta.env.PROD && import.meta.env.SITE
+  // if (!isProduction) {
+  //   return imageUrl
+  // }
+  // const encodedUrl = encodeURIComponent(imageUrl)
+  // return `/api/image-proxy?url=${encodedUrl}`
 }
 
 /**
