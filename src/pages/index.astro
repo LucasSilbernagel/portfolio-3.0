@@ -253,6 +253,15 @@ const description =
       if (homepageHeader) homepageHeader.classList.remove('hidden')
       if (homepageFooter) homepageFooter.classList.remove('hidden')
 
+      // Scroll to top when showing homepage for returning visitors
+      const prefersReducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      })
+
       // Reset tiles to initial state and then animate
       const tiles = document.querySelectorAll('.kiosk-tile')
       for (const tile of tiles) {
@@ -305,6 +314,15 @@ const description =
         }
         if (homepageHeader) homepageHeader.classList.remove('hidden')
         if (homepageFooter) homepageFooter.classList.remove('hidden')
+
+        // Scroll to top when transitioning to homepage
+        const prefersReducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches
+        window.scrollTo({
+          top: 0,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        })
 
         // Reset tiles to initial state and then animate
         const tiles = document.querySelectorAll('.kiosk-tile')
