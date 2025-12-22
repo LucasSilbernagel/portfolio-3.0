@@ -7,6 +7,7 @@ type Props =
       title: string
       titleSize?: string
       href: string
+      descriptiveText?: string
       id?: never
       dataResumeUrl?: never
       dataResumeFilename?: never
@@ -16,6 +17,7 @@ type Props =
       title: string
       titleSize?: string
       href?: never
+      descriptiveText?: never
       id?: string
       dataResumeUrl?: string
       dataResumeFilename?: string
@@ -26,6 +28,7 @@ const {
   title,
   titleSize = 'text-4xl xl:text-5xl',
   href,
+  descriptiveText,
   id,
   dataResumeUrl,
   dataResumeFilename,
@@ -57,6 +60,7 @@ const {
         class="transition-transform duration-200 hover:scale-105 focus-visible:scale-105"
       >
         {cardContent}
+        {descriptiveText && <span class="sr-only">: {descriptiveText}</span>}
       </a>
     ) : (
       <button
