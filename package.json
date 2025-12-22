@@ -18,6 +18,7 @@
     "build:all": "npm run build && npm run cms:build"
   },
   "dependencies": {
+    "@astrojs/netlify": "^6.6.3",
     "@astrojs/tailwind": "^6.0.2",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/ri": "^1.2.6",

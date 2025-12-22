@@ -106,12 +106,16 @@ export default async function fetchApi<T>({
  * TODO: Implement alternative solution (Netlify Edge Functions, _headers file, or CDN)
  */
 function proxyImageUrl(imageUrl: string): string {
-  // Use proxy in production to add proper cache headers for Lighthouse
-  // Astro API routes work on Netlify as serverless functions
-  const isProduction = import.meta.env.PROD && import.meta.env.SITE
-  if (!isProduction) {
+  // Use proxy in production builds to add proper cache headers for Lighthouse
+  // Astro API routes work on Netlify as serverless functions for static sites
+  // Only enable in production builds (not in dev server)
+  // In development, API routes may not work, so use direct URLs
+  if (import.meta.env.DEV) {
     return imageUrl
   }
+
+  // Only use proxy in production builds
+  // Note: API routes will work on Netlify as serverless functions
   const encodedUrl = encodeURIComponent(imageUrl)
   return `/api/image-proxy?url=${encodedUrl}`
 }

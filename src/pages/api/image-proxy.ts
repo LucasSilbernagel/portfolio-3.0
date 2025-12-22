@@ -18,12 +18,25 @@ export async function GET(context: APIContext) {
 
   // Fallback to constructing URL from request
   if (!imageUrl && context.request?.url) {
-    const requestUrl = new URL(context.request.url)
-    imageUrl = requestUrl.searchParams.get('url')
+    try {
+      const requestUrl = new URL(context.request.url)
+      imageUrl = requestUrl.searchParams.get('url')
+    } catch {
+      // If URL parsing fails, try to extract from the path
+      const match = context.request.url.match(/[?&]url=([^&]+)/)
+      if (match) {
+        imageUrl = match[1]
+      }
+    }
   }
 
   if (!imageUrl) {
-    return new Response('Missing url parameter', { status: 400 })
+    return new Response('Missing url parameter', {
+      status: 400,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    })
   }
 
   try {
@@ -69,6 +82,8 @@ export async function GET(context: APIContext) {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=31536000, immutable',
         'X-Content-Type-Options': 'nosniff',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
       },
     })
   } catch (error) {
