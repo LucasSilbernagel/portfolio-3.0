@@ -273,36 +273,39 @@ const description =
 
     // Check if user has visited before
     if (hasVisited === 'true') {
-      // Show homepage for returning visitors
-      if (landingScreen) {
-        ;(landingScreen as HTMLElement).classList.add('hidden')
-      }
-      if (homepage) {
-        homepage.classList.remove('hidden')
-      }
-      if (homepageHeader) homepageHeader.classList.remove('hidden')
-      if (homepageFooter) homepageFooter.classList.remove('hidden')
-
-      // Scroll to top when showing homepage for returning visitors
-      const prefersReducedMotion = window.matchMedia(
-        '(prefers-reduced-motion: reduce)'
-      ).matches
-      window.scrollTo({
-        top: 0,
-        behavior: prefersReducedMotion ? 'auto' : 'smooth',
-      })
-
-      // Reset tiles to initial state and then animate
+      // Reset tiles to initial state BEFORE showing homepage to prevent flash
       const tiles = document.querySelectorAll('.kiosk-tile')
       for (const tile of tiles) {
         ;(tile as HTMLElement).style.opacity = '0'
         ;(tile as HTMLElement).style.transform = 'translateY(30px)'
       }
 
-      // Initialize homepage animations after a brief delay to ensure initial state is rendered
-      setTimeout(() => {
-        animateTiles()
-      }, RENDER_DELAY_MS)
+      // Use requestAnimationFrame to ensure styles are applied before showing homepage
+      requestAnimationFrame(() => {
+        // Show homepage for returning visitors
+        if (landingScreen) {
+          ;(landingScreen as HTMLElement).classList.add('hidden')
+        }
+        if (homepage) {
+          homepage.classList.remove('hidden')
+        }
+        if (homepageHeader) homepageHeader.classList.remove('hidden')
+        if (homepageFooter) homepageFooter.classList.remove('hidden')
+
+        // Scroll to top when showing homepage for returning visitors
+        const prefersReducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches
+        window.scrollTo({
+          top: 0,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        })
+
+        // Initialize homepage animations after a brief delay to ensure initial state is rendered
+        setTimeout(() => {
+          animateTiles()
+        }, RENDER_DELAY_MS)
+      })
     } else {
       // Show landing screen for first-time visitors (already visible by default)
       if (landingScreen) {
@@ -336,35 +339,38 @@ const description =
         const homepageHeader = document.querySelector('#homepage-header')
         const homepageFooter = document.querySelector('#homepage-footer')
 
-        if (landingScreen) {
-          ;(landingScreen as HTMLElement).classList.add('hidden')
-        }
-        if (homepage) {
-          homepage.classList.remove('hidden')
-        }
-        if (homepageHeader) homepageHeader.classList.remove('hidden')
-        if (homepageFooter) homepageFooter.classList.remove('hidden')
-
-        // Scroll to top when transitioning to homepage
-        const prefersReducedMotion = window.matchMedia(
-          '(prefers-reduced-motion: reduce)'
-        ).matches
-        window.scrollTo({
-          top: 0,
-          behavior: prefersReducedMotion ? 'auto' : 'smooth',
-        })
-
-        // Reset tiles to initial state and then animate
+        // Reset tiles to initial state BEFORE showing homepage to prevent flash
         const tiles = document.querySelectorAll('.kiosk-tile')
         for (const tile of tiles) {
           ;(tile as HTMLElement).style.opacity = '0'
           ;(tile as HTMLElement).style.transform = 'translateY(30px)'
         }
 
-        // Initialize homepage animations after a brief delay to ensure initial state is rendered
-        setTimeout(() => {
-          animateTiles()
-        }, RENDER_DELAY_MS)
+        // Use requestAnimationFrame to ensure styles are applied before showing homepage
+        requestAnimationFrame(() => {
+          if (landingScreen) {
+            ;(landingScreen as HTMLElement).classList.add('hidden')
+          }
+          if (homepage) {
+            homepage.classList.remove('hidden')
+          }
+          if (homepageHeader) homepageHeader.classList.remove('hidden')
+          if (homepageFooter) homepageFooter.classList.remove('hidden')
+
+          // Scroll to top when transitioning to homepage
+          const prefersReducedMotion = window.matchMedia(
+            '(prefers-reduced-motion: reduce)'
+          ).matches
+          window.scrollTo({
+            top: 0,
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          })
+
+          // Initialize homepage animations after a brief delay to ensure initial state is rendered
+          setTimeout(() => {
+            animateTiles()
+          }, RENDER_DELAY_MS)
+        })
       })
     }
   }
@@ -455,7 +461,17 @@ const description =
   .kiosk-tile {
     opacity: 0;
     transform: translateY(30px);
-    transition: all 0.3s ease-in-out;
+    transition:
+      opacity 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
+    /* Ensure cards are hidden even before JavaScript runs */
+    visibility: visible;
+  }
+
+  /* Ensure cards are hidden when homepage is hidden */
+  #homepage.hidden .kiosk-tile {
+    opacity: 0;
+    transform: translateY(30px);
   }
 
   .group:hover .kiosk-tile {
