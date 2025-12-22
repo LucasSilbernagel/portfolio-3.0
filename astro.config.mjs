@@ -18,7 +18,8 @@ export default defineConfig({
   site: 'https://lucassilbernagel.com',
   vite: {
     build: {
-      cssCodeSplit: false,
+      cssCodeSplit: false, // Bundle all CSS into one file to reduce requests
+      cssMinify: true, // Minify CSS for smaller file size
     },
   },
 })
