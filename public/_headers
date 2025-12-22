@@ -1,0 +1,6 @@
+# Cache headers for image proxy endpoint
+# This improves Lighthouse cache lifetime scores by serving images with long cache TTL
+/api/image-proxy/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
