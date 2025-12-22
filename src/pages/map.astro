@@ -31,7 +31,11 @@ const iframeSrc = mapData?.mapIframeSrc || ''
         <div class="relative overflow-hidden rounded-lg">
           {
             iframeSrc ? (
-              <iframe src={iframeSrc} style="width: 100%; height: 600px;" />
+              <iframe
+                src={iframeSrc}
+                style="width: 100%; height: 600px;"
+                title="Interactive Map"
+              />
             ) : (
               <div class="flex h-[600px] items-center justify-center text-gray-500">
                 Map iframe source not available
