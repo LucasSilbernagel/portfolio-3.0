@@ -11,6 +11,21 @@ import type { ProjectContent } from '../types/strapi'
 
 const ANIMATION_DELAY_MS = 100
 
+// Project images: h-32 (128px height), w-full (responsive, max container ~1152px)
+// Images display at ~624px width on typical screens
+// Generate multiple sizes for responsive images:
+// - 400px for mobile (1x) and small screens
+// - 640px for typical desktop displays (matches ~624px display width)
+// - 800px for high-DPI displays (1.25x) and larger screens
+const PROJECT_IMAGE_SIZE_MOBILE = 400
+const PROJECT_IMAGE_SIZE_DESKTOP = 640
+const PROJECT_IMAGE_SIZE_HIGH_DPI = 800
+const PROJECT_IMAGE_SIZES = [
+  PROJECT_IMAGE_SIZE_MOBILE,
+  PROJECT_IMAGE_SIZE_DESKTOP,
+  PROJECT_IMAGE_SIZE_HIGH_DPI,
+]
+
 const strapiProjects = await safeFetchCollection<ProjectContent>({
   endpoint: 'projects',
   query: {
@@ -20,22 +35,23 @@ const strapiProjects = await safeFetchCollection<ProjectContent>({
   populate: 'image', // Only populate the image field for better performance
 })
 
-// Project images: h-32 (128px height), w-full (responsive, max container ~1152px)
-// Images display at ~624px width, so 800px is sufficient for 2x retina displays
-// This significantly reduces download size while maintaining quality
-const PROJECT_IMAGE_OPTIMIZED_WIDTH = 800
-
 const projects = strapiProjects.map((project) => {
   // Handle image - could be single object or array
   const projectImage = Array.isArray(project.image)
     ? project.image[0]
     : project.image
+
+  // Generate srcset with multiple sizes for responsive images
+  const imageSrcSet = projectImage
+    ? PROJECT_IMAGE_SIZES.map((width) => {
+        const url = formatImageUrlWithSize(projectImage, width, 'webp')
+        return `${url} ${width}w`
+      }).join(', ')
+    : undefined
+
+  // Use the middle size (640px) as the default src for browsers that don't support srcset
   const imageUrl = projectImage
-    ? formatImageUrlWithSize(
-        projectImage,
-        PROJECT_IMAGE_OPTIMIZED_WIDTH,
-        'webp'
-      )
+    ? formatImageUrlWithSize(projectImage, PROJECT_IMAGE_SIZE_DESKTOP, 'webp')
     : undefined
 
   return {
@@ -46,6 +62,7 @@ const projects = strapiProjects.map((project) => {
     liveUrl: project.liveUrl,
     githubUrl: project.githubUrl,
     imageUrl,
+    imageSrcSet,
   }
 })
 ---
@@ -70,6 +87,7 @@ const projects = strapiProjects.map((project) => {
               liveUrl={project.liveUrl}
               githubUrl={project.githubUrl}
               imageUrl={project.imageUrl}
+              imageSrcSet={project.imageSrcSet}
               isFirst={index === 0}
             />
           </div>
