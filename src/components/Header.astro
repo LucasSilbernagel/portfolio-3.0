@@ -1,6 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components'
-import { formatImageUrl, safeFetchSingleType } from '../lib/strapi'
+import { formatImageUrlWithSize, safeFetchSingleType } from '../lib/strapi'
 import type { ProfilePhotoContent } from '../types/strapi'
 
 export type Props = {
@@ -13,10 +13,22 @@ const { showBackButton = false, id } = Astro.props
 const profilePhoto = await safeFetchSingleType<ProfilePhotoContent>({
   endpoint: 'profile-photo',
   contentTypeName: 'profile photo',
+  populate: 'image', // Only populate the image field for better performance
 })
 
 const profileImage = profilePhoto?.image
-const profilePhotoUrl = profileImage ? formatImageUrl(profileImage) : ''
+// Header profile photo: h-16 w-16 (64px), use 2x size (128px) for retina displays
+const HEADER_PROFILE_PHOTO_DISPLAY_SIZE = 64
+const RETINA_SCALE_FACTOR = 2
+const HEADER_PROFILE_PHOTO_OPTIMIZED_SIZE =
+  HEADER_PROFILE_PHOTO_DISPLAY_SIZE * RETINA_SCALE_FACTOR
+const profilePhotoUrl = profileImage
+  ? formatImageUrlWithSize(
+      profileImage,
+      HEADER_PROFILE_PHOTO_OPTIMIZED_SIZE,
+      'webp'
+    )
+  : ''
 const profilePhotoAlt =
   profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
 ---

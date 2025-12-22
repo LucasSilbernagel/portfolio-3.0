@@ -3,12 +3,16 @@ import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
-import { formatImageUrl, fetchSingleTypeWithValidation } from '../lib/strapi'
+import {
+  formatImageUrlWithSize,
+  fetchSingleTypeWithValidation,
+} from '../lib/strapi'
 import type { AboutPageContent, BlockType } from '../types/strapi'
 
 const strapiResponse = await fetchSingleTypeWithValidation<AboutPageContent>({
   endpoint: 'about-page',
   contentTypeName: 'About Page',
+  populate: 'images', // Only populate the images relation; title and description are scalar fields returned by default
 })
 
 // For single types in Strapi v5, fields are returned directly without an attributes wrapper
@@ -21,13 +25,19 @@ if (!strapiResponse.description) {
   throw new Error('Description is required')
 }
 
+// Image sizes: Mobile h-36 w-36 (144px), Desktop sm:h-60 sm:w-60 (240px)
+// Use 2x size (480px) for retina displays on desktop, which also covers mobile at 2x (288px)
+const ABOUT_IMAGE_DISPLAY_SIZE = 240 // Desktop size
+const RETINA_SCALE_FACTOR = 2
+const ABOUT_IMAGE_OPTIMIZED_SIZE = ABOUT_IMAGE_DISPLAY_SIZE * RETINA_SCALE_FACTOR
+
 // Extract image URLs and alt text from media structure
 const imageData = strapiResponse.images.map((image) => {
   if (!image) {
     throw new Error('Image data is missing')
   }
   return {
-    src: formatImageUrl(image),
+    src: formatImageUrlWithSize(image, ABOUT_IMAGE_OPTIMIZED_SIZE, 'webp'),
     alt: image.alternativeText || image.name || '',
   }
 })

@@ -151,8 +151,12 @@ export function formatImageUrl(image: StrapiImage, useProxy = true): string {
 
 /**
  * Format Strapi image URL with size optimization
- * First tries to use a pre-generated format if it's close to the desired size,
- * otherwise adds width and format query parameters
+ * Uses pre-generated formats when available (they're cached and reliably work)
+ * Falls back to on-the-fly transformation only if no suitable pre-generated format exists
+ *
+ * Note: Strapi's on-the-fly transformation via query parameters may not always work
+ * depending on server configuration, so we prioritize pre-generated formats which are
+ * guaranteed to be optimized and cached.
  */
 export function formatImageUrlWithSize(
   image: StrapiImage,
@@ -160,6 +164,10 @@ export function formatImageUrlWithSize(
   format: 'webp' | 'jpg' | 'png' = 'webp',
   useProxy = true
 ): string {
+  // Maximum acceptable size multiplier for pre-generated formats
+  // Accepts formats up to 2x larger than requested to balance quality and file size
+  const MAX_FORMAT_SIZE_MULTIPLIER = 2
+
   // Check if there's a pre-generated format suitable for the desired size
   if (image.formats) {
     // Collect all available formats
@@ -174,33 +182,50 @@ export function formatImageUrlWithSize(
     }>
 
     // Find formats that are at least the desired width (to avoid upscaling)
-    const suitableFormats = formats.filter((f) => f.format.width >= width)
+    // Prefer formats that aren't too much larger (up to 2x is acceptable)
+    const maxAcceptableWidth = width * MAX_FORMAT_SIZE_MULTIPLIER
+    const suitableFormats = formats.filter(
+      (f) => f.format.width >= width && f.format.width <= maxAcceptableWidth
+    )
 
     if (suitableFormats.length > 0) {
       // Use the smallest format that's still >= desired width (closest match)
       let bestFormat = suitableFormats[0]
-      for (const format of suitableFormats) {
-        if (format.format.width < bestFormat.format.width) {
-          bestFormat = format
+      for (const formatItem of suitableFormats) {
+        if (formatItem.format.width < bestFormat.format.width) {
+          bestFormat = formatItem
         }
       }
       return getStrapiMedia(bestFormat.format.url, useProxy)
     }
 
-    // If no format is large enough, use the largest available format
+    // If formats exist but they're all too large, use the smallest one
+    // (better than the original full-size image)
+    const oversizedFormats = formats.filter((f) => f.format.width >= width)
+    if (oversizedFormats.length > 0) {
+      let smallestOversized = oversizedFormats[0]
+      for (const formatItem of oversizedFormats) {
+        if (formatItem.format.width < smallestOversized.format.width) {
+          smallestOversized = formatItem
+        }
+      }
+      return getStrapiMedia(smallestOversized.format.url, useProxy)
+    }
+
+    // If no format is large enough, use the largest available format (will be upscaled, but better than original)
     if (formats.length > 0) {
       let largestFormat = formats[0]
-      for (const format of formats) {
-        if (format.format.width > largestFormat.format.width) {
-          largestFormat = format
+      for (const formatItem of formats) {
+        if (formatItem.format.width > largestFormat.format.width) {
+          largestFormat = formatItem
         }
       }
       return getStrapiMedia(largestFormat.format.url, useProxy)
     }
   }
 
-  // Fallback: use query parameters for on-the-fly transformation
-  // First get the base URL without proxy to build the query params
+  // Fallback: use query parameters for on-the-fly transformation (if supported by Strapi)
+  // Note: This may not work if Strapi doesn't support on-the-fly transformation
   const baseUrlWithoutProxy = getStrapiMedia(image.url, false)
 
   try {
@@ -223,43 +248,81 @@ export function formatImageUrlWithSize(
 type FetchSingleTypeOptions = {
   endpoint: string
   query?: Record<string, string>
+  /**
+   * Specific fields to populate. If not provided, defaults to '*' (all fields).
+   * Can be a comma-separated string or array of field names.
+   * Examples: 'image', 'image,technologies', ['image', 'technologies']
+   */
+  populate?: string | string[]
 }
 
 type FetchCollectionTypeOptions = {
   endpoint: string
   query?: Record<string, string>
+  /**
+   * Specific fields to populate. If not provided, defaults to '*' (all fields).
+   * Can be a comma-separated string or array of field names.
+   * Examples: 'image', 'image,technologies', ['image', 'technologies']
+   */
+  populate?: string | string[]
+}
+
+/**
+ * Converts populate parameter to Strapi query format
+ * Strapi v5 accepts populate as comma-separated string or array notation
+ * Returns undefined if populate is not provided, allowing Strapi to use default behavior
+ */
+function formatPopulateParam(populate?: string | string[]): string | undefined {
+  if (populate === undefined) {
+    return undefined // Don't add populate param, let Strapi use default
+  }
+  if (populate === '' || (Array.isArray(populate) && populate.length === 0)) {
+    return '*' // Empty string/array means populate all (backward compatible)
+  }
+  if (Array.isArray(populate)) {
+    return populate.join(',')
+  }
+  return populate
 }
 
 /**
  * Helper to fetch a single Strapi content type (single type)
+ * Optimized to use specific populate paths instead of '*' for better performance
  */
 export async function fetchSingleType<T>({
   endpoint,
   query = {},
+  populate,
 }: FetchSingleTypeOptions): Promise<T | null> {
+  const populateParam = formatPopulateParam(populate)
+  const queryParams: Record<string, string> = { ...query }
+  if (populateParam !== undefined) {
+    queryParams.populate = populateParam
+  }
   return fetchApi<T | null>({
     endpoint,
-    query: {
-      populate: '*',
-      ...query,
-    },
+    query: queryParams,
     wrappedByKey: 'data',
   })
 }
 
 /**
  * Helper to fetch a collection of Strapi content (collection type)
+ * Optimized to use specific populate paths instead of '*' for better performance
  */
 export async function fetchCollection<T>({
   endpoint,
   query = {},
+  populate,
 }: FetchCollectionTypeOptions): Promise<T[]> {
+  const populateParam = formatPopulateParam(populate)
+  const queryParams: Record<string, string> = { ...query }
+  if (populateParam !== undefined) {
+    queryParams.populate = populateParam
+  }
   return fetchApi<T[]>({
     endpoint,
-    query: {
-      populate: '*',
-      ...query,
-    },
+    query: queryParams,
     wrappedByKey: 'data',
   })
 }
@@ -272,9 +335,10 @@ export async function safeFetchSingleType<T>({
   endpoint,
   query = {},
   contentTypeName,
+  populate,
 }: FetchSingleTypeOptions & { contentTypeName?: string }): Promise<T | null> {
   try {
-    return await fetchSingleType<T>({ endpoint, query })
+    return await fetchSingleType<T>({ endpoint, query, populate })
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn(
@@ -292,9 +356,10 @@ export async function safeFetchCollection<T>({
   endpoint,
   query = {},
   contentTypeName,
+  populate,
 }: FetchCollectionTypeOptions & { contentTypeName?: string }): Promise<T[]> {
   try {
-    return await fetchCollection<T>({ endpoint, query })
+    return await fetchCollection<T>({ endpoint, query, populate })
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn(
@@ -312,9 +377,10 @@ export async function fetchSingleTypeWithValidation<T>({
   endpoint,
   query = {},
   contentTypeName,
+  populate,
 }: FetchSingleTypeOptions & { contentTypeName: string }): Promise<T> {
   try {
-    const data = await fetchSingleType<T>({ endpoint, query })
+    const data = await fetchSingleType<T>({ endpoint, query, populate })
     if (!data) {
       throw new Error(
         `${contentTypeName} content not found in Strapi. Please:\n1. Create and publish the content in the Strapi admin panel\n2. Go to Settings > Users & Permissions Plugin > Roles > Public\n3. Enable "find" permission for "${contentTypeName}"`
@@ -339,9 +405,10 @@ export async function fetchCollectionWithValidation<T>({
   endpoint,
   query = {},
   contentTypeName,
+  populate,
 }: FetchCollectionTypeOptions & { contentTypeName: string }): Promise<T[]> {
   try {
-    const data = await fetchCollection<T>({ endpoint, query })
+    const data = await fetchCollection<T>({ endpoint, query, populate })
     if (!data || !Array.isArray(data) || data.length === 0) {
       throw new Error(
         `${contentTypeName} content not found in Strapi. Please:\n1. Create and publish the content in the Strapi admin panel\n2. Go to Settings > Users & Permissions Plugin > Roles > Public\n3. Enable "find" permission for "${contentTypeName}"`

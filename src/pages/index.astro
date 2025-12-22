@@ -5,7 +5,6 @@ import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
 import HomepageCard from '../components/HomepageCard.astro'
 import {
-  formatImageUrl,
   formatImageUrlWithSize,
   getStrapiMedia,
   safeFetchSingleType,
@@ -19,6 +18,7 @@ import type {
 const profilePhoto = await safeFetchSingleType<ProfilePhotoContent>({
   endpoint: 'profile-photo',
   contentTypeName: 'profile photo',
+  populate: 'image', // Only populate the image field for better performance
 })
 
 const profileImage = profilePhoto?.image
@@ -37,6 +37,7 @@ const profilePhotoAlt =
 const resume = await safeFetchSingleType<ResumeContent>({
   endpoint: 'resume',
   contentTypeName: 'resume',
+  populate: 'Resume', // Only populate the Resume field for better performance
 })
 
 const resumeUrl = resume?.Resume ? getStrapiMedia(resume.Resume.url) : null
@@ -46,10 +47,17 @@ const resumeFileName = resume?.Resume?.name || 'lucas-silbernagel-resume.pdf'
 const socialShareImage = await safeFetchSingleType<SocialShareImageContent>({
   endpoint: 'social-share-image',
   contentTypeName: 'social share image',
+  populate: 'socialShareImage', // Only populate the socialShareImage field for better performance
 })
 
+// OG images standard size is 1200x630px, so optimize for 1200px width
+const OG_IMAGE_OPTIMIZED_WIDTH = 1200
 const socialShareImageUrl = socialShareImage?.socialShareImage
-  ? formatImageUrl(socialShareImage.socialShareImage)
+  ? formatImageUrlWithSize(
+      socialShareImage.socialShareImage,
+      OG_IMAGE_OPTIMIZED_WIDTH,
+      'webp'
+    )
   : undefined
 
 const siteUrl = Astro.site?.href || 'https://lucassilbernagel.com'

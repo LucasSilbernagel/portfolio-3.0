@@ -4,7 +4,7 @@ import BoardingPass from '../components/BoardingPass.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
-import { formatImageUrl, safeFetchCollection } from '../lib/strapi'
+import { formatImageUrlWithSize, safeFetchCollection } from '../lib/strapi'
 import type { ProjectContent } from '../types/strapi'
 
 const ANIMATION_DELAY_MS = 100
@@ -15,14 +15,21 @@ const strapiProjects = await safeFetchCollection<ProjectContent>({
     sort: 'createdAt:desc',
   },
   contentTypeName: 'projects',
+  populate: 'image', // Only populate the image field for better performance
 })
+
+// Project images: h-32 (128px height), w-full (responsive, max container ~1152px)
+// Optimize for large screens (1280px width) to ensure good quality on all displays
+const PROJECT_IMAGE_OPTIMIZED_WIDTH = 1280
 
 const projects = strapiProjects.map((project) => {
   // Handle image - could be single object or array
   const projectImage = Array.isArray(project.image)
     ? project.image[0]
     : project.image
-  const imageUrl = projectImage ? formatImageUrl(projectImage) : undefined
+  const imageUrl = projectImage
+    ? formatImageUrlWithSize(projectImage, PROJECT_IMAGE_OPTIMIZED_WIDTH, 'webp')
+    : undefined
 
   return {
     projectName: project.projectName,
