@@ -16,6 +16,12 @@ export default defineConfig({
     icon(),
   ],
   site: 'https://lucassilbernagel.com',
+  build: {
+    // Inline all stylesheets to eliminate render-blocking requests
+    // This will inline the main CSS bundle (~6.58KB) directly in the HTML,
+    // removing the blocking request and improving critical path latency
+    inlineStylesheets: 'always',
+  },
   vite: {
     build: {
       cssCodeSplit: false, // Bundle all CSS into one file to reduce requests
