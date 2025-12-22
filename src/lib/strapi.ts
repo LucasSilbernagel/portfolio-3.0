@@ -166,8 +166,9 @@ export function formatImageUrlWithSize(
   useProxy = true
 ): string {
   // Maximum acceptable size multiplier for pre-generated formats
-  // Accepts formats up to 2x larger than requested to balance quality and file size
-  const MAX_FORMAT_SIZE_MULTIPLIER = 2
+  // Accepts formats up to 1.25x larger than requested to avoid downloading oversized images
+  // This reduces bandwidth while maintaining quality for retina displays
+  const MAX_FORMAT_SIZE_MULTIPLIER = 1.25
 
   // Check if there's a pre-generated format suitable for the desired size
   if (image.formats) {

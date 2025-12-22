@@ -21,8 +21,9 @@ const strapiProjects = await safeFetchCollection<ProjectContent>({
 })
 
 // Project images: h-32 (128px height), w-full (responsive, max container ~1152px)
-// Optimize for large screens (1280px width) to ensure good quality on all displays
-const PROJECT_IMAGE_OPTIMIZED_WIDTH = 1280
+// Images display at ~624px width, so 800px is sufficient for 2x retina displays
+// This significantly reduces download size while maintaining quality
+const PROJECT_IMAGE_OPTIMIZED_WIDTH = 800
 
 const projects = strapiProjects.map((project) => {
   // Handle image - could be single object or array
@@ -30,7 +31,11 @@ const projects = strapiProjects.map((project) => {
     ? project.image[0]
     : project.image
   const imageUrl = projectImage
-    ? formatImageUrlWithSize(projectImage, PROJECT_IMAGE_OPTIMIZED_WIDTH, 'webp')
+    ? formatImageUrlWithSize(
+        projectImage,
+        PROJECT_IMAGE_OPTIMIZED_WIDTH,
+        'webp'
+      )
     : undefined
 
   return {
@@ -65,6 +70,7 @@ const projects = strapiProjects.map((project) => {
               liveUrl={project.liveUrl}
               githubUrl={project.githubUrl}
               imageUrl={project.imageUrl}
+              isFirst={index === 0}
             />
           </div>
         ))

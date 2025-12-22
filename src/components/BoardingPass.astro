@@ -11,6 +11,7 @@ export type Props = {
   githubUrl?: string
   imageUrl?: string
   class?: string
+  isFirst?: boolean
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   githubUrl,
   imageUrl,
   class: className = '',
+  isFirst = false,
 } = Astro.props
 
 type ActionLink = {
@@ -91,6 +93,8 @@ const actionLinks = [
                   src={imageUrl}
                   alt={projectName}
                   class="h-32 w-full rounded-lg object-cover shadow-md"
+                  loading={isFirst ? 'eager' : 'lazy'}
+                  fetchpriority={isFirst ? 'high' : 'low'}
                 />
               </a>
             </div>
