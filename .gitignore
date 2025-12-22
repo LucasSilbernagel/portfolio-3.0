@@ -36,3 +36,5 @@ cms/.cache/
 cms/src/admin/
 cms/public/uploads/*
 !cms/public/uploads/.gitkeep
+# Local Netlify folder
+.netlify

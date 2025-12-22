@@ -65,19 +65,22 @@ export async function GET(context: APIContext) {
       )
     }
 
-    // Fetch the image from Strapi
-    const response = await fetch(decodedUrl)
+    // Fetch the image from Strapi with streaming for better performance
+    const response = await fetch(decodedUrl, {
+      // Add cache headers to the fetch request to leverage CDN caching
+      cache: 'default',
+    })
+
     if (!response.ok) {
       return new Response('Failed to fetch image', { status: response.status })
     }
 
-    // Get the image data
-    const imageData = await response.arrayBuffer()
+    // Stream the response instead of buffering for lower latency
     const contentType = response.headers.get('content-type') || 'image/jpeg'
 
     // Return the image with proper cache headers
     // Cache for 1 year (31536000 seconds) for optimal Lighthouse score
-    return new Response(imageData, {
+    return new Response(response.body, {
       headers: {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=31536000, immutable',
