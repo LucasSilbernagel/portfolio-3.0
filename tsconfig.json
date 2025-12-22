@@ -4,6 +4,8 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "baseUrl": ".",
+    "jsx": "preserve",
+    "jsxImportSource": "astro",
     "paths": {
       "@/*": ["src/*"],
       "@/components/*": ["src/components/*"],

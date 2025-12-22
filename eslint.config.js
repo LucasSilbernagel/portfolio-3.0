@@ -9,6 +9,7 @@ export default [
   ...tseslint.configs.recommended,
   {
     files: ['**/*.{ts,tsx}'],
+    ignores: ['**/*.astro'], // Exclude Astro files from TypeScript checking
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {

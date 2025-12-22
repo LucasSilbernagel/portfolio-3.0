@@ -7,7 +7,7 @@ import icon from 'astro-icon'
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'hybrid', // Enable hybrid mode: static pages by default, SSR for API routes
+  output: 'server', // Enable SSR for API routes; pages are still pre-rendered at build time
   adapter: netlify(),
   integrations: [
     tailwind({
