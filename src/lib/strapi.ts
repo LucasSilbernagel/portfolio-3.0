@@ -162,7 +162,7 @@ export function formatImageUrl(image: StrapiImage, useProxy = true): string {
 export function formatImageUrlWithSize(
   image: StrapiImage,
   width: number,
-  format: 'webp' | 'avif' | 'jpg' | 'png' = 'webp',
+  format: 'webp' | 'jpg' | 'png' = 'webp',
   useProxy = true
 ): string {
   // Maximum acceptable size multiplier for pre-generated formats
