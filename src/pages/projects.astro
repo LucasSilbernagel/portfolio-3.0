@@ -15,10 +15,10 @@ const ANIMATION_DELAY_MS = 100
 // Images display at ~624px width on typical screens
 // Generate multiple sizes for responsive images:
 // - 400px for mobile (1x) and small screens
-// - 640px for typical desktop displays (matches ~624px display width)
+// - 624px for typical desktop displays (matches actual display width)
 // - 800px for high-DPI displays (1.25x) and larger screens
 const PROJECT_IMAGE_SIZE_MOBILE = 400
-const PROJECT_IMAGE_SIZE_DESKTOP = 640
+const PROJECT_IMAGE_SIZE_DESKTOP = 624
 const PROJECT_IMAGE_SIZE_HIGH_DPI = 800
 const PROJECT_IMAGE_SIZES = [
   PROJECT_IMAGE_SIZE_MOBILE,
@@ -41,15 +41,23 @@ const projects = strapiProjects.map((project) => {
     ? project.image[0]
     : project.image
 
-  // Generate srcset with multiple sizes for responsive images
-  const imageSrcSet = projectImage
+  // Generate srcsets for both AVIF (modern, better compression) and WebP (fallback)
+  const imageSrcSetAvif = projectImage
+    ? PROJECT_IMAGE_SIZES.map((width) => {
+        const url = formatImageUrlWithSize(projectImage, width, 'avif')
+        return `${url} ${width}w`
+      }).join(', ')
+    : undefined
+
+  const imageSrcSetWebp = projectImage
     ? PROJECT_IMAGE_SIZES.map((width) => {
         const url = formatImageUrlWithSize(projectImage, width, 'webp')
         return `${url} ${width}w`
       }).join(', ')
     : undefined
 
-  // Use the middle size (640px) as the default src for browsers that don't support srcset
+  // Use the desktop size (624px) as the default src for browsers that don't support srcset
+  // Use WebP as fallback format for maximum compatibility
   const imageUrl = projectImage
     ? formatImageUrlWithSize(projectImage, PROJECT_IMAGE_SIZE_DESKTOP, 'webp')
     : undefined
@@ -62,7 +70,8 @@ const projects = strapiProjects.map((project) => {
     liveUrl: project.liveUrl,
     githubUrl: project.githubUrl,
     imageUrl,
-    imageSrcSet,
+    imageSrcSetAvif,
+    imageSrcSetWebp,
   }
 })
 ---
@@ -87,7 +96,8 @@ const projects = strapiProjects.map((project) => {
               liveUrl={project.liveUrl}
               githubUrl={project.githubUrl}
               imageUrl={project.imageUrl}
-              imageSrcSet={project.imageSrcSet}
+              imageSrcSetAvif={project.imageSrcSetAvif}
+              imageSrcSetWebp={project.imageSrcSetWebp}
               isFirst={index === 0}
             />
           </div>

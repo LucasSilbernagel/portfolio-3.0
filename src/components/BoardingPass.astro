@@ -10,7 +10,8 @@ export type Props = {
   liveUrl?: string
   githubUrl?: string
   imageUrl?: string
-  imageSrcSet?: string
+  imageSrcSetAvif?: string
+  imageSrcSetWebp?: string
   class?: string
   isFirst?: boolean
 }
@@ -23,7 +24,8 @@ const {
   liveUrl,
   githubUrl,
   imageUrl,
-  imageSrcSet,
+  imageSrcSetAvif,
+  imageSrcSetWebp,
   class: className = '',
   isFirst = false,
 } = Astro.props
@@ -91,15 +93,29 @@ const actionLinks = [
           imageUrl && liveUrl && (
             <div class="w-full md:flex-1">
               <a href={liveUrl} target="_blank" rel="noopener noreferrer">
-                <img
-                  src={imageUrl}
-                  srcset={imageSrcSet}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1152px) 624px, 800px"
-                  alt={projectName}
-                  class="h-32 w-full rounded-lg object-cover shadow-md"
-                  loading={isFirst ? 'eager' : 'lazy'}
-                  fetchpriority={isFirst ? 'high' : 'low'}
-                />
+                <picture>
+                  {imageSrcSetAvif && (
+                    <source
+                      type="image/avif"
+                      srcset={imageSrcSetAvif}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1152px) 624px, 800px"
+                    />
+                  )}
+                  {imageSrcSetWebp && (
+                    <source
+                      type="image/webp"
+                      srcset={imageSrcSetWebp}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1152px) 624px, 800px"
+                    />
+                  )}
+                  <img
+                    src={imageUrl}
+                    alt={projectName}
+                    class="h-32 w-full rounded-lg object-cover shadow-md"
+                    loading={isFirst ? 'eager' : 'lazy'}
+                    fetchpriority={isFirst ? 'high' : 'low'}
+                  />
+                </picture>
               </a>
             </div>
           )
