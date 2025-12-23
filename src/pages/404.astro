@@ -1,10 +1,21 @@
 ---
 export const prerender = true
 
+import { Image } from 'astro:assets'
 import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import notFoundImage from '../assets/not-found.jpg'
+
+// Image optimization sizes: mobile (320px), tablet (640px), desktop (768px)
+const IMAGE_WIDTH_MOBILE = 320
+const IMAGE_WIDTH_TABLET = 640
+const IMAGE_WIDTH_DESKTOP = 768
+const imageWidths = [
+  IMAGE_WIDTH_MOBILE,
+  IMAGE_WIDTH_TABLET,
+  IMAGE_WIDTH_DESKTOP,
+]
 ---
 
 <Layout title="404 | Lucas Silbernagel">
@@ -27,10 +38,14 @@ import notFoundImage from '../assets/not-found.jpg'
       </div>
 
       <div class="fade-in-2 mb-8">
-        <img
-          src={notFoundImage.src}
+        <Image
+          src={notFoundImage}
           alt=""
           class="mx-auto max-h-64 w-full max-w-3xl rounded-lg object-cover shadow-lg sm:max-h-80"
+          widths={imageWidths}
+          sizes={`(max-width: ${IMAGE_WIDTH_TABLET}px) 100vw, ${IMAGE_WIDTH_DESKTOP}px`}
+          loading="lazy"
+          format="webp"
         />
       </div>
 
