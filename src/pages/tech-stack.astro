@@ -67,7 +67,7 @@ const techStack = strapiResponse.technologies
                   data-icon-index={i}
                   style={`animation-delay: ${DECORATIVE_ICON_BASE_DELAY_MS + i * DECORATIVE_ICON_STAGGER_MS}ms`}
                 >
-                  <Icon name={iconName} />
+                  <Icon name={iconName} aria-hidden="true" />
                 </div>
               ))
             }
@@ -81,7 +81,7 @@ const techStack = strapiResponse.technologies
                   data-icon-index={i + ICONS_PER_SIDE}
                   style={`animation-delay: ${DECORATIVE_ICON_BASE_DELAY_MS + (i + ICONS_PER_SIDE) * DECORATIVE_ICON_STAGGER_MS}ms`}
                 >
-                  <Icon name={iconName} />
+                  <Icon name={iconName} aria-hidden="true" />
                 </div>
               ))
             }

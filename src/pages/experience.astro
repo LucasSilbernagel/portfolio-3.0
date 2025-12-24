@@ -27,13 +27,32 @@ const parseLocalDate = (dateString: string): Date => {
   return new Date(year, month - 1, day)
 }
 
-const formatPeriod = (startDate: string, endDate: string | null): string => {
+type PeriodParts = {
+  startMonth: string
+  startYear: number
+  endMonth: string | null
+  endYear: number | null
+  isPresent: boolean
+  isSamePeriod: boolean
+}
+
+const formatPeriod = (
+  startDate: string,
+  endDate: string | null
+): PeriodParts => {
   const start = parseLocalDate(startDate)
   const startMonth = start.toLocaleDateString('en-US', { month: 'long' })
   const startYear = start.getFullYear()
 
   if (!endDate) {
-    return `${startMonth} ${startYear} - present`
+    return {
+      startMonth,
+      startYear,
+      endMonth: null,
+      endYear: null,
+      isPresent: true,
+      isSamePeriod: false,
+    }
   }
 
   const end = parseLocalDate(endDate)
@@ -42,10 +61,24 @@ const formatPeriod = (startDate: string, endDate: string | null): string => {
 
   // If same month and year, return just the month and year
   if (startMonth === endMonth && startYear === endYear) {
-    return `${startMonth} ${startYear}`
+    return {
+      startMonth,
+      startYear,
+      endMonth: null,
+      endYear: null,
+      isPresent: false,
+      isSamePeriod: true,
+    }
   }
 
-  return `${startMonth} ${startYear} - ${endMonth} ${endYear}`
+  return {
+    startMonth,
+    startYear,
+    endMonth,
+    endYear,
+    isPresent: false,
+    isSamePeriod: false,
+  }
 }
 
 // Extract text from blocks content
@@ -117,6 +150,7 @@ const experiences = strapiResponse
                       class="inline-flex items-center gap-2 font-terminal text-lg uppercase tracking-[0.20em] text-terminal-dark-gray transition-colors hover:text-terminal-blue focus-visible:text-terminal-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terminal-blue"
                       target="_blank"
                       rel="noreferrer"
+                      aria-label={`Company: ${experience.Company} (opens company website in a new tab)`}
                     >
                       {experience.Company} <Icon name="mdi:external-link" />
                     </a>
@@ -125,8 +159,47 @@ const experiences = strapiResponse
                     </h2>
                   </div>
                   <div class="flex flex-col text-sm text-terminal-dark-gray/80 sm:items-end">
-                    <span class="font-semibold text-terminal-blue">
-                      {formatPeriod(experience.startDate, experience.endDate)}
+                    <span
+                      class="font-semibold text-terminal-blue"
+                      aria-label={(() => {
+                        const period = formatPeriod(
+                          experience.startDate,
+                          experience.endDate
+                        )
+                        if (period.isSamePeriod) {
+                          return `${period.startMonth} ${period.startYear}`
+                        }
+                        if (period.isPresent) {
+                          return `${period.startMonth} ${period.startYear} through present`
+                        }
+                        return `${period.startMonth} ${period.startYear} through ${period.endMonth} ${period.endYear}`
+                      })()}
+                    >
+                      {(() => {
+                        const period = formatPeriod(
+                          experience.startDate,
+                          experience.endDate
+                        )
+                        if (period.isSamePeriod) {
+                          return `${period.startMonth} ${period.startYear}`
+                        }
+                        if (period.isPresent) {
+                          return (
+                            <>
+                              {`${period.startMonth} ${period.startYear}`}
+                              <span aria-hidden="true"> - </span>
+                              present
+                            </>
+                          )
+                        }
+                        return (
+                          <>
+                            {`${period.startMonth} ${period.startYear}`}
+                            <span aria-hidden="true"> - </span>
+                            {`${period.endMonth} ${period.endYear}`}
+                          </>
+                        )
+                      })()}
                     </span>
                     <span>{experience.Location}</span>
                   </div>

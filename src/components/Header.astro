@@ -29,8 +29,6 @@ const profilePhotoUrl = profileImage
       'webp'
     )
   : ''
-const profilePhotoAlt =
-  profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
 ---
 
 <header
@@ -43,13 +41,14 @@ const profilePhotoAlt =
     <a
       href="/"
       class="flex flex-wrap items-center justify-center gap-6 transition-opacity duration-200 hover:opacity-90 focus-visible:opacity-90 sm:justify-start"
+      aria-label="Home"
     >
       <div
         class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-4 border-white shadow-lg"
       >
         <img
           src={profilePhotoUrl}
-          alt={profilePhotoAlt}
+          alt=""
           class="h-16 w-16 rounded-full object-cover"
         />
       </div>

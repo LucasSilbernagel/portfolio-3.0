@@ -66,17 +66,17 @@ const actionLinks = [
       >
         <div class="w-full space-y-4 md:flex-1">
           <div>
-            <div class="text-xs uppercase tracking-wide text-gray-500">
+            <h3 class="text-xs uppercase tracking-wide text-gray-500">
               Project
-            </div>
+            </h3>
             <div class="text-lg font-bold text-terminal-dark-gray">
               {projectName}
             </div>
           </div>
           <div>
-            <div class="text-xs uppercase tracking-wide text-gray-500">
+            <h3 class="text-xs uppercase tracking-wide text-gray-500">
               Completed
-            </div>
+            </h3>
             <div class="text-sm text-gray-700">{completedYear}</div>
           </div>
         </div>
@@ -90,7 +90,12 @@ const actionLinks = [
         {
           imageUrl && liveUrl && (
             <div class="w-full md:flex-1">
-              <a href={liveUrl} target="_blank" rel="noopener noreferrer">
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Live link: ${projectName}`}
+              >
                 <img
                   src={imageUrl}
                   srcset={imageSrcSet}
@@ -108,21 +113,21 @@ const actionLinks = [
 
       <div class="space-y-4">
         <div>
-          <div class="text-xs uppercase tracking-wide text-gray-500">
+          <h3 class="text-xs uppercase tracking-wide text-gray-500">
             Tech Stack
-          </div>
-          <div class="mt-1 flex flex-wrap gap-1">
+          </h3>
+          <ul class="mt-1 flex flex-wrap gap-1">
             {
               technologies.map((tech) => (
-                <span class="rounded bg-terminal-light-gray px-2 py-1 text-xs text-terminal-dark-gray">
+                <li class="rounded bg-terminal-light-gray px-2 py-1 text-xs text-terminal-dark-gray">
                   {tech}
-                </span>
+                </li>
               ))
             }
-          </div>
+          </ul>
         </div>
         <div>
-          <div class="text-xs uppercase tracking-wide text-gray-500">Links</div>
+          <h3 class="text-xs uppercase tracking-wide text-gray-500">Links</h3>
           <div class="mt-1 flex gap-2">
             {
               actionLinks.map(({ href, label, className: linkClass }) => (
@@ -142,9 +147,9 @@ const actionLinks = [
     </div>
 
     <div class="mt-6 border-t border-gray-200 pt-4">
-      <div class="mb-2 text-xs uppercase tracking-wide text-gray-500">
+      <h3 class="mb-2 text-xs uppercase tracking-wide text-gray-500">
         Description
-      </div>
+      </h3>
       <p class="text-sm leading-relaxed text-gray-700">{description}</p>
     </div>
 

@@ -72,10 +72,10 @@ const projects = strapiProjects.map((project) => {
   <PageWrapper>
     <PageHeader title="Projects" subtitle="My most recent side projects" />
 
-    <div class="mx-auto max-w-6xl space-y-8">
+    <ul class="mx-auto max-w-6xl space-y-8">
       {
         projects.map((project, index) => (
-          <div
+          <li
             class="animate-fade-in"
             style={`animation-delay: ${index * ANIMATION_DELAY_MS}ms`}
           >
@@ -90,10 +90,10 @@ const projects = strapiProjects.map((project) => {
               imageSrcSet={project.imageSrcSet}
               isFirst={index === 0}
             />
-          </div>
+          </li>
         ))
       }
-    </div>
+    </ul>
   </PageWrapper>
 </Layout>
 
