@@ -16,12 +16,15 @@ export default async function fetchApi<T>({
   wrappedByKey,
   wrappedByList,
 }: FetchApiOptions): Promise<T> {
-  const strapiUrl = import.meta.env.STRAPI_URL
+  // Check both import.meta.env (build-time) and process.env (runtime/test-time)
+  const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
 
   // In CI or when STRAPI_URL is not properly configured, return empty structure
   // Check for CI environment variable or default localhost URL
+  // Skip early return in test environments (vitest sets NODE_ENV=test)
+  const isTest = process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
   const isCI = process.env.CI === 'true' || import.meta.env.CI === 'true'
-  if (!strapiUrl || strapiUrl === 'http://localhost:1337' || isCI) {
+  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337' || isCI)) {
     // Return empty structure that matches the expected type
     // This allows builds to complete in CI without Strapi
     if (wrappedByList) {
@@ -397,9 +400,11 @@ export async function fetchSingleTypeWithValidation<T>({
   populate,
 }: FetchSingleTypeOptions & { contentTypeName: string }): Promise<T> {
   // In CI or when STRAPI_URL is not properly configured, return empty structure
-  const strapiUrl = import.meta.env.STRAPI_URL
+  // Skip early return in test environments
+  const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
+  const isTest = process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
   const isCI = process.env.CI === 'true' || import.meta.env.CI === 'true'
-  if (!strapiUrl || strapiUrl === 'http://localhost:1337' || isCI) {
+  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337' || isCI)) {
     return {} as T
   }
 
@@ -433,9 +438,11 @@ export async function fetchCollectionWithValidation<T>({
   populate,
 }: FetchCollectionTypeOptions & { contentTypeName: string }): Promise<T[]> {
   // In CI or when STRAPI_URL is not properly configured, return empty array
-  const strapiUrl = import.meta.env.STRAPI_URL
+  // Skip early return in test environments
+  const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
+  const isTest = process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
   const isCI = process.env.CI === 'true' || import.meta.env.CI === 'true'
-  if (!strapiUrl || strapiUrl === 'http://localhost:1337' || isCI) {
+  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337' || isCI)) {
     return []
   }
 
