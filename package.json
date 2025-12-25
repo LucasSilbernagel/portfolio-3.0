@@ -39,6 +39,7 @@
     "@playwright/test": "^1.57.0",
     "@tailwindcss/typography": "^0.5.19",
     "@typescript-eslint/parser": "^8.46.2",
+    "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
     "baseline-browser-mapping": "^2.9.11",
     "concurrently": "^9.2.1",

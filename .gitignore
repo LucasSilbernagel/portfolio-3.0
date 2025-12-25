@@ -41,3 +41,4 @@ cms/public/uploads/*
 
 playwright-report/
 test-results/
+coverage/
