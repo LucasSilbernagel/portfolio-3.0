@@ -121,6 +121,7 @@ export default [
       'dist/**',
       '.astro/**',
       'cms/types/generated/**',
+      'cms/.strapi/**',
     ],
   },
 ]
