@@ -20,10 +20,12 @@ test.describe('Resume Download', () => {
     page,
   }) => {
     // Set up download listener
-    const downloadPromise = page.waitForEvent('download', { timeout: 5000 }).catch(() => {
-      // Download might not trigger in test environment, that's okay
-      return null
-    })
+    const downloadPromise = page
+      .waitForEvent('download', { timeout: 5000 })
+      .catch(() => {
+        // Download might not trigger in test environment, that's okay
+        return null
+      })
 
     // Find and click the boarding pass download button
     const boardingPassButton = page.locator('#boarding-pass-download')
@@ -51,13 +53,17 @@ test.describe('Resume Download', () => {
 
     // Verify button has data attributes for resume URL and filename
     const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
-    const resumeFilename = await boardingPassButton.getAttribute('data-resume-filename')
+    const resumeFilename = await boardingPassButton.getAttribute(
+      'data-resume-filename'
+    )
 
     // At least one should be present (URL might be empty if resume not configured)
     expect(resumeUrl !== null || resumeFilename !== null).toBeTruthy()
   })
 
-  test('should hide loading overlay after download attempt', async ({ page }) => {
+  test('should hide loading overlay after download attempt', async ({
+    page,
+  }) => {
     // Set up download listener
     page.waitForEvent('download', { timeout: 5000 }).catch(() => {
       // Download might not trigger in test environment
@@ -84,4 +90,3 @@ test.describe('Resume Download', () => {
     await expect(loadingAnnouncement).toHaveAttribute('aria-live', 'polite')
   })
 })
-

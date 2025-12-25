@@ -49,8 +49,8 @@ pnpm test:e2e --debug
 ## Test Configuration
 
 Tests are configured in `playwright.config.ts`:
+
 - Base URL: `http://localhost:4321`
 - Browser: Chromium (Desktop Chrome)
 - Test directory: `./e2e`
 - Automatically starts preview server before tests
-

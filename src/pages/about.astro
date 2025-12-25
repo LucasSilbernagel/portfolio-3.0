@@ -31,7 +31,8 @@ if (!strapiResponse.description) {
 // Use 2x size (480px) for retina displays on desktop, which also covers mobile at 2x (288px)
 const ABOUT_IMAGE_DISPLAY_SIZE = 240 // Desktop size
 const RETINA_SCALE_FACTOR = 2
-const ABOUT_IMAGE_OPTIMIZED_SIZE = ABOUT_IMAGE_DISPLAY_SIZE * RETINA_SCALE_FACTOR
+const ABOUT_IMAGE_OPTIMIZED_SIZE =
+  ABOUT_IMAGE_DISPLAY_SIZE * RETINA_SCALE_FACTOR
 
 // Extract image URLs and alt text from media structure
 const imageData = strapiResponse.images.map((image) => {

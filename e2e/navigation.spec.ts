@@ -18,11 +18,15 @@ test.describe('Navigation Between Pages', () => {
 
   test('should navigate to About page', async ({ page }) => {
     // Click on Information card (links to /about)
-    await page.getByRole('link', { name: /^Information : About Lucas/i }).click()
+    await page
+      .getByRole('link', { name: /^Information : About Lucas/i })
+      .click()
 
     // Verify we're on the about page
     await expect(page).toHaveURL(/\/about/)
-    await expect(page.getByRole('heading', { name: /About/i }).first()).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: /About/i }).first()
+    ).toBeVisible()
   })
 
   test('should navigate to Tech Stack page', async ({ page }) => {
@@ -31,7 +35,9 @@ test.describe('Navigation Between Pages', () => {
 
     // Verify we're on the tech-stack page
     await expect(page).toHaveURL(/\/tech-stack/)
-    await expect(page.getByRole('heading', { name: /Tech Stack/i })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: /Tech Stack/i })
+    ).toBeVisible()
   })
 
   test('should navigate to Experience page', async ({ page }) => {
@@ -40,7 +46,9 @@ test.describe('Navigation Between Pages', () => {
 
     // Verify we're on the experience page
     await expect(page).toHaveURL(/\/experience/)
-    await expect(page.getByRole('heading', { name: /Experience/i })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: /Experience/i })
+    ).toBeVisible()
   })
 
   test('should navigate to Projects page', async ({ page }) => {
@@ -49,16 +57,22 @@ test.describe('Navigation Between Pages', () => {
 
     // Verify we're on the projects page
     await expect(page).toHaveURL(/\/projects/)
-    await expect(page.getByRole('heading', { name: 'Projects', exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Projects', exact: true })
+    ).toBeVisible()
   })
 
   test('should navigate to Contact page', async ({ page }) => {
     // Click on Help card (links to /contact)
-    await page.getByRole('link', { name: /^Help : Contact Information/i }).click()
+    await page
+      .getByRole('link', { name: /^Help : Contact Information/i })
+      .click()
 
     // Verify we're on the contact page
     await expect(page).toHaveURL(/\/contact/)
-    await expect(page.getByRole('heading', { name: 'Contact Me', exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Contact Me', exact: true })
+    ).toBeVisible()
   })
 
   test('should navigate to Map page', async ({ page }) => {
@@ -71,7 +85,9 @@ test.describe('Navigation Between Pages', () => {
 
   test('should have back link on sub-pages', async ({ page }) => {
     // Navigate to a sub-page
-    await page.getByRole('link', { name: /^Information : About Lucas/i }).click()
+    await page
+      .getByRole('link', { name: /^Information : About Lucas/i })
+      .click()
     await expect(page).toHaveURL(/\/about/)
 
     // Check for back link (should be in header)
@@ -81,7 +97,9 @@ test.describe('Navigation Between Pages', () => {
 
   test('should navigate back to homepage from sub-page', async ({ page }) => {
     // Navigate to a sub-page
-    await page.getByRole('link', { name: /^Information : About Lucas/i }).click()
+    await page
+      .getByRole('link', { name: /^Information : About Lucas/i })
+      .click()
     await expect(page).toHaveURL(/\/about/)
 
     // Click back link
@@ -110,4 +128,3 @@ test.describe('Navigation Between Pages', () => {
     }
   })
 })
-
