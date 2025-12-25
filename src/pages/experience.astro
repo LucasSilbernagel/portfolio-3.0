@@ -19,6 +19,9 @@ const strapiResponse = await fetchCollectionWithValidation<ExperienceItem>({
   contentTypeName: 'Experience',
 })
 
+// Handle empty response in CI builds
+const experiences = strapiResponse || []
+
 // Format date to period string
 // Parse date string (YYYY-MM-DD) as local date to avoid timezone issues
 const parseLocalDate = (dateString: string): Date => {
@@ -103,8 +106,6 @@ const extractHighlights = (highlights: unknown): string[] => {
 
   return []
 }
-
-const experiences = strapiResponse
 ---
 
 <Layout title="Lucas Silbernagel | Experience">

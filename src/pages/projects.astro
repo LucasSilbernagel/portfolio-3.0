@@ -35,36 +35,39 @@ const strapiProjects = await safeFetchCollection<ProjectContent>({
   populate: 'image', // Only populate the image field for better performance
 })
 
-const projects = strapiProjects.map((project) => {
-  // Handle image - could be single object or array
-  const projectImage = Array.isArray(project.image)
-    ? project.image[0]
-    : project.image
+// Handle empty response in CI builds
+const projects = (Array.isArray(strapiProjects) ? strapiProjects : []).map(
+  (project) => {
+    // Handle image - could be single object or array
+    const projectImage = Array.isArray(project.image)
+      ? project.image[0]
+      : project.image
 
-  // Generate srcset with multiple sizes for responsive images
-  const imageSrcSet = projectImage
-    ? PROJECT_IMAGE_SIZES.map((width) => {
-        const url = formatImageUrlWithSize(projectImage, width, 'webp')
-        return `${url} ${width}w`
-      }).join(', ')
-    : undefined
+    // Generate srcset with multiple sizes for responsive images
+    const imageSrcSet = projectImage
+      ? PROJECT_IMAGE_SIZES.map((width) => {
+          const url = formatImageUrlWithSize(projectImage, width, 'webp')
+          return `${url} ${width}w`
+        }).join(', ')
+      : undefined
 
-  // Use the middle size (640px) as the default src for browsers that don't support srcset
-  const imageUrl = projectImage
-    ? formatImageUrlWithSize(projectImage, PROJECT_IMAGE_SIZE_DESKTOP, 'webp')
-    : undefined
+    // Use the middle size (640px) as the default src for browsers that don't support srcset
+    const imageUrl = projectImage
+      ? formatImageUrlWithSize(projectImage, PROJECT_IMAGE_SIZE_DESKTOP, 'webp')
+      : undefined
 
-  return {
-    projectName: project.projectName,
-    completedYear: project.completedYear,
-    technologies: project.technologies,
-    description: project.description,
-    liveUrl: project.liveUrl,
-    githubUrl: project.githubUrl,
-    imageUrl,
-    imageSrcSet,
+    return {
+      projectName: project.projectName,
+      completedYear: project.completedYear,
+      technologies: project.technologies,
+      description: project.description,
+      liveUrl: project.liveUrl,
+      githubUrl: project.githubUrl,
+      imageUrl,
+      imageSrcSet,
+    }
   }
-})
+)
 ---
 
 <Layout title="Lucas Silbernagel | Projects">

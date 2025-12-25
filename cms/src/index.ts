@@ -1,17 +1,19 @@
-import * as fs from 'fs'
-import * as path from 'path'
+/* eslint-disable no-console */
+import * as fs from 'node:fs'
+// eslint-disable-next-line unicorn/import-style
+import * as path from 'node:path'
 
 function ensureUploadsDirectory() {
   const publicDir = path.resolve(process.cwd(), 'public')
   const uploadsDir = path.resolve(process.cwd(), 'public', 'uploads')
-  
+
   try {
     // Ensure public directory exists
     if (!fs.existsSync(publicDir)) {
       fs.mkdirSync(publicDir, { recursive: true })
       console.log(`Created public directory: ${publicDir}`)
     }
-    
+
     // Ensure uploads directory exists
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true })
@@ -47,4 +49,3 @@ export default {
     ensureUploadsDirectory()
   },
 }
-

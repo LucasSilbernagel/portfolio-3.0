@@ -38,3 +38,7 @@ cms/public/uploads/*
 !cms/public/uploads/.gitkeep
 # Local Netlify folder
 .netlify
+
+playwright-report/
+test-results/
+coverage/

@@ -70,8 +70,6 @@ const getDatabaseConfig = ({ env }) => {
         client: 'sqlite',
         connection: {
           filename: path.join(
-            // @ts-ignore - __dirname is available at runtime in CommonJS
-            // eslint-disable-next-line no-undef
             __dirname,
             '..',
             '..',
