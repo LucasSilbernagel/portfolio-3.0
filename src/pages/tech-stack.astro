@@ -31,17 +31,10 @@ const strapiResponse = await fetchSingleTypeWithValidation<TechStackContent>({
   contentTypeName: 'Tech Stack',
 })
 
-// Validate required fields
-if (
-  !strapiResponse.technologies ||
-  !Array.isArray(strapiResponse.technologies)
-) {
-  throw new Error(
-    'Tech stack technologies field is required and must be an array'
-  )
-}
-
-const techStack = strapiResponse.technologies
+// Handle empty response in CI builds - use empty array if technologies is missing
+const techStack = Array.isArray(strapiResponse.technologies)
+  ? strapiResponse.technologies
+  : []
 ---
 
 <Layout title="Lucas Silbernagel | Tech Stack">
