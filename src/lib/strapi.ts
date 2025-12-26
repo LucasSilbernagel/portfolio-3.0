@@ -164,14 +164,6 @@ export function getStrapiMedia(url: string | null, useProxy = true): string {
 }
 
 /**
- * Format Strapi image data for use in components
- */
-export function formatImageUrl(image: StrapiImage, useProxy = true): string {
-  // Strapi v5 returns media fields as flat objects, so url is directly on the image
-  return getStrapiMedia(image.url, useProxy)
-}
-
-/**
  * Format Strapi image URL with size optimization
  * Uses pre-generated formats when available (they're cached and reliably work)
  * Falls back to on-the-fly transformation only if no suitable pre-generated format exists
