@@ -19,18 +19,14 @@ export default async function fetchApi<T>({
   // Check both import.meta.env (build-time) and process.env (runtime/test-time)
   const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
 
-  // In CI or when STRAPI_URL is not properly configured, return empty structure
-  // Check for CI environment variable or default localhost URL
+  // When STRAPI_URL is not properly configured, return empty structure
   // Skip early return in test environments (vitest sets NODE_ENV=test)
+  // Only return empty data if STRAPI_URL is missing or is localhost (not configured for production)
   const isTest =
     process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
-  const isCI = process.env.CI === 'true' || import.meta.env.CI === 'true'
-  if (
-    !isTest &&
-    (!strapiUrl || strapiUrl === 'http://localhost:1337' || isCI)
-  ) {
+  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337')) {
     // Return empty structure that matches the expected type
-    // This allows builds to complete in CI without Strapi
+    // This allows builds to complete when STRAPI_URL is not configured
     if (wrappedByList) {
       return [] as T
     }
@@ -387,7 +383,7 @@ export async function safeFetchCollection<T>({
 /**
  * Helper to fetch Strapi data with validation and error throwing
  * Throws descriptive error if content is not found
- * In CI environments without Strapi, returns a default empty structure
+ * Returns a default empty structure if STRAPI_URL is not configured
  */
 export async function fetchSingleTypeWithValidation<T>({
   endpoint,
@@ -395,16 +391,12 @@ export async function fetchSingleTypeWithValidation<T>({
   contentTypeName,
   populate,
 }: FetchSingleTypeOptions & { contentTypeName: string }): Promise<T> {
-  // In CI or when STRAPI_URL is not properly configured, return empty structure
+  // When STRAPI_URL is not properly configured, return empty structure
   // Skip early return in test environments
   const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
   const isTest =
     process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
-  const isCI = process.env.CI === 'true' || import.meta.env.CI === 'true'
-  if (
-    !isTest &&
-    (!strapiUrl || strapiUrl === 'http://localhost:1337' || isCI)
-  ) {
+  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337')) {
     return {} as T
   }
 
@@ -429,7 +421,7 @@ export async function fetchSingleTypeWithValidation<T>({
 /**
  * Helper to fetch Strapi collection with validation and error throwing
  * Throws descriptive error if collection is empty
- * In CI environments without Strapi, returns an empty array
+ * Returns an empty array if STRAPI_URL is not configured
  */
 export async function fetchCollectionWithValidation<T>({
   endpoint,
@@ -437,16 +429,12 @@ export async function fetchCollectionWithValidation<T>({
   contentTypeName,
   populate,
 }: FetchCollectionTypeOptions & { contentTypeName: string }): Promise<T[]> {
-  // In CI or when STRAPI_URL is not properly configured, return empty array
+  // When STRAPI_URL is not properly configured, return empty array
   // Skip early return in test environments
   const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
   const isTest =
     process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
-  const isCI = process.env.CI === 'true' || import.meta.env.CI === 'true'
-  if (
-    !isTest &&
-    (!strapiUrl || strapiUrl === 'http://localhost:1337' || isCI)
-  ) {
+  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337')) {
     return []
   }
 
