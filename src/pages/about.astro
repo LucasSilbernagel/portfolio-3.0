@@ -17,7 +17,6 @@ const strapiResponse = await fetchSingleTypeWithValidation<AboutPageContent>({
   populate: 'images', // Only populate the images relation; title and description are scalar fields returned by default
 })
 
-// For single types in Strapi v5, fields are returned directly without an attributes wrapper
 // Validate required fields (allow empty in CI builds)
 const title = strapiResponse.title || 'About'
 const description = strapiResponse.description || ''

@@ -1,0 +1,33 @@
+---
+// Loading Overlay displayed while printing resume
+// Includes both the visual overlay and screen reader announcement
+---
+
+<!-- Loading Overlay displayed while printing resume -->
+<div
+  id="loading-overlay"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-terminal-dark-gray/95 backdrop-blur-sm"
+>
+  <div class="flex flex-col items-center gap-4">
+    <div
+      class="h-16 w-16 animate-spin rounded-full border-4 border-terminal-blue border-t-transparent"
+      aria-hidden="true"
+    >
+    </div>
+    <p
+      class="font-terminal text-xl uppercase tracking-wider text-terminal-yellow"
+    >
+      Printing...
+    </p>
+  </div>
+</div>
+
+<!-- Screen reader announcement for loading state -->
+<div
+  id="loading-announcement"
+  role="status"
+  aria-live="polite"
+  aria-atomic="true"
+  class="sr-only"
+>
+</div>
