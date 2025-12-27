@@ -91,7 +91,24 @@ const description =
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
     <!-- Preload critical background image -->
-    <link rel="preload" as="image" href={airplaneBackground.src} />
+    <link
+      rel="preload"
+      as="image"
+      href={airplaneBackground.src}
+      fetchpriority="high"
+    />
+
+    <!-- Preload critical profile photo -->
+    {
+      profilePhotoUrl && (
+        <link
+          rel="preload"
+          as="image"
+          href={profilePhotoUrl}
+          fetchpriority="high"
+        />
+      )
+    }
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
