@@ -1,10 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { StrapiImage } from '../types/strapi'
-import {
-  formatImageUrl,
-  formatImageUrlWithSize,
-  getStrapiMedia,
-} from './strapi'
+import { formatImageUrlWithSize, getStrapiMedia } from './strapi'
 
 // Test constants
 const TEST_IMAGE_WIDTH_500 = 500
@@ -116,60 +112,6 @@ describe('getStrapiMedia', () => {
     // In DEV mode, both return direct URL regardless of useProxy
     expect(getStrapiMedia(imageUrl, true)).toBe(imageUrl)
     expect(getStrapiMedia(imageUrl, false)).toBe(imageUrl)
-  })
-})
-
-describe('formatImageUrl', () => {
-  beforeEach(() => {
-    vi.stubEnv('STRAPI_URL', 'https://api.example.com')
-  })
-
-  afterEach(() => {
-    vi.unstubAllEnvs()
-  })
-
-  it('should format image URL from StrapiImage', () => {
-    const image = {
-      id: 1,
-      name: 'test-image',
-      alternativeText: 'Test image',
-      caption: null,
-      width: 1920,
-      height: 1080,
-      url: '/uploads/test-image.jpg',
-      hash: 'abc123',
-      ext: '.jpg',
-      mime: 'image/jpeg',
-      size: TEST_SIZE_100KB,
-    } satisfies StrapiImage
-
-    const result = formatImageUrl(image)
-    expect(result).toBe('https://api.example.com/uploads/test-image.jpg')
-  })
-
-  it('should respect useProxy parameter', () => {
-    // In test environment, DEV is true, so no proxying occurs
-    const image = {
-      id: 1,
-      name: 'test-image',
-      alternativeText: null,
-      caption: null,
-      width: 1920,
-      height: 1080,
-      url: '/uploads/test-image.jpg',
-      hash: 'abc123',
-      ext: '.jpg',
-      mime: 'image/jpeg',
-      size: TEST_SIZE_100KB,
-    } satisfies StrapiImage
-
-    // In DEV mode, both return direct URL regardless of useProxy
-    expect(formatImageUrl(image, true)).toBe(
-      'https://api.example.com/uploads/test-image.jpg'
-    )
-    expect(formatImageUrl(image, false)).toBe(
-      'https://api.example.com/uploads/test-image.jpg'
-    )
   })
 })
 
