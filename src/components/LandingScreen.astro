@@ -26,6 +26,8 @@ const { backgroundImage, profilePhotoUrl, profilePhotoAlt } = Astro.props
           alt={profilePhotoAlt}
           width="192"
           height="192"
+          fetchpriority="high"
+          loading="eager"
           class="rounded-full object-contain"
         />
       </div>
