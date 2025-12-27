@@ -2,6 +2,8 @@
 
 The third iteration of my software development portfolio, themed as an airport check-in terminal screen.
 
+<img width="1468" height="721" alt="og-image" src="https://github.com/user-attachments/assets/b75e999e-d56f-43c0-8f9d-072ceaf7f6ee" />
+
 ## Live link
 
 https://lucassilbernagel.com/
