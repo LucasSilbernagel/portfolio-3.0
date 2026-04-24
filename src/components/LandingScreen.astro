@@ -19,7 +19,7 @@ const { backgroundImage, profilePhotoUrl, profilePhotoAlt } = Astro.props
   <div class="relative z-10 mx-auto flex max-w-4xl flex-col px-8 text-center">
     <div class="mb-6 mt-6 flex justify-center md:mb-12 md:mt-0">
       <div
-        class="flex h-48 w-48 items-center justify-center rounded-full border-8 border-white bg-gradient-to-br from-terminal-blue to-blue-600 shadow-2xl"
+        class="flex h-48 w-48 items-center justify-center overflow-hidden rounded-full border-8 border-white bg-gradient-to-br from-terminal-blue to-blue-600 shadow-2xl"
       >
         <img
           src={profilePhotoUrl}
@@ -28,7 +28,7 @@ const { backgroundImage, profilePhotoUrl, profilePhotoAlt } = Astro.props
           height="192"
           fetchpriority="high"
           loading="eager"
-          class="rounded-full object-contain"
+          class="h-full w-full object-cover"
         />
       </div>
     </div>
