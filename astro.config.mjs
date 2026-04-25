@@ -14,6 +14,10 @@ export default defineConfig({
     icon(),
   ],
   site: 'https://lucassilbernagel.com',
+  image: {
+    // Use no-op image service for static builds - no external dependencies needed
+    service: { entrypoint: 'astro/assets/services/noop' },
+  },
   build: {
     // Inline all stylesheets to eliminate render-blocking requests
     // This will inline the main CSS bundle (~6.58KB) directly in the HTML,
