@@ -21,10 +21,13 @@ export default async function fetchApi<T>({
 
   // When STRAPI_URL is not properly configured, return empty structure
   // Skip early return in test environments (vitest sets NODE_ENV=test)
-  // Only return empty data if STRAPI_URL is missing or is localhost (not configured for production)
+  // Only return empty data if STRAPI_URL is missing or is localhost (development URL)
   const isTest =
     process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
-  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337')) {
+  const isLocalhostUrl =
+    strapiUrl === 'http://localhost:1337' ||
+    strapiUrl === 'http://127.0.0.1:1337'
+  if (!isTest && (!strapiUrl || isLocalhostUrl)) {
     // Return empty structure that matches the expected type
     // This allows builds to complete when STRAPI_URL is not configured
     if (wrappedByList) {
@@ -113,16 +116,6 @@ export default async function fetchApi<T>({
 
   // Should never reach here, but TypeScript needs it
   throw lastError || new Error('Failed to fetch from Strapi')
-}
-
-/**
- * Proxy an image URL through our image proxy endpoint
- * Cache headers are now handled by static deployment configuration (_headers file)
- * Since we're using static output, we return direct URLs
- */
-function proxyImageUrl(imageUrl: string): string {
-  // Return the URL directly - cache headers are set via _headers file
-  return imageUrl
 }
 
 /**
@@ -377,7 +370,10 @@ export async function fetchSingleTypeWithValidation<T>({
   const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
   const isTest =
     process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
-  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337')) {
+  const isLocalhostUrl =
+    strapiUrl === 'http://localhost:1337' ||
+    strapiUrl === 'http://127.0.0.1:1337'
+  if (!isTest && (!strapiUrl || isLocalhostUrl)) {
     return {} as T
   }
 
@@ -415,7 +411,10 @@ export async function fetchCollectionWithValidation<T>({
   const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
   const isTest =
     process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
-  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337')) {
+  const isLocalhostUrl =
+    strapiUrl === 'http://localhost:1337' ||
+    strapiUrl === 'http://127.0.0.1:1337'
+  if (!isTest && (!strapiUrl || isLocalhostUrl)) {
     return []
   }
 
