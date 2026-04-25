@@ -81,9 +81,6 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.7.1
         version: 0.7.1(prettier-plugin-astro@0.14.1)(prettier-plugin-organize-imports@4.3.0(prettier@3.6.2)(typescript@5.9.3))(prettier@3.6.2)
-      sharp:
-        specifier: ^0.34.5
-        version: 0.34.5
       typescript-eslint:
         specifier: ^8.48.0
         version: 8.48.0(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
