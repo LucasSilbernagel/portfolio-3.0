@@ -21,10 +21,13 @@ export default async function fetchApi<T>({
 
   // When STRAPI_URL is not properly configured, return empty structure
   // Skip early return in test environments (vitest sets NODE_ENV=test)
-  // Only return empty data if STRAPI_URL is missing or is localhost (not configured for production)
+  // Only return empty data if STRAPI_URL is missing or is localhost (development URL)
   const isTest =
     process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
-  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337')) {
+  const isLocalhostUrl =
+    strapiUrl === 'http://localhost:1337' ||
+    strapiUrl === 'http://127.0.0.1:1337'
+  if (!isTest && (!strapiUrl || isLocalhostUrl)) {
     // Return empty structure that matches the expected type
     // This allows builds to complete when STRAPI_URL is not configured
     if (wrappedByList) {
@@ -116,31 +119,10 @@ export default async function fetchApi<T>({
 }
 
 /**
- * Proxy an image URL through our image proxy endpoint to add proper cache headers
- * This improves Lighthouse cache lifetime scores by serving images with long cache TTL
- *
- * NOTE: Currently disabled because API routes don't work reliably on Netlify for static sites.
- * TODO: Implement alternative solution (Netlify Edge Functions, _headers file, or CDN)
- */
-function proxyImageUrl(imageUrl: string): string {
-  // Use proxy in production builds to add proper cache headers for Lighthouse
-  // Astro API routes work on Netlify as serverless functions for static sites
-  // Only enable in production builds (not in dev server)
-  // In development, API routes may not work, so use direct URLs
-  if (import.meta.env.DEV) {
-    return imageUrl
-  }
-
-  // Only use proxy in production builds
-  // Note: API routes will work on Netlify as serverless functions
-  const encodedUrl = encodeURIComponent(imageUrl)
-  return `/api/image-proxy?url=${encodedUrl}`
-}
-
-/**
  * Get media URL from Strapi
+ * Returns direct URLs to Strapi images - cache headers are handled by _headers file
  */
-export function getStrapiMedia(url: string | null, useProxy = true): string {
+export function getStrapiMedia(url: string | null): string {
   if (!url) {
     return ''
   }
@@ -149,12 +131,6 @@ export function getStrapiMedia(url: string | null, useProxy = true): string {
   const fullUrl = url.startsWith('/')
     ? `${import.meta.env.STRAPI_URL}${url}`
     : url
-
-  // Use proxy for images to add proper cache headers
-  const imageExtensionRegex = /\.(jpg|jpeg|png|gif|webp|svg|avif)(\?|$)/i
-  if (useProxy && imageExtensionRegex.test(fullUrl)) {
-    return proxyImageUrl(fullUrl)
-  }
 
   return fullUrl
 }
@@ -171,8 +147,7 @@ export function getStrapiMedia(url: string | null, useProxy = true): string {
 export function formatImageUrlWithSize(
   image: StrapiImage,
   width: number,
-  format: 'webp' | 'jpg' | 'png' = 'webp',
-  useProxy = true
+  format: 'webp' | 'jpg' | 'png' = 'webp'
 ): string {
   // Maximum acceptable size multiplier for pre-generated formats
   // Accepts formats up to 1.25x larger than requested to avoid downloading oversized images
@@ -207,7 +182,7 @@ export function formatImageUrlWithSize(
           bestFormat = formatItem
         }
       }
-      return getStrapiMedia(bestFormat.format.url, useProxy)
+      return getStrapiMedia(bestFormat.format.url)
     }
 
     // If formats exist but they're all too large, use the smallest one
@@ -220,7 +195,7 @@ export function formatImageUrlWithSize(
           smallestOversized = formatItem
         }
       }
-      return getStrapiMedia(smallestOversized.format.url, useProxy)
+      return getStrapiMedia(smallestOversized.format.url)
     }
 
     // If no format is large enough, use the largest available format (will be upscaled, but better than original)
@@ -231,16 +206,16 @@ export function formatImageUrlWithSize(
           largestFormat = formatItem
         }
       }
-      return getStrapiMedia(largestFormat.format.url, useProxy)
+      return getStrapiMedia(largestFormat.format.url)
     }
   }
 
   // Fallback: use query parameters for on-the-fly transformation (if supported by Strapi)
   // Note: This may not work if Strapi doesn't support on-the-fly transformation
-  const baseUrlWithoutProxy = getStrapiMedia(image.url, false)
+  const baseUrl = getStrapiMedia(image.url)
 
   try {
-    const url = new URL(baseUrlWithoutProxy)
+    const url = new URL(baseUrl)
 
     // Add width parameter for optimization
     url.searchParams.set('width', width.toString())
@@ -248,11 +223,10 @@ export function formatImageUrlWithSize(
     // Add format parameter for better compression (WebP is smaller than JPG/PNG)
     url.searchParams.set('format', format)
 
-    // Now apply proxy if needed
-    return useProxy ? proxyImageUrl(url.toString()) : url.toString()
+    return url.toString()
   } catch {
-    // If URL parsing fails, return the original URL (with or without proxy)
-    return getStrapiMedia(image.url, useProxy)
+    // If URL parsing fails, return the original URL
+    return getStrapiMedia(image.url)
   }
 }
 
@@ -396,7 +370,10 @@ export async function fetchSingleTypeWithValidation<T>({
   const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
   const isTest =
     process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
-  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337')) {
+  const isLocalhostUrl =
+    strapiUrl === 'http://localhost:1337' ||
+    strapiUrl === 'http://127.0.0.1:1337'
+  if (!isTest && (!strapiUrl || isLocalhostUrl)) {
     return {} as T
   }
 
@@ -434,7 +411,10 @@ export async function fetchCollectionWithValidation<T>({
   const strapiUrl = import.meta.env.STRAPI_URL || process.env.STRAPI_URL
   const isTest =
     process.env.NODE_ENV === 'test' || import.meta.env.MODE === 'test'
-  if (!isTest && (!strapiUrl || strapiUrl === 'http://localhost:1337')) {
+  const isLocalhostUrl =
+    strapiUrl === 'http://localhost:1337' ||
+    strapiUrl === 'http://127.0.0.1:1337'
+  if (!isTest && (!strapiUrl || isLocalhostUrl)) {
     return []
   }
 

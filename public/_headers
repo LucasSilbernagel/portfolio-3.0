@@ -1,6 +1,8 @@
-# Cache headers for image proxy endpoint
-# This improves Lighthouse cache lifetime scores by serving images with long cache TTL
-/api/image-proxy/*
+# Cache headers for images served from external Strapi server
+# Images are cached by Strapi's CDN/server configuration
+# To set cache headers for Strapi images, configure cache control at the Strapi level
+
+# Cache immutable assets for 1 year
+/*.{js,css,woff,woff2,ttf,eot}
   Cache-Control: public, max-age=31536000, immutable
-  X-Content-Type-Options: nosniff
 

@@ -1,5 +1,4 @@
 // @ts-check
-import netlify from '@astrojs/netlify'
 import tailwind from '@astrojs/tailwind'
 import { defineConfig } from 'astro/config'
 
@@ -7,8 +6,7 @@ import icon from 'astro-icon'
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server', // Enable SSR for API routes; pages are still pre-rendered at build time
-  adapter: netlify(),
+  output: 'static', // Fully static site; all content pre-rendered at build time
   integrations: [
     tailwind({
       applyBaseStyles: false,
@@ -16,6 +14,10 @@ export default defineConfig({
     icon(),
   ],
   site: 'https://lucassilbernagel.com',
+  image: {
+    // Use no-op image service for static builds - no external dependencies needed
+    service: { entrypoint: 'astro/assets/services/noop' },
+  },
   build: {
     // Inline all stylesheets to eliminate render-blocking requests
     // This will inline the main CSS bundle (~6.58KB) directly in the HTML,

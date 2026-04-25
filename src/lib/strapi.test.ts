@@ -51,67 +51,41 @@ describe('getStrapiMedia', () => {
   })
 
   it('should prepend STRAPI_URL to relative URLs', () => {
-    const result = getStrapiMedia('/uploads/image.jpg', false)
+    const result = getStrapiMedia('/uploads/image.jpg')
     expect(result).toBe('https://api.example.com/uploads/image.jpg')
   })
 
   it('should return absolute URLs as-is', () => {
     const absoluteUrl = 'https://cdn.example.com/image.jpg'
-    const result = getStrapiMedia(absoluteUrl, false)
+    const result = getStrapiMedia(absoluteUrl)
     expect(result).toBe(absoluteUrl)
   })
 
-  it('should not proxy images in development mode', () => {
-    // In test environment, DEV is always true (compile-time constant)
-    const result = getStrapiMedia('/uploads/image.jpg', true)
+  it('should return direct URLs for all images', () => {
+    // Static sites return direct URLs without proxying
+    const result = getStrapiMedia('/uploads/image.jpg')
     expect(result).toBe('https://api.example.com/uploads/image.jpg')
   })
 
-  it('should proxy images in production mode', () => {
-    // Note: import.meta.env.DEV is a compile-time constant, so in test environment
-    // it's always true. This test verifies the behavior when DEV is false.
-    // In actual production builds, DEV will be false and proxying will occur.
-    // For now, we test that in DEV mode (current test environment), it doesn't proxy.
-    const imageUrl = 'https://api.example.com/uploads/image.jpg'
-    // In test environment, import.meta.env.DEV is still true at compile time
-    // So this will return the direct URL. This is expected behavior in tests.
-    const result = getStrapiMedia(imageUrl, true)
-    // In test environment, DEV is true, so no proxying occurs
-    expect(result).toBe(imageUrl)
-  })
-
-  it('should only proxy image file extensions', () => {
-    // In test environment, DEV is true, so no proxying occurs
-    // This test verifies that image URLs are identified correctly
+  it('should handle various file types', () => {
+    // All files are returned as direct URLs
     const imageUrl = 'https://api.example.com/uploads/image.jpg'
     const pdfUrl = 'https://api.example.com/uploads/document.pdf'
 
-    // Both return direct URLs in DEV mode (test environment)
-    expect(getStrapiMedia(imageUrl, true)).toBe(imageUrl)
-    expect(getStrapiMedia(pdfUrl, true)).toBe(pdfUrl)
+    expect(getStrapiMedia(imageUrl)).toBe(imageUrl)
+    expect(getStrapiMedia(pdfUrl)).toBe(pdfUrl)
   })
 
-  it('should handle various image extensions', () => {
-    // In test environment, DEV is true, so no proxying occurs
-    // This test verifies that all image extensions are recognized
+  it('should handle all image extensions', () => {
+    // All image extensions are returned as direct URLs
     const extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'avif']
 
     for (const ext of extensions) {
       const url = `https://api.example.com/image.${ext}`
-      const result = getStrapiMedia(url, true)
-      // In DEV mode (test environment), returns direct URL
+      const result = getStrapiMedia(url)
+      // Returns direct URL
       expect(result).toBe(url)
     }
-  })
-
-  it('should respect useProxy parameter', () => {
-    // In test environment, DEV is true, so no proxying occurs even with useProxy=true
-    // This test verifies the useProxy parameter is respected when proxying would occur
-    const imageUrl = 'https://api.example.com/uploads/image.jpg'
-
-    // In DEV mode, both return direct URL regardless of useProxy
-    expect(getStrapiMedia(imageUrl, true)).toBe(imageUrl)
-    expect(getStrapiMedia(imageUrl, false)).toBe(imageUrl)
   })
 })
 
@@ -177,12 +151,7 @@ describe('formatImageUrlWithSize', () => {
     })
 
     // Request 600px, should use medium (750px) as it's within 1.25x multiplier
-    const result = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_600,
-      'webp',
-      false
-    )
+    const result = formatImageUrlWithSize(image, TEST_IMAGE_WIDTH_600, 'webp')
     expect(result).toBe('https://api.example.com/uploads/medium.jpg')
   })
 
@@ -205,12 +174,7 @@ describe('formatImageUrlWithSize', () => {
     })
 
     // Request 400px, both formats are larger, should use smallest (medium)
-    const result = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_400,
-      'webp',
-      false
-    )
+    const result = formatImageUrlWithSize(image, TEST_IMAGE_WIDTH_400, 'webp')
     expect(result).toBe('https://api.example.com/uploads/medium.jpg')
   })
 
@@ -233,24 +197,14 @@ describe('formatImageUrlWithSize', () => {
     })
 
     // Request 1000px, no format is large enough, should use largest (small)
-    const result = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_1000,
-      'webp',
-      false
-    )
+    const result = formatImageUrlWithSize(image, TEST_IMAGE_WIDTH_1000, 'webp')
     expect(result).toBe('https://api.example.com/uploads/small.jpg')
   })
 
   it('should fall back to query parameters when no formats available', () => {
     const image = createImageWithFormats({})
 
-    const result = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_800,
-      'webp',
-      false
-    )
+    const result = formatImageUrlWithSize(image, TEST_IMAGE_WIDTH_800, 'webp')
     expect(result).toContain('width=800')
     expect(result).toContain('format=webp')
     expect(result).toContain('https://api.example.com/uploads/test-image.jpg')
@@ -271,12 +225,7 @@ describe('formatImageUrlWithSize', () => {
       size: TEST_SIZE_100KB,
     } satisfies StrapiImage
 
-    const result = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_800,
-      'webp',
-      false
-    )
+    const result = formatImageUrlWithSize(image, TEST_IMAGE_WIDTH_800, 'webp')
     expect(result).toContain('width=800')
     expect(result).toContain('format=webp')
   })
@@ -296,13 +245,8 @@ describe('formatImageUrlWithSize', () => {
       size: TEST_SIZE_100KB,
     } satisfies StrapiImage
 
-    // Should return the original URL (with proxy if enabled)
-    const result = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_800,
-      'webp',
-      false
-    )
+    // Should return the original URL
+    const result = formatImageUrlWithSize(image, TEST_IMAGE_WIDTH_800, 'webp')
     expect(result).toBe('not-a-valid-url')
   })
 
@@ -312,55 +256,14 @@ describe('formatImageUrlWithSize', () => {
     const webpResult = formatImageUrlWithSize(
       image,
       TEST_IMAGE_WIDTH_800,
-      'webp',
-      false
+      'webp'
     )
-    const jpgResult = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_800,
-      'jpg',
-      false
-    )
-    const pngResult = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_800,
-      'png',
-      false
-    )
+    const jpgResult = formatImageUrlWithSize(image, TEST_IMAGE_WIDTH_800, 'jpg')
+    const pngResult = formatImageUrlWithSize(image, TEST_IMAGE_WIDTH_800, 'png')
 
     expect(webpResult).toContain('format=webp')
     expect(jpgResult).toContain('format=jpg')
     expect(pngResult).toContain('format=png')
-  })
-
-  it('should respect useProxy parameter', () => {
-    // In test environment, DEV is true, so no proxying occurs
-    const image = createImageWithFormats({
-      medium: {
-        url: '/uploads/medium.jpg',
-        width: 750,
-        height: 450,
-        size: TEST_SIZE_75KB,
-        sizeInBytes: TEST_SIZE_75KB,
-      },
-    })
-
-    const withProxy = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_600,
-      'webp',
-      true
-    )
-    const withoutProxy = formatImageUrlWithSize(
-      image,
-      TEST_IMAGE_WIDTH_600,
-      'webp',
-      false
-    )
-
-    // In DEV mode, both return direct URL regardless of useProxy
-    expect(withProxy).toBe('https://api.example.com/uploads/medium.jpg')
-    expect(withoutProxy).toBe('https://api.example.com/uploads/medium.jpg')
   })
 
   it('should prefer exact width match over slightly larger format', () => {
