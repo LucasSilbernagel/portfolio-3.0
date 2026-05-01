@@ -26,7 +26,7 @@ test.describe('Landing Screen to Homepage', () => {
       page.getByRole('heading', { name: 'Lucas Silbernagel' })
     ).toBeVisible()
     await expect(
-      page.getByRole('heading', { name: 'Software Developer' })
+      page.getByRole('heading', { name: 'Senior Software Engineer' })
     ).toBeVisible()
     await expect(page.getByRole('button', { name: 'Check in' })).toBeVisible()
   })
