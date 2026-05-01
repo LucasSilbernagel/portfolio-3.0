@@ -2,7 +2,7 @@
 
 The third iteration of my software development portfolio, themed as an airport check-in terminal screen.
 
-<img width="1468" height="721" alt="og-image" src="https://github.com/user-attachments/assets/b75e999e-d56f-43c0-8f9d-072ceaf7f6ee" />
+<img width="2940" height="1800" alt="Screen Shot 2026-05-01 at 16 34 00" src="https://github.com/user-attachments/assets/18ac2306-c07d-4fff-8d4e-37878baec8a0" />
 
 ## Live link
 
