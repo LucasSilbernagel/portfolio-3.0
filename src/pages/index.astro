@@ -90,6 +90,13 @@ const description =
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
+    <!-- Preconnect to Strapi media domain for profile photo -->
+    {
+      profilePhotoUrl && (
+        <link rel="preconnect" href={new URL(profilePhotoUrl).origin} />
+      )
+    }
+
     <!-- Preload critical background image -->
     <link
       rel="preload"
