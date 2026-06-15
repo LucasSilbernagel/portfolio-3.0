@@ -33,7 +33,7 @@ import profilePlaceholder from '../assets/profile-placeholder.webp'
           aria-hidden="true"
         />
 
-        <!-- Real image: fades in on top -->
+        <!-- Real image: loads on top of placeholder -->
         <img
           src={profilePhotoUrl}
           alt={profilePhotoAlt}
@@ -41,7 +41,7 @@ import profilePlaceholder from '../assets/profile-placeholder.webp'
           height="192"
           fetchpriority="high"
           loading="eager"
-          class="absolute inset-0 h-full w-full rounded-full object-cover animate-fade-in"
+          class="absolute inset-0 h-full w-full rounded-full object-cover"
         />
       </div>
     </div>
