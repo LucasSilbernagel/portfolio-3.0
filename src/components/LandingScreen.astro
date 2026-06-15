@@ -23,13 +23,10 @@ import profilePlaceholder from '../assets/profile-placeholder.webp'
       <div
         class="relative flex h-48 w-48 items-center justify-center overflow-hidden rounded-full border-8 border-white bg-gradient-to-br from-terminal-blue to-blue-600 shadow-2xl"
       >
-        <!-- Blurred placeholder - shows instantly -->
-        <img
-          src={profilePlaceholder.src}
-          alt=""
-          width="192"
-          height="192"
-          class="h-full w-full animate-pulse object-cover blur-xl"
+        <!-- Blurred placeholder div - shows instantly -->
+        <div
+          class="absolute inset-0 h-full w-full rounded-full animate-pulse bg-cover bg-center blur-xl"
+          style={`background-image: url(${profilePlaceholder.src}); aspect-ratio: 1 / 1;`}
           aria-hidden="true"
         />
 
@@ -41,7 +38,7 @@ import profilePlaceholder from '../assets/profile-placeholder.webp'
           height="192"
           fetchpriority="high"
           loading="eager"
-          class="absolute inset-0 h-full w-full animate-fade-in object-cover"
+          class="relative z-10 h-full w-full rounded-full animate-fade-in object-cover"
         />
       </div>
     </div>
