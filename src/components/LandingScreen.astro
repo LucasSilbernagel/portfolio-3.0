@@ -23,27 +23,31 @@ import profilePlaceholder from '../assets/profile-placeholder.webp'
       <div
         class="relative h-48 w-48 overflow-hidden rounded-full border-8 border-white bg-gradient-to-br from-terminal-blue to-blue-600 shadow-2xl"
       >
-        <!-- Placeholder: tiny blurred image, loads instantly -->
         <img
           src={profilePlaceholder.src}
-          alt=""
-          width="192"
-          height="192"
-          class="h-full w-full rounded-full object-cover blur-xl"
-          aria-hidden="true"
-        />
-
-        <!-- Real image: loads on top of placeholder -->
-        <img
-          src={profilePhotoUrl}
+          data-src={profilePhotoUrl}
           alt={profilePhotoAlt}
           width="192"
           height="192"
           fetchpriority="high"
           loading="eager"
-          class="absolute inset-0 h-full w-full rounded-full object-cover"
+          class="h-full w-full rounded-full object-cover"
+          id="profile-photo"
         />
       </div>
+
+      <script>
+        // Swap to real image once loaded
+        const img = document.querySelector(
+          '#profile-photo'
+        ) as HTMLImageElement | null
+        if (img?.dataset.src) {
+          const realImg = new Image()
+          realImg.src = img.dataset.src
+          await realImg.decode()
+          img.src = realImg.src
+        }
+      </script>
     </div>
 
     <header class="mb-16">
