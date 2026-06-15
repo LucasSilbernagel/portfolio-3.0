@@ -92,7 +92,7 @@ const description =
 
     <!-- Preconnect to Strapi media domain for profile photo -->
     {
-      profilePhotoUrl && (
+      profilePhotoUrl && profilePhotoUrl.startsWith('http') && (
         <link rel="preconnect" href={new URL(profilePhotoUrl).origin} />
       )
     }
