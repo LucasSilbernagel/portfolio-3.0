@@ -11,6 +11,16 @@
     @apply bg-terminal-dark-gray text-terminal-white;
   }
 
+  /* Fix Firefox alt text flash during image loading */
+  img {
+    color: transparent;
+  }
+
+  img:not([src]),
+  img[src=''] {
+    color: initial;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
