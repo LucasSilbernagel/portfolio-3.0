@@ -25,8 +25,8 @@ test.describe('Resume Download', () => {
 
     const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
 
-    // Skip test if resume URL is not available (e.g., in CI without Strapi)
-    test.skip(!resumeUrl, 'Resume URL not available (likely CI without Strapi)')
+    // Skip test if resume URL is not available
+    test.skip(!resumeUrl, 'Resume URL not available')
 
     // Set up download listener
     const downloadPromise = page
@@ -74,8 +74,8 @@ test.describe('Resume Download', () => {
 
     const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
 
-    // Skip test if resume URL is not available (e.g., in CI without Strapi)
-    test.skip(!resumeUrl, 'Resume URL not available (likely CI without Strapi)')
+    // Skip test if resume URL is not available
+    test.skip(!resumeUrl, 'Resume URL not available')
 
     // Set up download listener
     page.waitForEvent('download', { timeout: 5000 }).catch(() => {

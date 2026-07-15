@@ -1,0 +1,144 @@
+backend:
+  name: github
+  repo: LucasSilbernagel/portfolio-3.0
+  branch: main
+
+# Images are committed alongside content and optimized by Astro at build time.
+# Paths are stored relative to each entry file so Astro's image() helper resolves them.
+media_folder: src/assets/content
+public_folder: /src/assets/content
+
+collections:
+  - name: projects
+    label: Projects
+    label_singular: Project
+    folder: src/content/projects
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: projectName
+    media_folder: ../../assets/content
+    public_folder: ../../assets/content
+    fields:
+      - { name: order, label: Order, widget: number, value_type: int, min: 1 }
+      - { name: projectName, label: Project name, widget: string }
+      - { name: completedYear, label: Completed year, widget: string }
+      - {
+          name: technologies,
+          label: Technologies,
+          widget: list,
+          allow_add: true,
+        }
+      - { name: description, label: Description, widget: text }
+      - { name: liveUrl, label: Live URL, widget: string }
+      - { name: githubUrl, label: GitHub URL, widget: string }
+      - { name: image, label: Image, widget: image, choose_url: false }
+
+  - name: experience
+    label: Experience
+    label_singular: Experience entry
+    folder: src/content/experience
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: company
+    fields:
+      - { name: company, label: Company, widget: string }
+      - { name: position, label: Position, widget: string }
+      - { name: location, label: Location, widget: string }
+      - { name: website, label: Website, widget: string }
+      - {
+          name: startDate,
+          label: Start date,
+          widget: datetime,
+          format: YYYY-MM-DD,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+        }
+      - {
+          name: endDate,
+          label: End date (leave empty if current),
+          widget: datetime,
+          format: YYYY-MM-DD,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          required: false,
+          default: '',
+        }
+      - {
+          name: highlights,
+          label: Highlights,
+          widget: list,
+          allow_add: true,
+          field: { name: highlight, label: Highlight, widget: text },
+        }
+
+  - name: techStack
+    label: Tech stack
+    label_singular: Tech stack category
+    folder: src/content/tech-stack
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: category
+    fields:
+      - { name: order, label: Order, widget: number, value_type: int, min: 1 }
+      - { name: category, label: Category, widget: string }
+      - { name: items, label: Items, widget: list, allow_add: true }
+
+  - name: about
+    label: About page
+    files:
+      - name: about
+        label: About page
+        file: src/content/about/about.md
+        media_folder: ../../assets/content
+        public_folder: ../../assets/content
+        fields:
+          - { name: title, label: Title, widget: string }
+          - {
+              name: images,
+              label: Images,
+              widget: list,
+              max: 4,
+              fields:
+                [
+                  { name: src, label: Image, widget: image },
+                  { name: alt, label: Alt text, widget: string },
+                ],
+            }
+          - { name: body, label: Description, widget: markdown }
+
+  - name: site
+    label: Site settings
+    files:
+      - name: settings
+        label: Site settings
+        file: src/content/site/settings.md
+        media_folder: ../../assets/content
+        public_folder: ../../assets/content
+        fields:
+          - { name: profilePhoto, label: Profile photo, widget: image }
+          - {
+              name: profilePhotoAlt,
+              label: Profile photo alt text,
+              widget: string,
+            }
+          - {
+              name: socialShareImage,
+              label: Social share image,
+              widget: image,
+            }
+          - {
+              name: resumeFile,
+              label: Resume PDF,
+              widget: file,
+              media_folder: /public,
+              public_folder: /,
+            }
+          - {
+              name: resumeFileName,
+              label: Resume download filename,
+              widget: string,
+            }
+          - { name: mapIframeSrc, label: Map iframe URL, widget: text }

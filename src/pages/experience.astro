@@ -6,21 +6,13 @@ import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
 import { Icon } from 'astro-icon/components'
-import { fetchCollectionWithValidation } from '../lib/strapi'
-import type { ExperienceItem, BlockType } from '../types/strapi'
+import { getCollection } from 'astro:content'
 
 const ANIMATION_DELAY_STEP_MS = 120
 
-const strapiResponse = await fetchCollectionWithValidation<ExperienceItem>({
-  endpoint: 'experiences',
-  query: {
-    sort: 'startDate:desc',
-  },
-  contentTypeName: 'Experience',
-})
-
-// Handle empty response in CI builds
-const experiences = strapiResponse || []
+const experiences = (await getCollection('experience'))
+  .map((entry) => entry.data)
+  .sort((a, b) => b.startDate.localeCompare(a.startDate))
 
 // Format date to period string
 // Parse date string (YYYY-MM-DD) as local date to avoid timezone issues
@@ -83,29 +75,6 @@ const formatPeriod = (
     isSamePeriod: false,
   }
 }
-
-// Extract text from blocks content
-const extractHighlights = (highlights: unknown): string[] => {
-  if (typeof highlights === 'string') {
-    return highlights.split('\n').filter((line) => line.trim())
-  }
-
-  if (Array.isArray(highlights)) {
-    return highlights
-      .map((block: unknown) => {
-        if (typeof block === 'object' && block !== null && 'type' in block) {
-          const blockObj = block as BlockType
-          if (blockObj.type === 'paragraph' && blockObj.children) {
-            return blockObj.children.map((child) => child.text || '').join('')
-          }
-        }
-        return null
-      })
-      .filter((text): text is string => text !== null && text.trim() !== '')
-  }
-
-  return []
-}
 ---
 
 <Layout title="Lucas Silbernagel | Experience">
@@ -147,16 +116,16 @@ const extractHighlights = (highlights: unknown): string[] => {
                 <header class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <a
-                      href={experience.Website}
+                      href={experience.website}
                       class="inline-flex items-center gap-2 font-terminal text-lg uppercase tracking-[0.20em] text-terminal-dark-gray transition-colors hover:text-terminal-blue focus-visible:text-terminal-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terminal-blue"
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={`Company: ${experience.Company} (opens company website in a new tab)`}
+                      aria-label={`Company: ${experience.company} (opens company website in a new tab)`}
                     >
-                      {experience.Company} <Icon name="mdi:external-link" />
+                      {experience.company} <Icon name="mdi:external-link" />
                     </a>
                     <h2 class="mt-2 text-2xl font-bold text-terminal-dark-gray sm:text-3xl">
-                      {experience.Position}
+                      {experience.position}
                     </h2>
                   </div>
                   <div class="flex flex-col text-sm text-terminal-dark-gray/80 sm:items-end">
@@ -202,7 +171,7 @@ const extractHighlights = (highlights: unknown): string[] => {
                         )
                       })()}
                     </span>
-                    <span>{experience.Location}</span>
+                    <span>{experience.location}</span>
                   </div>
                 </header>
 
@@ -210,7 +179,7 @@ const extractHighlights = (highlights: unknown): string[] => {
                   class="mt-6 space-y-3 text-base leading-relaxed"
                   role="list"
                 >
-                  {extractHighlights(experience.Highlights).map((highlight) => (
+                  {experience.highlights.map((highlight) => (
                     <li class="flex gap-3">
                       <span class="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-terminal-blue" />
                       <p>{highlight}</p>

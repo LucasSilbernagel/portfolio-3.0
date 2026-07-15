@@ -1,8 +1,8 @@
 ---
 import '../styles/global.css'
 import Footer from '../components/Footer.astro'
-import { formatImageUrlWithSize, safeFetchSingleType } from '../lib/strapi'
-import type { SocialShareImageContent } from '../types/strapi'
+import { getEntry } from 'astro:content'
+import { getImage } from 'astro:assets'
 
 export type Props = {
   title?: string
@@ -14,31 +14,21 @@ const {
   description = 'Personal website and software development portfolio for Lucas Silbernagel',
 } = Astro.props
 
-// Fetch social share image from Strapi
-const socialShareImage = await safeFetchSingleType<SocialShareImageContent>({
-  endpoint: 'social-share-image',
-  contentTypeName: 'social share image',
-  populate: 'socialShareImage', // Only populate the socialShareImage field for better performance
-})
+const site = await getEntry('site', 'settings')
 
 // OG images standard size is 1200x630px, so optimize for 1200px width
 const OG_IMAGE_OPTIMIZED_WIDTH = 1200
-const socialShareImageUrl = socialShareImage?.socialShareImage
-  ? formatImageUrlWithSize(
-      socialShareImage.socialShareImage,
-      OG_IMAGE_OPTIMIZED_WIDTH,
-      'webp'
-    )
-  : undefined
+const socialShareImage = await getImage({
+  src: site.data.socialShareImage,
+  width: OG_IMAGE_OPTIMIZED_WIDTH,
+  format: 'webp',
+})
 
 const siteUrl = Astro.site?.href || 'https://lucassilbernagel.com'
 const pageUrl = new URL(Astro.url.pathname, siteUrl).href
 
-const ogImageUrl = socialShareImageUrl
-  ? socialShareImageUrl.startsWith('http')
-    ? socialShareImageUrl
-    : new URL(socialShareImageUrl, siteUrl).href
-  : undefined
+// Absolute URL required for social crawlers
+const ogImageUrl = new URL(socialShareImage.src, siteUrl).href
 ---
 
 <!doctype html>

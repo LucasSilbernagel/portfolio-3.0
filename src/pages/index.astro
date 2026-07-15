@@ -8,70 +8,41 @@ import Header from '../components/Header.astro'
 import HomepageCard from '../components/HomepageCard.astro'
 import LandingScreen from '../components/LandingScreen.astro'
 import LoadingOverlay from '../components/LoadingOverlay.astro'
-import {
-  formatImageUrlWithSize,
-  getStrapiMedia,
-  safeFetchSingleType,
-} from '../lib/strapi'
-import type {
-  ProfilePhotoContent,
-  ResumeContent,
-  SocialShareImageContent,
-} from '../types/strapi'
+import { getEntry } from 'astro:content'
+import { getImage } from 'astro:assets'
 
-const profilePhoto = await safeFetchSingleType<ProfilePhotoContent>({
-  endpoint: 'profile-photo',
-  contentTypeName: 'profile photo',
-  populate: 'image', // Only populate the image field for better performance
-})
+const site = await getEntry('site', 'settings')
 
-const profileImage = profilePhoto?.image
 // Profile photo display size: 192px (h-48 w-48 = 12rem = 192px)
 // Use 2x size (384px) for retina displays
 const PROFILE_PHOTO_DISPLAY_SIZE = 192
 const RETINA_SCALE_FACTOR = 2
 const PROFILE_PHOTO_OPTIMIZED_SIZE =
   PROFILE_PHOTO_DISPLAY_SIZE * RETINA_SCALE_FACTOR
-const profilePhotoUrl = profileImage
-  ? formatImageUrlWithSize(profileImage, PROFILE_PHOTO_OPTIMIZED_SIZE, 'webp')
-  : ''
-const profilePhotoAlt =
-  profileImage?.alternativeText || profileImage?.name || 'Lucas Silbernagel'
-
-const resume = await safeFetchSingleType<ResumeContent>({
-  endpoint: 'resume',
-  contentTypeName: 'resume',
-  populate: 'Resume', // Only populate the Resume field for better performance
+const profilePhoto = await getImage({
+  src: site.data.profilePhoto,
+  width: PROFILE_PHOTO_OPTIMIZED_SIZE,
+  format: 'webp',
 })
+const profilePhotoUrl = profilePhoto.src
+const profilePhotoAlt = site.data.profilePhotoAlt
 
-const resumeUrl = resume?.Resume ? getStrapiMedia(resume.Resume.url) : null
-const resumeFileName = resume?.Resume?.name || 'lucas-silbernagel-resume.pdf'
-
-// Fetch social share image from Strapi
-const socialShareImage = await safeFetchSingleType<SocialShareImageContent>({
-  endpoint: 'social-share-image',
-  contentTypeName: 'social share image',
-  populate: 'socialShareImage', // Only populate the socialShareImage field for better performance
-})
+const resumeUrl = site.data.resumeFile
+const resumeFileName = site.data.resumeFileName
 
 // OG images standard size is 1200x630px, so optimize for 1200px width
 const OG_IMAGE_OPTIMIZED_WIDTH = 1200
-const socialShareImageUrl = socialShareImage?.socialShareImage
-  ? formatImageUrlWithSize(
-      socialShareImage.socialShareImage,
-      OG_IMAGE_OPTIMIZED_WIDTH,
-      'webp'
-    )
-  : undefined
+const socialShareImage = await getImage({
+  src: site.data.socialShareImage,
+  width: OG_IMAGE_OPTIMIZED_WIDTH,
+  format: 'webp',
+})
 
 const siteUrl = Astro.site?.href || 'https://lucassilbernagel.com'
 const pageUrl = new URL(Astro.url.pathname, siteUrl).href
 
-const ogImageUrl = socialShareImageUrl
-  ? socialShareImageUrl.startsWith('http')
-    ? socialShareImageUrl
-    : new URL(socialShareImageUrl, siteUrl).href
-  : undefined
+// Absolute URL required for social crawlers
+const ogImageUrl = new URL(socialShareImage.src, siteUrl).href
 
 const title = 'Lucas Silbernagel | Senior Software Engineer'
 const description =
@@ -89,13 +60,6 @@ const description =
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-
-    <!-- Preconnect to Strapi media domain for profile photo -->
-    {
-      profilePhotoUrl && profilePhotoUrl.startsWith('http') && (
-        <link rel="preconnect" href={new URL(profilePhotoUrl).origin} />
-      )
-    }
 
     <!-- Preload critical background image -->
     <link

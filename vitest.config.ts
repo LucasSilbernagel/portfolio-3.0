@@ -4,6 +4,9 @@ export default getViteConfig({
   test: {
     globals: true,
     environment: 'node',
+    // No unit tests currently; the previous suite only covered the removed
+    // Strapi data layer. Keep the runner green until unit coverage is re-added.
+    passWithNoTests: true,
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     coverage: {
       provider: 'v8',
