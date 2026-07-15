@@ -13,6 +13,6 @@ images:
 
 I’m a Toronto-based software developer, and I've been specializing in front-end development since 2020. My main passion is crafting accessible, high-performance user experiences.
 
-I thrive in a little bit of chaos, where my collaborative and organizational skills really shine. Stakeholders and teammates appreciate my ability to iterate rabidly while maintaining and improving code quality.
+I thrive in a little bit of chaos, where my collaborative and organizational skills really shine. Stakeholders and teammates appreciate my ability to iterate rapidly while maintaining and improving code quality.
 
 Beyond my technical work, I really enjoy empowering other developers with detailed documentation, educational presentations, and one-on-one mentoring conversations.
