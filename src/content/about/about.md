@@ -1,18 +1,18 @@
 ---
 title: Hi, I'm Lucas!
 images:
-  - src: ../../assets/content/lucas-headshot.png
-    alt: Lucas Silbernagel professional headshot
-  - src: ../../assets/content/lucas-guitar.jpg
-    alt: Lucas Silbernagel sitting on a couch playing an acoustic guitar
-  - src: ../../assets/content/lucas-angkor-wat.png
-    alt: Lucas Silbernagel standing in front of Angkor Wat at sunrise
-  - src: ../../assets/content/lucas-phnom-penh.png
-    alt: Lucas Silbernagel standing on a riverboat at sunset in Phnom Penh, Cambodia
+  - src: ../../assets/content/lucas-headshot.jpg
+    alt: Professional headshot of Lucas Silbernagel
+  - src: ../../assets/content/lucas-machu-picchu.jpg
+    alt: Lucas Silbernagel posing on a sunny day in front of Machu Picchu, Peru
+  - src: ../../assets/content/lucas-red-valley.jpg
+    alt: Lucas Silbernagel posing on a sunny day in front of the Red Valley, Peru
+  - src: ../../assets/content/lucas-paddington-bear.jpg
+    alt: Lucas Silbernagel sitting on a bench posing with a statue of Paddington Bear in Aguas Calientes, Peru
 ---
 
-I’m a Toronto-based software developer, and I've been specializing in front-end development since 2020. My main passion is crafting accessible, high-performance user experiences.
+I'm a Toronto-based software developer specializing in front-end development since 2020. My passion is crafting accessible, high-performance user experiences that scale.
 
-I thrive in a little bit of chaos, where my collaborative and organizational skills really shine. Stakeholders and teammates appreciate my ability to iterate rapidly while maintaining and improving code quality.
+I do my best work in fast-paced environments where collaboration and clear communication matter. Stakeholders and teammates appreciate my ability to iterate rapidly while maintaining code quality.
 
-Beyond my technical work, I really enjoy empowering other developers with detailed documentation, educational presentations, and one-on-one mentoring conversations.
+Beyond shipping features, I really enjoy empowering other developers through detailed documentation, educational presentations, and knowledge-sharing sessions. I believe the best codebases are built by teams that learn together.

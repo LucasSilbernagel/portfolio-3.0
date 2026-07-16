@@ -75,28 +75,6 @@ export default [
       },
     },
   },
-  {
-    files: ['cms/scripts/**/*.js'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'script',
-      globals: {
-        require: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
-        module: 'readonly',
-        exports: 'readonly',
-        console: 'readonly',
-        process: 'readonly',
-        global: 'readonly',
-      },
-    },
-    rules: {
-      'no-console': 'off',
-      'unicorn/prefer-node-protocol': 'off',
-      'unicorn/no-process-exit': 'off',
-    },
-  },
   ...astro.configs.recommended,
   {
     files: ['**/*.astro'],
@@ -116,12 +94,6 @@ export default [
     },
   },
   {
-    ignores: [
-      'node_modules/**',
-      'dist/**',
-      '.astro/**',
-      'cms/types/generated/**',
-      'cms/.strapi/**',
-    ],
+    ignores: ['node_modules/**', 'dist/**', '.astro/**', '.netlify/**'],
   },
 ]

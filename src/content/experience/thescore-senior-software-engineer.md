@@ -6,9 +6,8 @@ website: https://www.scoremediaandgaming.com/
 startDate: '2025-03-01'
 endDate: null
 highlights:
-  - 'Drove accelerated market entry for theScore Casino web application, launching the product two months ahead of schedule, which involved end-to-end setup of the new app theme, Google Tag Manager, visual regression testing, and build pipeline updates.'
-  - 'Spearheaded development for high-value casino features including the complex In-House Jackpots system, introducing the Rive animation framework to the repository, and developing the animated cash rolodex component for the lobby.'
-  - 'Led or collaborated on multiple major features concurrently consistently delivering on aggressive deadlines and navigating unexpected technical obstacles to achieve successful project completion.'
-  - 'Enhanced web platform scalability and developer velocity by writing and presenting several RFCs to establish architectural improvements, including proposals to take advantage of more of the performance-enhancing features provided by Next.js.'
-  - 'Improved application stability and user experience by architecting a new theme testing strategy across standalone casino products and implementing a centralized persistence management solution for one-time user messages (e.g., tooltips and modals).'
+  - 'Led end-to-end web platform setup for the launch of Hollywood Casino Canada, delivering ahead of schedule by auditing region gating, configuring multi-brand environment variables, and refactoring LaunchDarkly feature flags.'
+  - 'Architected and delivered Casino Tournaments and In-House Jackpots products, introducing the Rive animation framework and authoring mock-driven development frameworks to unblock frontend velocity before backend schema completion.'
+  - 'Championed codebase stability and observability by building an extensive Playwright E2E testing suite for the casino lobby and creating dedicated Datadog performance dashboards to monitor multi-region application health.'
+  - 'Spearheaded the end-to-end architecture and deployment of the Omnichannel Jackpots platform, delivering a data-driven web application to 1920x1080 digital displays inside physical casinos ahead of schedule and under budget.'
 ---
