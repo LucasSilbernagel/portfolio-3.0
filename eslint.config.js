@@ -94,6 +94,13 @@ export default [
     },
   },
   {
-    ignores: ['node_modules/**', 'dist/**', '.astro/**', '.netlify/**'],
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      '.astro/**',
+      '.netlify/**',
+      // Vendored third-party bundle (Sveltia CMS)
+      'public/admin/sveltia-cms.js',
+    ],
   },
 ]

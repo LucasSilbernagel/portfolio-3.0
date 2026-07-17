@@ -1,8 +1,8 @@
 ---
 import '../styles/global.css'
 import Footer from '../components/Footer.astro'
-import { getEntry } from 'astro:content'
 import { getImage } from 'astro:assets'
+import { getSiteSettings } from '../lib/content'
 
 export type Props = {
   title?: string
@@ -14,7 +14,7 @@ const {
   description = 'Personal website and software development portfolio for Lucas Silbernagel',
 } = Astro.props
 
-const site = await getEntry('site', 'settings')
+const site = await getSiteSettings()
 
 // OG images standard size is 1200x630px, so optimize for 1200px width
 const OG_IMAGE_OPTIMIZED_WIDTH = 1200

@@ -8,10 +8,10 @@ import Header from '../components/Header.astro'
 import HomepageCard from '../components/HomepageCard.astro'
 import LandingScreen from '../components/LandingScreen.astro'
 import LoadingOverlay from '../components/LoadingOverlay.astro'
-import { getEntry } from 'astro:content'
 import { getImage } from 'astro:assets'
+import { getSiteSettings } from '../lib/content'
 
-const site = await getEntry('site', 'settings')
+const site = await getSiteSettings()
 
 // Profile photo display size: 192px (h-48 w-48 = 12rem = 192px)
 // Use 2x size (384px) for retina displays

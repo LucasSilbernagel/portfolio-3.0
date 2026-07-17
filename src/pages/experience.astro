@@ -7,74 +7,13 @@ import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
 import { Icon } from 'astro-icon/components'
 import { getCollection } from 'astro:content'
+import { formatPeriod } from '../lib/experience'
 
 const ANIMATION_DELAY_STEP_MS = 120
 
 const experiences = (await getCollection('experience'))
   .map((entry) => entry.data)
   .sort((a, b) => b.startDate.localeCompare(a.startDate))
-
-// Format date to period string
-// Parse date string (YYYY-MM-DD) as local date to avoid timezone issues
-const parseLocalDate = (dateString: string): Date => {
-  const [year, month, day] = dateString.split('-').map(Number)
-  // month is 0-indexed in Date constructor
-  return new Date(year, month - 1, day)
-}
-
-type PeriodParts = {
-  startMonth: string
-  startYear: number
-  endMonth: string | null
-  endYear: number | null
-  isPresent: boolean
-  isSamePeriod: boolean
-}
-
-const formatPeriod = (
-  startDate: string,
-  endDate: string | null
-): PeriodParts => {
-  const start = parseLocalDate(startDate)
-  const startMonth = start.toLocaleDateString('en-US', { month: 'long' })
-  const startYear = start.getFullYear()
-
-  if (!endDate) {
-    return {
-      startMonth,
-      startYear,
-      endMonth: null,
-      endYear: null,
-      isPresent: true,
-      isSamePeriod: false,
-    }
-  }
-
-  const end = parseLocalDate(endDate)
-  const endMonth = end.toLocaleDateString('en-US', { month: 'long' })
-  const endYear = end.getFullYear()
-
-  // If same month and year, return just the month and year
-  if (startMonth === endMonth && startYear === endYear) {
-    return {
-      startMonth,
-      startYear,
-      endMonth: null,
-      endYear: null,
-      isPresent: false,
-      isSamePeriod: true,
-    }
-  }
-
-  return {
-    startMonth,
-    startYear,
-    endMonth,
-    endYear,
-    isPresent: false,
-    isSamePeriod: false,
-  }
-}
 ---
 
 <Layout title="Lucas Silbernagel | Experience">

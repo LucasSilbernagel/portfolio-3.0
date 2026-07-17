@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components'
-import { getEntry } from 'astro:content'
 import { getImage } from 'astro:assets'
+import { getSiteSettings } from '../lib/content'
 
 export type Props = {
   showBackButton?: boolean
@@ -10,7 +10,7 @@ export type Props = {
 
 const { showBackButton = false, id } = Astro.props
 
-const site = await getEntry('site', 'settings')
+const site = await getSiteSettings()
 // Header profile photo: h-16 w-16 (64px), use 2x size (128px) for retina displays
 const HEADER_PROFILE_PHOTO_DISPLAY_SIZE = 64
 const RETINA_SCALE_FACTOR = 2

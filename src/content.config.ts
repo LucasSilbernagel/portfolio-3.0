@@ -45,18 +45,24 @@ const techStack = defineCollection({
   }),
 })
 
+// The about page layout only has four image position slots
+const MAX_ABOUT_IMAGES = 4
+
 const about = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/about' }),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      // Ordered images positioned around the about card (max 4 used by layout)
-      images: z.array(
-        z.object({
-          src: image(),
-          alt: z.string(),
-        })
-      ),
+      // Ordered images positioned around the about card; capped to the
+      // layout's position slots to keep manual edits honest
+      images: z
+        .array(
+          z.object({
+            src: image(),
+            alt: z.string(),
+          })
+        )
+        .max(MAX_ABOUT_IMAGES),
     }),
 })
 

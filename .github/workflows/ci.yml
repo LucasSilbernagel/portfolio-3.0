@@ -99,7 +99,6 @@ jobs:
       - name: Build site
         run: pnpm run build
         env:
-          STRAPI_URL: http://localhost:1337
           CI: true
 
       - name: Run E2E tests
@@ -162,5 +161,4 @@ jobs:
       - name: Build site
         run: pnpm run build
         env:
-          STRAPI_URL: http://localhost:1337
           CI: true

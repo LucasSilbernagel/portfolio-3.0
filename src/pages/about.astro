@@ -5,10 +5,11 @@ import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
-import { getEntry, render } from 'astro:content'
+import { render } from 'astro:content'
 import { getImage } from 'astro:assets'
+import { getAboutPage } from '../lib/content'
 
-const about = await getEntry('about', 'about')
+const about = await getAboutPage()
 const { Content } = await render(about)
 const title = about.data.title
 

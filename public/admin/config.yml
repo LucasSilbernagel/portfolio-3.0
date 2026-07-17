@@ -4,7 +4,13 @@ backend:
   branch: main
 
 # Images are committed alongside content and optimized by Astro at build time.
-# Paths are stored relative to each entry file so Astro's image() helper resolves them.
+#
+# IMPORTANT: these global values are only a fallback for the media library.
+# The global public_folder produces absolute paths (/src/assets/content/...)
+# that Astro's image() helper CANNOT resolve. Every collection with image or
+# file fields MUST override media_folder/public_folder with entry-relative
+# paths (e.g. ../../assets/content) so stored paths resolve from the entry
+# file, as the collections below all do.
 media_folder: src/assets/content
 public_folder: /src/assets/content
 

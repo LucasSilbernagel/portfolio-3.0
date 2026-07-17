@@ -23,10 +23,10 @@ test.describe('Resume Download', () => {
     const boardingPassButton = page.locator('#boarding-pass-download')
     await expect(boardingPassButton).toBeVisible()
 
+    // The resume URL is statically generated from site settings, so it must
+    // always be present; a missing URL is a regression, not a skip condition
     const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
-
-    // Skip test if resume URL is not available
-    test.skip(!resumeUrl, 'Resume URL not available')
+    expect(resumeUrl).toBeTruthy()
 
     // Set up download listener
     const downloadPromise = page
@@ -56,14 +56,15 @@ test.describe('Resume Download', () => {
     const boardingPassButton = page.locator('#boarding-pass-download')
     await expect(boardingPassButton).toBeVisible()
 
-    // Verify button has data attributes for resume URL and filename
+    // Verify button has data attributes for resume URL and filename; both are
+    // statically generated from site settings and must always be present
     const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
     const resumeFilename = await boardingPassButton.getAttribute(
       'data-resume-filename'
     )
 
-    // At least one should be present (URL might be empty if resume not configured)
-    expect(resumeUrl !== null || resumeFilename !== null).toBeTruthy()
+    expect(resumeUrl).toBeTruthy()
+    expect(resumeFilename).toBeTruthy()
   })
 
   test('should hide loading overlay after download attempt', async ({
@@ -72,10 +73,10 @@ test.describe('Resume Download', () => {
     const boardingPassButton = page.locator('#boarding-pass-download')
     await expect(boardingPassButton).toBeVisible()
 
+    // The resume URL is statically generated from site settings, so it must
+    // always be present; a missing URL is a regression, not a skip condition
     const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
-
-    // Skip test if resume URL is not available
-    test.skip(!resumeUrl, 'Resume URL not available')
+    expect(resumeUrl).toBeTruthy()
 
     // Set up download listener
     page.waitForEvent('download', { timeout: 5000 }).catch(() => {
