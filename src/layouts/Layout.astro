@@ -1,8 +1,7 @@
 ---
 import '../styles/global.css'
 import Footer from '../components/Footer.astro'
-import { getImage } from 'astro:assets'
-import { getSiteSettings } from '../lib/content'
+import { getOgImageUrl } from '../lib/content'
 
 export type Props = {
   title?: string
@@ -14,21 +13,9 @@ const {
   description = 'Personal website and software development portfolio for Lucas Silbernagel',
 } = Astro.props
 
-const site = await getSiteSettings()
-
-// OG images standard size is 1200x630px, so optimize for 1200px width
-const OG_IMAGE_OPTIMIZED_WIDTH = 1200
-const socialShareImage = await getImage({
-  src: site.data.socialShareImage,
-  width: OG_IMAGE_OPTIMIZED_WIDTH,
-  format: 'webp',
-})
-
 const siteUrl = Astro.site?.href || 'https://lucassilbernagel.com'
 const pageUrl = new URL(Astro.url.pathname, siteUrl).href
-
-// Absolute URL required for social crawlers
-const ogImageUrl = new URL(socialShareImage.src, siteUrl).href
+const ogImageUrl = await getOgImageUrl(siteUrl)
 ---
 
 <!doctype html>

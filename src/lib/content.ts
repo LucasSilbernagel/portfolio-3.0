@@ -1,3 +1,4 @@
+import { getImage } from 'astro:assets'
 import { getEntry } from 'astro:content'
 
 /**
@@ -12,6 +13,23 @@ export const getSiteSettings = async () => {
     )
   }
   return site
+}
+
+// OG images standard size is 1200x630px, so optimize for 1200px width
+const OG_IMAGE_OPTIMIZED_WIDTH = 1200
+
+/**
+ * Build the absolute URL for the social share image from site settings.
+ * Social crawlers require an absolute URL.
+ */
+export const getOgImageUrl = async (siteUrl: string): Promise<string> => {
+  const site = await getSiteSettings()
+  const socialShareImage = await getImage({
+    src: site.data.socialShareImage,
+    width: OG_IMAGE_OPTIMIZED_WIDTH,
+    format: 'webp',
+  })
+  return new URL(socialShareImage.src, siteUrl).href
 }
 
 /**

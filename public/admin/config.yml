@@ -36,8 +36,28 @@ collections:
           allow_add: true,
         }
       - { name: description, label: Description, widget: text }
-      - { name: liveUrl, label: Live URL, widget: string }
-      - { name: githubUrl, label: GitHub URL, widget: string }
+      # pattern guards match the z.url() schema in src/content.config.ts so
+      # editors get feedback at save time instead of a failed production build
+      - {
+          name: liveUrl,
+          label: Live URL,
+          widget: string,
+          pattern:
+            [
+              '^https?://',
+              'Must be a full URL starting with http:// or https://',
+            ],
+        }
+      - {
+          name: githubUrl,
+          label: GitHub URL,
+          widget: string,
+          pattern:
+            [
+              '^https?://',
+              'Must be a full URL starting with http:// or https://',
+            ],
+        }
       - { name: image, label: Image, widget: image, choose_url: false }
 
   - name: experience
@@ -48,11 +68,23 @@ collections:
     extension: md
     format: yaml-frontmatter
     identifier_field: company
+    # Include the position so a second role at the same company (already the
+    # case for theScore and Xanadu) gets a distinct filename
+    slug: '{{fields.company}}-{{fields.position}}'
     fields:
       - { name: company, label: Company, widget: string }
       - { name: position, label: Position, widget: string }
       - { name: location, label: Location, widget: string }
-      - { name: website, label: Website, widget: string }
+      - {
+          name: website,
+          label: Website,
+          widget: string,
+          pattern:
+            [
+              '^https?://',
+              'Must be a full URL starting with http:// or https://',
+            ],
+        }
       - {
           name: startDate,
           label: Start date,
@@ -141,10 +173,26 @@ collections:
               widget: file,
               media_folder: /public,
               public_folder: /,
+              hint:
+                'Uploads to public/ and is served from the site root. If the
+                new file has a different name, delete the old PDF from public/
+                so it does not linger on the live site.',
             }
           - {
               name: resumeFileName,
               label: Resume download filename,
               widget: string,
+              hint:
+                'The filename visitors get when downloading the resume; it
+                does not need to match the uploaded file name above.',
             }
-          - { name: mapIframeSrc, label: Map iframe URL, widget: text }
+          - {
+              name: mapIframeSrc,
+              label: Map iframe URL,
+              widget: text,
+              pattern:
+                [
+                  '^https?://',
+                  'Must be a full URL starting with http:// or https://',
+                ],
+            }

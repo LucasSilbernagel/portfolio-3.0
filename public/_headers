@@ -1,0 +1,6 @@
+# The Sveltia CMS admin page handles a GitHub PAT; deny framing so it cannot
+# be embedded in another site for clickjacking
+/admin
+  X-Frame-Options: DENY
+/admin/*
+  X-Frame-Options: DENY
