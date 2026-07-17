@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+const HTTP_OK = 200
+
 test.describe('Resume Download', () => {
   test.beforeEach(async ({ page, context }) => {
     // Clear session storage and navigate to homepage
@@ -65,6 +67,25 @@ test.describe('Resume Download', () => {
 
     expect(resumeUrl).toBeTruthy()
     expect(resumeFilename).toBeTruthy()
+  })
+
+  test('should serve the resume file at the linked URL', async ({
+    page,
+    request,
+  }) => {
+    const boardingPassButton = page.locator('#boarding-pass-download')
+    await expect(boardingPassButton).toBeVisible()
+
+    const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
+    if (!resumeUrl) {
+      throw new Error('data-resume-url attribute is missing')
+    }
+
+    // Guard against a broken site-settings edit: the URL being present is
+    // not enough, the file behind it must actually be served
+    const response = await request.get(resumeUrl)
+    expect(response.status()).toBe(HTTP_OK)
+    expect(response.headers()['content-type']).toContain('pdf')
   })
 
   test('should hide loading overlay after download attempt', async ({

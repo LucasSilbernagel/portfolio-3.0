@@ -36,17 +36,26 @@ const projects = await Promise.all(
 
     // Generate multiple widths for responsive images
     const optimized = await Promise.all(
-      PROJECT_IMAGE_SIZES.map((width) =>
-        getImage({ src: project.image, width, format: 'webp' })
-      )
+      PROJECT_IMAGE_SIZES.map(async (width) => {
+        const image = await getImage({
+          src: project.image,
+          width,
+          format: 'webp',
+        })
+        return { width, src: image.src }
+      })
     )
     const imageSrcSet = optimized
-      .map((img, i) => `${img.src} ${PROJECT_IMAGE_SIZES[i]}w`)
+      .map(({ width, src }) => `${src} ${width}w`)
       .join(', ')
 
-    // Use the middle size (640px) as the default src for browsers that don't support srcset
-    const imageUrl =
-      optimized[PROJECT_IMAGE_SIZES.indexOf(PROJECT_IMAGE_SIZE_DESKTOP)].src
+    // Use the desktop size (640px) as the default src for browsers that don't support srcset
+    const defaultImage = await getImage({
+      src: project.image,
+      width: PROJECT_IMAGE_SIZE_DESKTOP,
+      format: 'webp',
+    })
+    const imageUrl = defaultImage.src
 
     return {
       projectName: project.projectName,
