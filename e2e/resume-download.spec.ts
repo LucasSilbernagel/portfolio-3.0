@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+const HTTP_OK = 200
+
 test.describe('Resume Download', () => {
   test.beforeEach(async ({ page, context }) => {
     // Clear session storage and navigate to homepage
@@ -23,10 +25,10 @@ test.describe('Resume Download', () => {
     const boardingPassButton = page.locator('#boarding-pass-download')
     await expect(boardingPassButton).toBeVisible()
 
+    // The resume URL is statically generated from site settings, so it must
+    // always be present; a missing URL is a regression, not a skip condition
     const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
-
-    // Skip test if resume URL is not available (e.g., in CI without Strapi)
-    test.skip(!resumeUrl, 'Resume URL not available (likely CI without Strapi)')
+    expect(resumeUrl).toBeTruthy()
 
     // Set up download listener
     const downloadPromise = page
@@ -56,14 +58,34 @@ test.describe('Resume Download', () => {
     const boardingPassButton = page.locator('#boarding-pass-download')
     await expect(boardingPassButton).toBeVisible()
 
-    // Verify button has data attributes for resume URL and filename
+    // Verify button has data attributes for resume URL and filename; both are
+    // statically generated from site settings and must always be present
     const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
     const resumeFilename = await boardingPassButton.getAttribute(
       'data-resume-filename'
     )
 
-    // At least one should be present (URL might be empty if resume not configured)
-    expect(resumeUrl !== null || resumeFilename !== null).toBeTruthy()
+    expect(resumeUrl).toBeTruthy()
+    expect(resumeFilename).toBeTruthy()
+  })
+
+  test('should serve the resume file at the linked URL', async ({
+    page,
+    request,
+  }) => {
+    const boardingPassButton = page.locator('#boarding-pass-download')
+    await expect(boardingPassButton).toBeVisible()
+
+    const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
+    if (!resumeUrl) {
+      throw new Error('data-resume-url attribute is missing')
+    }
+
+    // Guard against a broken site-settings edit: the URL being present is
+    // not enough, the file behind it must actually be served
+    const response = await request.get(resumeUrl)
+    expect(response.status()).toBe(HTTP_OK)
+    expect(response.headers()['content-type']).toContain('pdf')
   })
 
   test('should hide loading overlay after download attempt', async ({
@@ -72,10 +94,10 @@ test.describe('Resume Download', () => {
     const boardingPassButton = page.locator('#boarding-pass-download')
     await expect(boardingPassButton).toBeVisible()
 
+    // The resume URL is statically generated from site settings, so it must
+    // always be present; a missing URL is a regression, not a skip condition
     const resumeUrl = await boardingPassButton.getAttribute('data-resume-url')
-
-    // Skip test if resume URL is not available (e.g., in CI without Strapi)
-    test.skip(!resumeUrl, 'Resume URL not available (likely CI without Strapi)')
+    expect(resumeUrl).toBeTruthy()
 
     // Set up download listener
     page.waitForEvent('download', { timeout: 5000 }).catch(() => {

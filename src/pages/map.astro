@@ -5,15 +5,10 @@ import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import PageWrapper from '../components/PageWrapper.astro'
 import PageHeader from '../components/PageHeader.astro'
-import { safeFetchSingleType } from '../lib/strapi'
-import type { MapContent } from '../types/strapi'
+import { getSiteSettings } from '../lib/content'
 
-const mapData = await safeFetchSingleType<MapContent>({
-  endpoint: 'map',
-  contentTypeName: 'map',
-})
-
-const iframeSrc = mapData?.mapIframeSrc || ''
+const site = await getSiteSettings()
+const iframeSrc = site.data.mapIframeSrc
 ---
 
 <Layout title="Lucas Silbernagel | Travel Map">

@@ -7,8 +7,12 @@ import icon from 'astro-icon'
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server', // Enable SSR for API routes; pages are still pre-rendered at build time
+  output: 'static',
   adapter: netlify(),
+  redirects: {
+    // Legacy bookmark for reaching the content manager (now Sveltia CMS)
+    '/content': '/admin',
+  },
   integrations: [
     tailwind({
       applyBaseStyles: false,

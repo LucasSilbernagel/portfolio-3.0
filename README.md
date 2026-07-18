@@ -20,7 +20,8 @@ https://lucassilbernagel.com/
 
 ### Content Management
 
-- [Strapi](https://strapi.io/)
+- [Astro Content Collections](https://docs.astro.build/en/guides/content-collections/) - git-based content in `src/content/`
+- [Sveltia CMS](https://github.com/sveltia/sveltia-cms) - editing UI at `/admin`
 
 ### Testing
 
@@ -53,36 +54,49 @@ Then `cd` into the project folder and open it in your code editor. For Visual St
 
 Create a `.env` file in the project root directory. Add the following environment variable:
 
-`STRAPI_URL=http://localhost:1337`
+`PUBLIC_FORMSPARK_ID=*********`
 
-This should point to your local Strapi instance. For production builds, you'll need to set this to your production Strapi URL.
+This is the [Formspark](https://formspark.io/) form ID used by the contact form.
 
 ### Install dependencies
 
-To install all of the required dependencies for both the main application and the CMS, run the following commands:
-
-`pnpm install`
-`cd cms && npm install && cd ..`
+To install all of the required dependencies, run `pnpm install`.
 
 ### Start up the app
 
-You have a few options for running the application:
+Run `pnpm dev` in your terminal.
+Your terminal should indicate a `localhost` URL (typically `http://localhost:4321`) at which you can view the app in your browser.
+All content is stored in the repository, so no external services are needed.
 
-- **Frontend only**: Run `pnpm dev` in your terminal. Your terminal should indicate a `localhost` URL (typically `http://localhost:4321`) at which you can view the app in your browser. Note that without Strapi running, the site will build but content will be empty.
+## Content management
 
-- **CMS only**: Run `pnpm cms:dev` (or `cd cms && npm run develop`) to start Strapi. The Strapi admin panel will be available at `http://localhost:1337/admin`.
+Site content lives in the repository as markdown files in `src/content/`, validated at build time by the Zod schemas in `src/lib/content-schemas.ts` (wired up in `src/content.config.ts`).
+Images referenced by content live in `src/assets/content/` and are optimized by `astro:assets`; the resume PDF is served as-is from `public/`.
 
-- **Both frontend and CMS**: Run `pnpm dev:all` to start both the Astro dev server and Strapi concurrently.
+Content can be edited three ways:
 
-#### Setting up Strapi
+- Edit the markdown files directly and commit.
+- Use [Sveltia CMS](https://github.com/sveltia/sveltia-cms) at `/admin` on the live site, signing in with a GitHub personal access token that has read/write access to this repository's contents.
+- Open a pull request.
 
-If you're running Strapi for the first time, you'll need to:
+### Caveats
 
-1. Create an admin account when prompted
-2. Create and publish content in the Strapi admin panel
-3. Configure public permissions:
-   - Go to Settings > Users & Permissions Plugin > Roles > Public
-   - Enable "find" permission for each content type you want to display (projects, experience, tech-stack, about-page, etc.)
+- **CMS edits commit directly to `main`** and trigger a production deploy.
+  Sveltia validates URLs at save time (`pattern` rules in `public/admin/config.yml`), but an edit that breaks the build fails silently: Netlify keeps serving the last good deploy.
+  Keep Netlify deploy-failure notifications enabled so a broken edit is noticed.
+- **The content model is defined in two places**: the Zod schemas in `src/lib/content-schemas.ts` and the Sveltia config in `public/admin/config.yml`.
+  If you change one, change the other.
+  A unit test (`src/lib/content-schemas.test.ts`) fails on any field-name drift between them.
+
+### Upgrading Sveltia CMS
+
+The CMS script is self-hosted at `public/admin/sveltia-cms.js` (pinned copy of `@sveltia/cms`, version noted in `public/admin/index.html`) so the admin page, which handles a GitHub PAT, never executes third-party CDN code.
+To upgrade:
+
+1. Download the new version: `https://unpkg.com/@sveltia/cms@<version>/dist/sveltia-cms.js`
+2. Verify its integrity against the npm package: `npm pack @sveltia/cms@<version>` and compare the sha256 of `dist/sveltia-cms.js`
+3. Replace `public/admin/sveltia-cms.js` and update the version comment in `public/admin/index.html`
+4. Load `/admin` and check the browser console for Content-Security-Policy violations (the CSP for `/admin` is set in `public/_headers`)
 
 ## Testing
 

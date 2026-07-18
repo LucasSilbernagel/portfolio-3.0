@@ -1,6 +1,23 @@
-# Cache headers for image proxy endpoint
-# This improves Lighthouse cache lifetime scores by serving images with long cache TTL
-/api/image-proxy/*
+# Content-hashed build assets are immutable: a changed file gets a new
+# filename, so it is safe to cache them forever. Restores the long cache TTL
+# (and Lighthouse cache-lifetime score) that the old image-proxy header set.
+/_astro/*
   Cache-Control: public, max-age=31536000, immutable
   X-Content-Type-Options: nosniff
 
+# The Sveltia CMS admin page handles a GitHub PAT, so lock it down:
+# - deny framing (CSP frame-ancestors, plus X-Frame-Options for older
+#   browsers) so it cannot be embedded in another site for clickjacking
+# - restrict scripts to the self-hosted bundle and outbound requests to the
+#   GitHub hosts Sveltia needs (api.github.com for Git operations,
+#   githubusercontent.com for avatars and media, githubstatus.com for the
+#   backend status check), based on the Sveltia CSP guide
+#   (https://sveltiacms.app/en/docs/security)
+# If the admin page misbehaves after a Sveltia upgrade, check the browser
+# console for CSP violations.
+/admin
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' blob: data: https://*.githubusercontent.com; media-src 'self' blob: data:; frame-src blob:; worker-src 'self' blob:; connect-src 'self' blob: data: https://api.github.com https://www.githubstatus.com https://*.githubusercontent.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+/admin/*
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' blob: data: https://*.githubusercontent.com; media-src 'self' blob: data:; frame-src blob:; worker-src 'self' blob:; connect-src 'self' blob: data: https://api.github.com https://www.githubstatus.com https://*.githubusercontent.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'

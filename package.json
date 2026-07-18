@@ -17,12 +17,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "cms:dev": "cd cms && npm run develop",
-    "cms:build": "cd cms && npm run build",
-    "cms:start": "cd cms && npm run start",
-    "dev:all": "concurrently \"npm run dev\" \"npm run cms:dev\"",
-    "build:all": "npm run build && npm run cms:build"
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@astrojs/netlify": "^6.6.3",
@@ -35,6 +30,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
     "@eslint/js": "^9.38.0",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/typography": "^0.5.19",
@@ -42,7 +38,6 @@
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
     "baseline-browser-mapping": "^2.9.11",
-    "concurrently": "^9.2.1",
     "eslint": "^9.38.0",
     "eslint-plugin-astro": "^1.3.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -51,7 +46,9 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.7.1",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.0",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.16",
+    "yaml": "^2.9.0"
   }
 }
