@@ -1,6 +1,6 @@
 ---
 profilePhoto: ../../assets/content/lucas-headshot.jpg
-profilePhotoAlt: Professional headshot of Lucas Silbernagel
+profilePhotoAlt: Professional headshot of Lucas Silbernagel (developer)
 socialShareImage: ../../assets/content/og-image.png
 resumeFile: /lucas-silbernagel-resume.pdf
 resumeFileName: lucas-silbernagel-resume-portfolio.pdf
