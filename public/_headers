@@ -1,3 +1,10 @@
+# Content-hashed build assets are immutable: a changed file gets a new
+# filename, so it is safe to cache them forever. Restores the long cache TTL
+# (and Lighthouse cache-lifetime score) that the old image-proxy header set.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
 # The Sveltia CMS admin page handles a GitHub PAT, so lock it down:
 # - deny framing (CSP frame-ancestors, plus X-Frame-Options for older
 #   browsers) so it cannot be embedded in another site for clickjacking

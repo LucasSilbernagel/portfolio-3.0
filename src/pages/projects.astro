@@ -50,12 +50,9 @@ const projects = await Promise.all(
       .join(', ')
 
     // Use the desktop size (640px) as the default src for browsers that don't support srcset
-    const defaultImage = await getImage({
-      src: project.image,
-      width: PROJECT_IMAGE_SIZE_DESKTOP,
-      format: 'webp',
-    })
-    const imageUrl = defaultImage.src
+    const imageUrl = optimized.find(
+      ({ width }) => width === PROJECT_IMAGE_SIZE_DESKTOP
+    )!.src
 
     return {
       projectName: project.projectName,

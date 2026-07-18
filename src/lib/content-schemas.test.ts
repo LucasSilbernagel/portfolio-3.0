@@ -12,12 +12,16 @@ import {
 
 // The content model is defined twice: once as Zod schemas (validated at
 // build time) and once in the Sveltia CMS config (drives the editing UI).
-// Nothing else enforces that they match, so this test fails on field-name
-// drift: a field added in only one place would otherwise surface as either
-// an uneditable field or a broken production build.
+// Nothing else enforces that they match, so this test fails on drift in
+// either field names or requiredness. A field present in only one place, or
+// one that is optional in the CMS (`required: false`) but required in Zod,
+// would otherwise surface as an uneditable field or a build that breaks the
+// moment an editor saves without it. Requiredness is encoded in the field
+// signature as a trailing `?` so a single assertion covers both.
 
 type CmsField = {
   name: string
+  required?: boolean
   fields?: CmsField[]
 }
 
@@ -49,16 +53,24 @@ const getCmsFields = (collection: CmsCollection): CmsField[] => {
   return fields
 }
 
-// 'body' is the markdown body, not a frontmatter field, so it has no
-// counterpart in the Zod schemas
-const cmsFieldNames = (fields: CmsField[]): string[] =>
+// Field signature: the name, plus a trailing `?` when the field is optional,
+// so name and requiredness are compared together. Sveltia fields are required
+// unless `required: false`; Zod fields are optional when they accept a missing
+// value (`.optional()` or `.default()`). 'body' is the markdown body, not a
+// frontmatter field, so it has no counterpart in the Zod schemas.
+const cmsFieldSignatures = (fields: CmsField[]): string[] =>
   fields
-    .map((field) => field.name)
-    .filter((name) => name !== 'body')
+    .filter((field) => field.name !== 'body')
+    .map((field) => `${field.name}${field.required === false ? '?' : ''}`)
     .toSorted()
 
-const zodFieldNames = (schema: z.AnyZodObject): string[] =>
-  Object.keys(schema.shape).toSorted()
+const zodFieldSignatures = (schema: z.AnyZodObject): string[] =>
+  Object.entries(schema.shape)
+    .map(
+      ([name, value]) =>
+        `${name}${(value as z.ZodTypeAny).isOptional() ? '?' : ''}`
+    )
+    .toSorted()
 
 // Stand-in for the image() helper Astro passes to collection schemas; only
 // the field names matter here
@@ -66,26 +78,26 @@ const image = () => z.string()
 
 describe('Sveltia config matches the content collection schemas', () => {
   it('projects fields match', () => {
-    expect(cmsFieldNames(getCmsFields(getCmsCollection('projects')))).toEqual(
-      zodFieldNames(projectsSchema(image))
-    )
+    expect(
+      cmsFieldSignatures(getCmsFields(getCmsCollection('projects')))
+    ).toEqual(zodFieldSignatures(projectsSchema(image)))
   })
 
   it('experience fields match', () => {
-    expect(cmsFieldNames(getCmsFields(getCmsCollection('experience')))).toEqual(
-      zodFieldNames(experienceSchema)
-    )
+    expect(
+      cmsFieldSignatures(getCmsFields(getCmsCollection('experience')))
+    ).toEqual(zodFieldSignatures(experienceSchema))
   })
 
   it('tech stack fields match', () => {
-    expect(cmsFieldNames(getCmsFields(getCmsCollection('techStack')))).toEqual(
-      zodFieldNames(techStackSchema)
-    )
+    expect(
+      cmsFieldSignatures(getCmsFields(getCmsCollection('techStack')))
+    ).toEqual(zodFieldSignatures(techStackSchema))
   })
 
   it('about page fields match', () => {
-    expect(cmsFieldNames(getCmsFields(getCmsCollection('about')))).toEqual(
-      zodFieldNames(aboutSchema(image))
+    expect(cmsFieldSignatures(getCmsFields(getCmsCollection('about')))).toEqual(
+      zodFieldSignatures(aboutSchema(image))
     )
   })
 
@@ -94,14 +106,14 @@ describe('Sveltia config matches the content collection schemas', () => {
       (field) => field.name === 'images'
     )
     expect(imagesField?.fields).toBeDefined()
-    expect(cmsFieldNames(imagesField?.fields ?? [])).toEqual(
-      zodFieldNames(aboutSchema(image).shape.images.element)
+    expect(cmsFieldSignatures(imagesField?.fields ?? [])).toEqual(
+      zodFieldSignatures(aboutSchema(image).shape.images.element)
     )
   })
 
   it('site settings fields match', () => {
-    expect(cmsFieldNames(getCmsFields(getCmsCollection('site')))).toEqual(
-      zodFieldNames(siteSchema(image))
+    expect(cmsFieldSignatures(getCmsFields(getCmsCollection('site')))).toEqual(
+      zodFieldSignatures(siteSchema(image))
     )
   })
 

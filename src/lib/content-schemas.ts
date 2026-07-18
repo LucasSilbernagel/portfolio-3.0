@@ -13,6 +13,19 @@ import { z } from 'astro/zod'
 // substitute a plain string schema
 type ImageFn<T extends z.ZodTypeAny> = () => T
 
+// A full http(s) URL. z.url() alone also accepts javascript:/data: URLs,
+// which flow into href and iframe src attributes; the `^https?://` guard
+// keeps this in lockstep with the `pattern` rules in public/admin/config.yml
+// so direct commits are held to the same contract as CMS edits.
+const httpUrl = () =>
+  z
+    .string()
+    .url()
+    .regex(
+      /^https?:\/\//,
+      'Must be a full URL starting with http:// or https://'
+    )
+
 export const projectsSchema = <T extends z.ZodTypeAny>(image: ImageFn<T>) =>
   z.object({
     // Controls display order on the Projects page (ascending)
@@ -21,8 +34,8 @@ export const projectsSchema = <T extends z.ZodTypeAny>(image: ImageFn<T>) =>
     completedYear: z.string(),
     technologies: z.array(z.string()),
     description: z.string(),
-    liveUrl: z.string().url(),
-    githubUrl: z.string().url(),
+    liveUrl: httpUrl(),
+    githubUrl: httpUrl(),
     image: image(),
   })
 
@@ -30,7 +43,7 @@ export const experienceSchema = z.object({
   company: z.string(),
   position: z.string(),
   location: z.string(),
-  website: z.string().url(),
+  website: httpUrl(),
   // Local dates in YYYY-MM-DD form (parsed as local time to avoid TZ drift)
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   // A current role has no end date. Sveltia writes an empty string when the
@@ -78,5 +91,5 @@ export const siteSchema = <T extends z.ZodTypeAny>(image: ImageFn<T>) =>
     // the resume-download e2e test verifies the file is actually served
     resumeFile: z.string().startsWith('/'),
     resumeFileName: z.string(),
-    mapIframeSrc: z.string().url(),
+    mapIframeSrc: httpUrl(),
   })
