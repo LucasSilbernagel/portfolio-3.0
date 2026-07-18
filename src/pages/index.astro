@@ -32,7 +32,7 @@ const resumeFileName = site.data.resumeFileName
 
 const siteUrl = Astro.site?.href || 'https://lucassilbernagel.com'
 const pageUrl = new URL(Astro.url.pathname, siteUrl).href
-const ogImageUrl = await getOgImageUrl(siteUrl)
+const ogImageUrl = await getOgImageUrl(siteUrl, site)
 
 const title = 'Lucas Silbernagel | Senior Software Engineer'
 const description =

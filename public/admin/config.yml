@@ -71,6 +71,9 @@ collections:
     # Include the position so a second role at the same company (already the
     # case for theScore and Xanadu) gets a distinct filename
     slug: '{{fields.company}}-{{fields.position}}'
+    # identifier_field alone shows two identical "theScore"/"Xanadu" rows in the
+    # entry list; summary adds the position so editors can tell them apart
+    summary: '{{fields.company}} - {{fields.position}}'
     fields:
       - { name: company, label: Company, widget: string }
       - { name: position, label: Position, widget: string }

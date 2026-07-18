@@ -1,6 +1,8 @@
 import { getImage } from 'astro:assets'
 import { getEntry } from 'astro:content'
 
+type SiteSettings = Awaited<ReturnType<typeof getSiteSettings>>
+
 /**
  * Load the site settings singleton, failing the build with a descriptive
  * error if the entry is missing (e.g. the file was renamed or deleted).
@@ -21,13 +23,21 @@ const OG_IMAGE_OPTIMIZED_WIDTH = 1200
 /**
  * Build the absolute URL for the social share image from site settings.
  * Social crawlers require an absolute URL.
+ *
+ * Emitted as PNG rather than WebP: some social platforms (notably LinkedIn)
+ * do not reliably render WebP og:image previews, and the byte savings are
+ * irrelevant for a share image. Pass an already-loaded settings entry to
+ * avoid a redundant lookup when the caller has one.
  */
-export const getOgImageUrl = async (siteUrl: string): Promise<string> => {
-  const site = await getSiteSettings()
+export const getOgImageUrl = async (
+  siteUrl: string,
+  site?: SiteSettings
+): Promise<string> => {
+  const settings = site ?? (await getSiteSettings())
   const socialShareImage = await getImage({
-    src: site.data.socialShareImage,
+    src: settings.data.socialShareImage,
     width: OG_IMAGE_OPTIMIZED_WIDTH,
-    format: 'webp',
+    format: 'png',
   })
   return new URL(socialShareImage.src, siteUrl).href
 }

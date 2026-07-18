@@ -23,6 +23,10 @@ type CmsField = {
   name: string
   required?: boolean
   fields?: CmsField[]
+  // Sveltia string-widget validation: [regex, error message]
+  pattern?: [string, string]
+  // datetime widget storage format
+  format?: string
 }
 
 type CmsCollection = {
@@ -52,6 +56,18 @@ const getCmsFields = (collection: CmsCollection): CmsField[] => {
   }
   return fields
 }
+
+const findField = (collectionName: string, fieldName: string): CmsField => {
+  const field = getCmsFields(getCmsCollection(collectionName)).find(
+    (f) => f.name === fieldName
+  )
+  if (!field) {
+    throw new Error(`Field "${fieldName}" not found in "${collectionName}"`)
+  }
+  return field
+}
+
+const HTTPS_PATTERN = '^https?://'
 
 // Field signature: the name, plus a trailing `?` when the field is optional,
 // so name and requiredness are compared together. Sveltia fields are required
@@ -116,6 +132,33 @@ describe('Sveltia config matches the content collection schemas', () => {
       zodFieldSignatures(siteSchema(image))
     )
   })
+
+  // Field names/requiredness matching is not enough: the Zod schemas lean on
+  // guards that only exist in the CMS config. A URL field whose `pattern` is
+  // dropped, or a date field whose `format` drifts off YYYY-MM-DD, would still
+  // pass every test above but break a save or a build. These assert the guards
+  // the schemas depend on are actually present.
+
+  // Every httpUrl() field in content-schemas.ts must carry the matching
+  // save-time pattern guard so CMS edits are held to the same contract as the
+  // build-time regex in httpUrl()
+  it.each([
+    ['projects', 'liveUrl'],
+    ['projects', 'githubUrl'],
+    ['experience', 'website'],
+    ['site', 'mapIframeSrc'],
+  ])('%s.%s carries the https URL pattern guard', (collection, field) => {
+    expect(findField(collection, field).pattern?.[0]).toBe(HTTPS_PATTERN)
+  })
+
+  // The experience date regex (/^\d{4}-\d{2}-\d{2}$/) and local-date parsing
+  // both assume the CMS writes YYYY-MM-DD; guard against a format drift
+  it.each([['startDate'], ['endDate']])(
+    'experience.%s is stored as YYYY-MM-DD',
+    (field) => {
+      expect(findField('experience', field).format).toBe('YYYY-MM-DD')
+    }
+  )
 
   it('every CMS collection has a schema counterpart', () => {
     const schemaCollections = [
