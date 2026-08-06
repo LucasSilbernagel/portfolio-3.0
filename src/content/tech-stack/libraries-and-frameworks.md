@@ -1,9 +1,15 @@
 ---
 order: 2
-category: Libraries and frameworks
+category: Frontend Architecture & UI
 items:
   - React
   - Next.js
+  - TypeScript
+  - JavaScript
+  - HTML/CSS
+  - Tailwind CSS
+  - MUI
+  - shadcn/ui
   - Gatsby
   - Remix
   - Astro
