@@ -1,10 +1,10 @@
 ---
 order: 3
-category: State management
+category: State & Data Management
 items:
   - React Context
   - Zustand
   - Apollo Client
   - TanStack Query
-  - etc.
+  - REST & GraphQL APIs
 ---
