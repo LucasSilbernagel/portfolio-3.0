@@ -11,8 +11,10 @@ images:
     alt: Lucas Silbernagel sitting on a bench posing with a statue of Paddington Bear in Aguas Calientes, Peru
 ---
 
-I'm a Toronto-based software developer specializing in front-end development since 2020. My passion is crafting accessible, high-performance user experiences that scale.
+I’m a Toronto-based Senior Software Engineer specializing in front-end architecture, web performance, and AI-native software engineering.
 
-I do my best work in fast-paced environments where collaboration and clear communication matter. Stakeholders and teammates appreciate my ability to iterate rapidly while maintaining code quality.
+Over the past 6+ years, my core focus has been crafting accessible, high-scale, and high-performance user experiences. I thrive at the intersection of technical architecture and software execution, where I lead RFC-driven initiatives, establish testing suites, and build production observability dashboards.
 
-Beyond shipping features, I really enjoy empowering other developers through detailed documentation, educational presentations, and knowledge-sharing sessions. I believe the best codebases are built by teams that learn together.
+In my daily workflows, I combine modern web development tools with agentic AI workflows. By leveraging spec-driven development and AI orchestration to streamline planning and code execution, I can focus heavily on product design, web accessibility, performance monitoring, and team enablement.
+
+Beyond hands-on code delivery, I place high value on supporting the engineers around me through mentoring, educational presentations, detailed RFCs, and automated testing standards.
