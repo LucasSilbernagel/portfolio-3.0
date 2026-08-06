@@ -160,6 +160,53 @@ describe('Sveltia config matches the content collection schemas', () => {
     }
   )
 
+  // Sveltia saves the datetime widget unquoted, so YAML hands the schema a
+  // Date instead of a string; that broke the build once already
+  describe('experience dates accept the Date form YAML produces', () => {
+    const entry = {
+      company: 'theScore',
+      position: 'Senior Software Engineer',
+      location: 'Toronto, Canada',
+      website: 'https://www.scoremediaandgaming.com/',
+      highlights: ['Shipped things'],
+    }
+
+    it.each([
+      ['quoted string', '2025-03-01'],
+      // How YAML parses an unquoted `2025-03-01`: UTC midnight
+      ['unquoted Date', new Date('2025-03-01T00:00:00Z')],
+    ])('parses startDate given as a %s', (_label, startDate) => {
+      expect(experienceSchema.parse({ ...entry, startDate }).startDate).toBe(
+        '2025-03-01'
+      )
+    })
+
+    it.each([
+      ['quoted string', '2026-01-15', '2026-01-15'],
+      ['unquoted Date', new Date('2026-01-15T00:00:00Z'), '2026-01-15'],
+      // A cleared datetime field, and a current role
+      ['empty string', '', null],
+      ['null', null, null],
+    ])('parses endDate given as %s', (_label, endDate, expected) => {
+      expect(
+        experienceSchema.parse({ ...entry, startDate: '2025-03-01', endDate })
+          .endDate
+      ).toBe(expected)
+    })
+
+    it('defaults a missing endDate to null', () => {
+      expect(
+        experienceSchema.parse({ ...entry, startDate: '2025-03-01' }).endDate
+      ).toBeNull()
+    })
+
+    it('still rejects a date that is not YYYY-MM-DD', () => {
+      expect(() =>
+        experienceSchema.parse({ ...entry, startDate: 'March 2025' })
+      ).toThrow()
+    })
+  })
+
   it('every CMS collection has a schema counterpart', () => {
     const schemaCollections = [
       'projects',

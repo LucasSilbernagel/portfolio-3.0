@@ -39,19 +39,34 @@ export const projectsSchema = <T extends z.ZodTypeAny>(image: ImageFn<T>) =>
     image: image(),
   })
 
+// Sveltia's datetime widget writes dates unquoted (`startDate: 2025-03-01`),
+// which YAML parses as a Date rather than a string, so both forms have to be
+// accepted. YAML reads a date-only timestamp as UTC midnight, so the parts are
+// read back in UTC - local getters would shift the day in western timezones.
+const ISO_DATE_LENGTH = 'YYYY-MM-DD'.length
+
+const toDateString = (value: string | Date): string =>
+  value instanceof Date ? value.toISOString().slice(0, ISO_DATE_LENGTH) : value
+
+// Local dates in YYYY-MM-DD form (parsed as local time to avoid TZ drift)
+const YYYY_MM_DD = /^\d{4}-\d{2}-\d{2}$/
+
 export const experienceSchema = z.object({
   company: z.string(),
   position: z.string(),
   location: z.string(),
   website: httpUrl(),
-  // Local dates in YYYY-MM-DD form (parsed as local time to avoid TZ drift)
-  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  startDate: z
+    .union([z.string(), z.date()])
+    .transform(toDateString)
+    .pipe(z.string().regex(YYYY_MM_DD)),
   // A current role has no end date. Sveltia writes an empty string when the
-  // datetime field is cleared, so the `z.literal('')` branch must stay in
-  // this union; both '' and a missing field are normalized to null
+  // datetime field is cleared, so the `''` case must keep normalizing to null,
+  // as does a missing field
   endDate: z
-    .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal(''), z.null()])
-    .transform((value) => value || null)
+    .union([z.string(), z.date(), z.null()])
+    .transform((value) => (value ? toDateString(value) : null))
+    .pipe(z.union([z.string().regex(YYYY_MM_DD), z.null()]))
     .default(null),
   highlights: z.array(z.string()),
 })
