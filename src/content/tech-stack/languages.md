@@ -1,9 +1,11 @@
 ---
 order: 1
-category: Languages
+category: AI Workflows & Engineering
 items:
-  - HTML
-  - CSS
-  - JavaScript
-  - TypeScript
+  - Claude Code
+  - BMAD Method
+  - Spec-Driven Development
+  - Context Engineering
+  - Prompt Engineering
+  - GitHub Copilot
 ---
