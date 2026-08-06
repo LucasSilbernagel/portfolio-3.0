@@ -1,7 +1,10 @@
 ---
 order: 5
-category: Data
+category: Testing, Observability & CI/CD
 items:
-  - REST APIs
-  - GraphQL APIs
+  - Playwright
+  - Jest
+  - Vitest
+  - React Testing Library
+  - Datadog
 ---
