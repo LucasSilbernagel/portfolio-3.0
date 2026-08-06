@@ -3,7 +3,7 @@ company: theScore
 position: Senior Software Engineer
 location: Toronto, Canada
 website: https://www.scoremediaandgaming.com/
-startDate: 2025-03-01
+startDate: '2025-03-01'
 endDate: ''
 highlights:
   - Integrated agentic AI workflows (Claude Code, BMAD method) into feature planning and development, driving spec-driven execution and sharding to accelerate frontend delivery timelines.
