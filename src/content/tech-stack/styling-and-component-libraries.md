@@ -1,9 +1,14 @@
 ---
 order: 4
-category: Styling and component libraries
+category: Backend & CMS
 items:
-  - Tailwind CSS
-  - MUI
-  - shadcn/ui
-  - etc.
+  - Node.js
+  - Express
+  - Apollo Server
+  - MongoDB
+  - Firebase
+  - Sanity
+  - Strapi
+  - Shopify
+  - WordPress
 ---
