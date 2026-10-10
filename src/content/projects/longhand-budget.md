@@ -14,5 +14,5 @@ technologies:
 description: Longhand Budget is a privacy-first personal budgeting and financial-planning web app. Users can track income and expenses, set savings goals, monitor assets and debts, and model long-term outcomes like retirement. Built using the BMAD Method, an Agile assembly line of specialized AI agents using artifact-driven workflows, context engineering, and handoffs.
 liveUrl: https://www.longhandbudget.com/
 githubUrl: https://github.com/LucasSilbernagel/budget-planner
-image: ../../assets/content/budget-planner.png
+image: ../../assets/content/budget-planner-1.png
 ---
