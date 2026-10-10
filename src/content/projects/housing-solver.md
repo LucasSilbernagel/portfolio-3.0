@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 3
 projectName: Housing Solver
 completedYear: '2025'
 technologies:
