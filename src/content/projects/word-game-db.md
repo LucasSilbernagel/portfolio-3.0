@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 2
 projectName: Word Game DB v2
 completedYear: '2025'
 technologies:
