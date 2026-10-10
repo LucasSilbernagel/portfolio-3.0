@@ -9,6 +9,8 @@ items:
   - Firebase
   - Sanity
   - Strapi
+  - PostgreSQL
+  - Drizzle ORM
   - Shopify
   - WordPress
 ---
